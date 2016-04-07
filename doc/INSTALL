@@ -1,0 +1,56 @@
+First a few requirements.
+
+Module Dependancies (with Debian package name in parenthesis)
+
+mysql (php5-mysql)
+ldap (php5-ldap) (Optional)
+PEAR (php-pear)
+Mail/RFC822 (php-mail)
+MCrypt (php5-mcrypt)
+
+Module Dependancies that are probably included with PHP
+PDO
+Hash
+
+
+Next some configuration.
+
+In the modules/lib/config.pm file there are a few configuration settings that
+need to be set before anything else.
+
+secure_phrase =>  This is basically a short random character string used in the
+security module to make the stored passwords harder to un-encrypt.
+
+database => Fill in at least the database connection information for the 'core'
+'write' database identifier.  This will be the default database connection.
+It is possible to have a 'read' identifier here as well, in order to balance
+read and write database access across different servers.
+
+authen_modules => external =>  Enter the database connection identifier (i.e. 'core') here
+if you will use one of the provided modules for getting user information from
+an external source.  One module has been provided for connecting to the
+PowerSchool student information system.
+
+user_external_module =>  This is the identifier for the module to be used for
+getting user information from an external source.  This identifier should match
+code in modules/lib/external_user_module.pm for linking to the external
+information source.
+
+trusted_proxies => This is a list of load balancers in order for the application
+url to be guessed.  The load balancer is expected to set the
+HTTP_X_FORWARDED_SERVER and HTTP_X_FORWARDED_PROTO http headers, along with the
+HTTP_X_FORWARDED_SSL and HTTP_X_FORWARDED_PORT http headers as applicable.
+
+Third, you will need to configure the web server.  In the apache web server it
+should be as easy as creating the virtual host entry with the document root
+set to the webroot folder of the application.
+
+Fourth, you will need to configure cron, or some similar scheduled execution
+program, to run the scripts in the scripts/cron directory.  The message queue
+processing script should be run daily.
+
+Fifth, you will need to import some information into the database.  The file,
+install.sql, will create the table structure.
+
+Sixth, for those not using the external user module.  Point a web browser at
+/install.php to begin creating users.

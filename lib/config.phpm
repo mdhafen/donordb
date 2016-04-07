@@ -1,0 +1,109 @@
+<?php
+// Make sure all class definitions are loaded before this!
+session_name( 'FDDSESSID' );
+session_start();
+$config = array(
+	'base_dir'        => '/var/www/',  // sane defaults
+	'base_url'	  => '/', // these are set below
+	'secure_phrase'   => '',
+	'authen_modules'  => array(
+		'db'       => 'core',
+		'external' => 0,
+		'ldap'     => 0,
+	),
+	'password_modes'   => array(
+		'encrypted_hash' => 1,
+		'reversable_encrypted' => 1,
+		'md5_fallback' => 1,
+		'upgrade_from_md5' => 1,
+	),
+	'user_external_module' => 'PS',
+	'trusted_proxies' => array(),
+	'database'        => array(
+		'core' => array(
+			'write' => array(
+				'engine' => 'mysql',
+				'host'   => 'localhost',
+				'schema' => 'donor',
+				'user'   => 'fdonordb',
+				'passwd' => '',
+			),
+		),
+	),
+	'auth' => array(
+		1   => "reports",
+		2   => "actions",
+		4   => "accounts",
+		8   => "contacts",
+		16  => "manage_site",
+	),
+	'role' => array(
+		1 => array(
+			'name' => 'board member',
+			'auth' => 1, // report
+		),
+		2 => array(
+			'name' => 'manager',
+			'auth' => 15, // report,actions,accounts,contacts
+		),
+		6 => array(
+			'name' => 'sysadmin',
+			'auth' => 31, // all
+		),
+	),
+);
+
+$config['base_dir'] = realpath( dirname( __FILE__ ) . '/..' );
+$config['this_url'] = $_SERVER['REQUEST_URI'];
+
+$dir = $config['base_dir'] . '/webroot/';
+$count = 1;
+$lcs = '/';
+while ( strripos( $dir, substr( $config['this_url'], 0, $count ) ) > 0 ) {
+	$lcs = substr( $config['this_url'], 0, $count );
+	if ( $count+1 > mb_strlen( $config['this_url'] ) ) { break; }
+	$count = strpos( $config['this_url'], '/', $count + 1 );
+	if ( $count < 0 ) { break; }
+}
+
+/*
+ These next two are to catch load balancers (reverse proxies).
+ You may have to set X-Forwarded-Port and X-Forwarded-Proto
+ in the load balancer config
+  apache2: RequestHeader set X-Forwarded-Proto https
+
+ Also, these should be secured in the server config to be rejected in headers
+ except from certain trusted clients (the load balancers)
+  (anything from the client, like these, can be easily spoofed
+ */
+if ( ! empty($config['trusted_proxies']) && array_search($_SERVER['REMOTE_ADDR'],$config['trusted_proxies']) !== false ) {
+	if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' ) {
+		$host = "https://". $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		if ( isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] != '443' ) {
+			$host .= ':'. $_SERVER['HTTP_X_FORWARDED_PORT'];
+		}
+	}
+	else if ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'http' ) {
+		$host = "http://". $_SERVER['HTTP_X_FORWARDED_SERVER'];
+		if ( isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] != '80' ) {
+			$host .= ':'. $_SERVER['HTTP_X_FORWARDED_PORT'];
+		}
+	}
+}
+else if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) {
+	$host = "https://". $_SERVER['SERVER_NAME'];
+	if ( $_SERVER['SERVER_PORT'] != '443' ) {
+		$host .= ':'. $_SERVER['SERVER_PORT'];
+	}
+}
+else {
+	$host = "http://". $_SERVER['SERVER_NAME'];
+	if ( $_SERVER['SERVER_PORT'] != '80' ) {
+		$host .= ':'. $_SERVER['SERVER_PORT'];
+	}
+}
+$config['base_url'] = $host . $lcs;
+if ( substr( $config['base_url'], -1, 1 ) != '/' ) {
+	$config['base_url'] .= '/';
+}
+?>

@@ -1,0 +1,364 @@
+<?php
+// external libraries
+
+//internal libraries
+require_once( 'config.phpm' );
+require_once( 'input.phpm' );
+require_once( 'user.phpm' );
+require_once( 'output.phpm' );
+require_once( 'data.phpm' );
+
+$logout = input( '_logout', INPUT_STR );
+if ( $logout ) {
+	destroy_session();
+}
+
+function authorize() {
+	global $config;
+	$perms = func_get_args();
+	$auth = $config['auth'];
+	$role = $config['role'];
+
+	if ( ! authenticate() ) {
+		output( array(), 'login' );
+		exit;
+	}
+
+	$user = $_SESSION[ 'loggedin_user' ];
+	$authen = $role[ $user['role'] ]['auth'];
+	$authorized = 0;
+	foreach ( $perms as $perm ) {
+		if ( in_array( $perm, $auth ) ) {
+			$bit = array_search( $perm, $auth );
+			if ( $authen & $bit ) {
+				$authorized++;
+			}
+		}
+	}
+
+	if ( $authorized != count( $perms ) ) {
+		output( array( 'NOTPERMITTED' => 1 ), 'login' );
+		exit;
+	}
+}
+
+function authorized() {
+	global $config;
+	$perms = func_get_args();
+	$auth = $config['auth'];
+	$role = $config['role'];
+
+	if ( ! authenticate() ) {
+		return;
+	}
+
+	$user = $_SESSION[ 'loggedin_user' ];
+	$authen = $role[ $user['role'] ]['auth'];
+	$authorized = 0;
+	foreach ( $perms as $perm ) {
+		if ( in_array( $perm, $auth ) ) {
+			$bit = array_search( $perm, $auth );
+			if ( $authen & $bit ) {
+				$authorized++;
+			}
+		}
+	}
+
+	return ( $authorized == count( $perms ) );
+}
+
+function get_authorizations() {
+	global $config;
+	$auths = array();
+	$auth = $config['auth'];
+	$role = $config['role'];
+
+	if ( empty($_SESSION['loggedin_user']) ) {
+		return;
+	}
+
+	$user = $_SESSION[ 'loggedin_user' ];
+	$authen = $role[ $user['role'] ]['auth'];
+	foreach ( $auth as $bit => $perm ) {
+		if ( $authen & $bit ) {
+			array_push( $auths, $perm );
+		}
+	}
+	return $auths;
+}
+
+function authenticate() {
+	global $config;
+
+	if ( ! isset( $_SESSION[ 'loggedin_user' ] ) ) {
+		$username = input( '_username', INPUT_HTML_NONE );
+		$password = input( '_password', INPUT_STR );
+		if ( ! $username || ! $password ) {
+			$_SESSION[ 'NOSESSION' ] = 1;
+			$_SESSION[ 'username' ] = $username;
+			$_SESSION[ 'token' ] = '';
+		} else {
+			$user = 0;
+			if ( !empty( $config['authen_modules'] ) ) {
+				if ( !empty($config['authen_modules']['ldap']) ) {
+					$module = $config['authen_modules']['ldap'];
+					$user = authen_ldap( $module, $username, $password );
+				}
+				if ( ! $user && !empty($config['authen_modules']['external']) ) {
+					$module = $config['authen_modules']['external'];
+				}
+				if ( ! $user && !empty($config['authen_modules']['db']) ) {
+					$module = $config['authen_modules']['db'];
+					$user = authen_db( $module, $username, $password );
+				}
+			}
+			if ( $user && $user['username'] ) {
+				unset( $_SESSION[ 'BADLOGIN' ] );
+				unset( $_SESSION[ 'NOSESSION' ] );
+				$token = hash(
+					'sha512',
+					session_id() .','.
+					$_SERVER[ 'REMOTE_ADDR' ] .','.
+					$config[ 'secure_phrase' ]
+					);
+				$_SESSION[ 'token' ] = $token;
+				$_SESSION[ 'userid' ] = $user[ 'userid' ];
+				$_SESSION[ 'username' ] = $user[ 'username' ];
+				$_SESSION[ 'loggedin_user' ] = $user;
+				$_SESSION[ 'new_session' ] = 1;
+			} else {
+				$_SESSION[ 'BADLOGIN' ] = 1;
+				$_SESSION[ 'token' ] = '';
+				$_SESSION[ 'username' ] = $username;
+			}
+		}
+	}
+
+	$my_token = hash(
+		'sha512',
+		session_id() .','.
+		$_SERVER[ 'REMOTE_ADDR' ] .','.
+		$config[ 'secure_phrase' ]
+	);
+
+	if ( $my_token == $_SESSION[ 'token' ] ) {
+		return 1;
+	} else {
+		if ( !empty( $_SESSION['token'] ) ) {
+			destroy_session();
+		}
+		return 0;
+	}
+}
+
+function authen_db( $module, $username, $password ) {
+	global $config;
+	$user = user_by_username( $username, $module );
+	if ( $user && $user['username'] && $user['password'] ) {
+		if ( empty($user['salt']) && !empty($config['password_modes']['md5_fallback']) ) {
+			$user_password = md5($password);
+			if ( strcmp( $user['password'], $user_password ) == 0 ) {
+				// dont need these anymore
+				unset( $user['salt'], $user['password'] );
+				if ( !empty($config['password_modes']['upgrade_from_md5']) ) {
+					list($new_pass,$new_salt) = new_password($password);
+					$updated['salt'] = $new_salt;
+					$updated['password'] = $new_pass;
+					update_user( $user['userid'], $updated );
+				}
+				return $user;
+			}
+		}
+		else if ( !empty($user['salt']) ) {
+			$cipher = mcrypt_module_open( 'blowfish', '', 'ecb', '' );
+			$iv = mcrypt_create_iv( mcrypt_enc_get_iv_size( $cipher ), MCRYPT_RAND );
+			$key = substr( base64_decode( $user[ 'salt' ] ) . $config[ 'secure_phrase' ], 0, mcrypt_enc_get_key_size( $cipher ) );
+			mcrypt_generic_init( $cipher, $key, $iv );
+
+			$user_password = mdecrypt_generic( $cipher, base64_decode( $user[ 'password' ] ) );
+			mcrypt_generic_deinit( $cipher );
+			mcrypt_module_close( $cipher );
+
+			$user_password = rtrim($user_password, "\0" );
+			if ( strcmp( $user_password, $password ) == 0 ) {
+				// dont need these anymore
+				unset( $user['salt'], $user['password'] );
+				return $user;
+			}
+			else if ( !empty($config['password_modes']['encrypted_hash']) ) {
+				$h_password = hash( 'sha512', $password . $key );
+				if ( strcmp( $user_password, $h_password ) == 0 ) {
+					// dont need these anymore
+					unset( $user['salt'], $user['password'] );
+					return $user;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+function authen_ldap( $module, $username, $password ) {
+	global $config;
+	$user = 0;
+	$userdn = 0;
+	$name = '';
+	$email = '';
+
+	$ldap = new LDAP_Wrapper( $module );
+	if ( strcasecmp( $username, $ldap->config['userdn'] ) == 0 ) {
+		$set = array();
+		$set[] = array( 'dn' => $username, 'cn' => array($username) );
+	}
+	else if ( strripos( $username, $ldap->config['base'] ) > 0 ) {
+		$set = $ldap->quick_search( array('objectClass'=>'*'), array(), 0, $username );
+	}
+	else {
+		$set = $ldap->quick_search( array( 'uid' => $username ), array() );
+	}
+
+	if ( count($set) == 1 ) {
+		$userdn = $set[0]['dn'];
+		$username = empty( $set[0]['uid'] ) ? $set[0]['dn'] : $set[0]['uid'][0];
+		$name = $set[0]['cn'][0];
+		$email = empty( $set[0]['mail'] ) ? "" : $set[0]['mail'][0];
+	}
+
+	if ( $userdn ) {
+		if ( $ldap->do_connect( $module, $userdn, $password ) ) {
+			$role = 1;
+			if ( ! empty($ldap->config['roles']) ) {
+				foreach ( $ldap->config['roles'] as $role_id => $group_dn ) {
+					$group = $ldap->quick_search( array('objectClass'=>'groupOfNames'), array(), 0, $group_dn );
+					if ( ! empty($group[0]) && ! empty($group[0]['member']) ) {
+						foreach ( $group[0]['member'] as $member_dn ) {
+							if ( strcasecmp($member_dn,$userdn) == 0 ) {
+								if ( $role_id > $role ) {
+									$role = $role_id;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			$user = array(
+				'userid' => $userdn,
+				'username' => $username,
+				'fullname' => $name,
+				'email' => $email,
+				'role' => $role,
+				'password' => $password,
+			);
+		}
+		else {
+			// re-bind as root
+			$userdn = $ldap->config['userdn'];
+			$password = $ldap->config['passwd'];
+			$ldap->do_connect( $module, $userdn, $password );
+		}
+	}
+
+	return $user;
+}
+
+function roles() {
+	global $config;
+	$role = $config['role'];
+	return $role;
+}
+
+function new_password( $new_password ) {
+	global $config;
+	$cipher = mcrypt_module_open( 'blowfish', '', 'ecb', '' );
+	$iv = mcrypt_create_iv( mcrypt_enc_get_iv_size( $cipher ), MCRYPT_RAND );
+	$key_size = mcrypt_enc_get_key_size( $cipher );
+
+	$rand_length = rand( $key_size - strlen( $config[ 'secure_phrase' ] ), $key_size );
+	$salt = '';
+	for ( $i = 0; $i < $rand_length; $i++ ) {
+		$salt .= chr( rand( 32, 255 ) );
+	}  // utilize as much of each byte as possible by using extended ASCII
+
+	$key = substr( $salt . $config[ 'secure_phrase' ], 0, $key_size );
+	mcrypt_generic_init( $cipher, $key, $iv );
+
+	if ( !empty($config['password_modes']['encrypted_hash']) ) {
+		$new_password = hash( 'sha512', $new_password . $key );
+	}
+	$user_password = mcrypt_generic( $cipher, $new_password );
+
+	mcrypt_generic_deinit( $cipher );
+	mcrypt_module_close( $cipher );
+
+	return array( base64_encode( $user_password ), base64_encode( $salt ) );
+}
+
+/*
+  creates a variant of the XKCD style password if a dictionary is available
+   as in 'correct horse battery staple'
+  if no dictionary is available then is a random 16 character password
+ */
+function create_password() {
+	global $config;
+	$symbol_set = '!@#$%&*()-_+\'";:/?.,'; // reduced for mobile keyboards
+	$numeric_set = '0123456789';
+	$alpha_set = 'abcdefghijklmnopqrstuvwxyz';
+	$ualpha_set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	#$dict_str = $symbol_set . $numeric_set . $alpha_set . $ualpha_set;
+	$dict_str = $alpha_set;
+	$dict_file = $config['base_dir'] .'/lib/word_dictionary'; # /usr/share/dict/words
+	$dictionary = array();
+	$iterations = 0;
+	$password = '';
+
+	if ( is_readable( $dict_file ) ) {
+		$dictionary = file( $dict_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+		if ( !empty($dictionary) ) {
+			$dict_str = "-";
+		}
+	}
+
+	$dict_size = count($dictionary) - 1;
+	$dict_str_size = strlen($dict_str) - 1;
+	#while ( $iterations < 4 || strlen($password) < 16 ) {
+	while ( $iterations < 3 || strlen($password) < 15 ) {
+		$iterations++;
+		if ( !empty($dictionary) ) {
+			$password .= $dictionary[ rand(0,$dict_size) ];
+		}
+		if ( !empty($dict_str) ) {
+			$password .= $dict_str[ rand(0,$dict_str_size) ];
+		}
+	}
+	$password = substr($password,0,-1);  // chop last '-' off
+
+	return $password;
+}
+
+// Just in case I care that php random number generator isn't random enough
+function _rand( $min = 0, $max = 255 ) {
+	$range = $max - $min;
+
+	$num = $range;
+	$bytes = 0;
+	do {
+		$bytes++;
+		$num = $num >> 8;
+	} while ( $num > 0 );
+
+	$num = 0;
+	$iterations = 255;
+	do {
+		$iterations--;
+		$raw = mcrypt_create_iv( $bytes, MCRYPT_RAND );
+		for ( $s = 0; $s < $bytes; $s++ ) {
+			$num = ( $num << 8 ) | ( ord( $raw[$s] ) );
+		}
+		$num = $num & PHP_INT_MAX; // make sure there's no overflow
+	} while ( $num > $range && $interations );
+	if ( $num > $range ) { $num = $num % $range; } // less safe fallback
+	return $num + $min;
+}
+
+?>
