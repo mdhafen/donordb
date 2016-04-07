@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="<?= $data['_config']['base_url'] ?>uikit/css/uikit.gradient.css" />
         <link rel="stylesheet" href="<?= $data['_config']['base_url'] ?>uikit/css/components/datepicker.gradient.css" />
         <link rel="stylesheet" href="<?= $data['_config']['base_url'] ?>site.css" />
-		<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
 		<script src="<?= $data['_config']['base_url'] ?>uikit/js/uikit.js"></script>
 		<script src="<?= $data['_config']['base_url'] ?>uikit/js/components/datepicker.js"></script>
 		<script type='text/javascript' src="<?= $data['_config']['base_url'] ?>scripts.js"></script>
