@@ -7,21 +7,21 @@
 <?php include 'header.php'; ?>
 <div class="uk-margin uk-margin-left uk-margin-right">
 
-<?php if ( !empty($data['error']) ) { ?>
+<?php if ( !empty($data['ERROR']) ) { ?>
 <div class="uk-alert uk-alert-danger">
 <?php if ( !empty($data['INSTALL_USER_EXTERNAL']) ) { ?><div>External Users is set.  No user information will be entered in this database, but this program will get it from another database.</div><?php } ?>
 
-<?php if ( !empty($data['INSTALL_NO_TABLES']) ) { ?>
-<div>The database hasn&apos;t been setup.  This program will now attempt to create the necessary tables for you.
-  <?php if ( !empty($data['INSTALL_CREATESQL_CANT_READ']) ) { ?><br>Can&apos;t read the sql file.  You will have to do it yourself.<?php } ?>
-  <?php if ( !empty($data['INSTALL_CREATETABLES_FAILED']) ) { ?><br>There was an error.  You will have to check on the state of the database and tables yourself.<?php } ?>
-</div>
-<?php } ?>
+<?php if ( !empty($data['INSTALL_CREATETABLES_CANT_READ']) ) { ?><div>The database hasn&apos;t been setup.  This program will now attempt to create the necessary tables for you.<br>Can&apos;t read the sql file.  You will have to do it yourself.</div><?php } ?>
+<?php if ( !empty($data['INSTALL_CREATETABLES_FAILED']) ) { ?><div>The database hasn&apos;t been setup.  This program will now attempt to create the necessary tables for you.<br>There was an error.  You will have to check on the state of the database and tables yourself.<br>Error message: <?= $data['INSTALL_CREATETABLES_FAILED'] ?></div><?php } ?>
 
 <?php if ( !empty($data['INSTALL_ALREADY_ADDED_ADMIN']) ) { ?><div>There are already users for managing the program.  This program won&apos;t create more for you.</div><?php } ?>
 
+<?php if ( !empty($data['INSTALL_NO_LOCATION']) ) { ?><div>The location identifier and location name must be specified.  An existing location identifier may be supplied.</div><?php } ?>
+<?php if ( !empty($data['INSTALL_ADD_LOCATION_FAILED']) ) { ?><div>Creating the specified location in the database failed.</div><?php } ?>
+
 <?php if ( !empty($data['INSTALL_PASS_NOMATCH']) ) { ?><div>Passwords don&apos;t match.</div><?php } ?>
-<?php if ( !empty($data['SET_INFO_USERNAME_USED']) ) { ?><div>That username is already in use.</div><?php } ?>
+<?php if ( !empty($data['INSTALL_USERNAME_USED']) ) { ?><div>That username is already in use.</div><?php } ?>
+<?php if ( !empty($data['INSTALL_ADD_USER_FAILED']) ) { ?><div>Creating the specified user in the database failed.</div><?php } ?>
 </div>
 <?php } ?>
 

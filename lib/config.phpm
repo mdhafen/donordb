@@ -17,16 +17,16 @@ $config = array(
 		'md5_fallback' => 1,
 		'upgrade_from_md5' => 1,
 	),
-	'user_external_module' => 'PS',
+	'user_external_module' => '',
 	'trusted_proxies' => array(),
 	'database'        => array(
 		'core' => array(
 			'write' => array(
 				'engine' => 'mysql',
 				'host'   => 'localhost',
-				'schema' => 'donor',
-				'user'   => 'fdonordb',
-				'passwd' => '',
+				'schema' => 'fdonordb_v2',
+				'user'   => 'donor',
+				'passwd' => 'd1ngb@tm@n',
 			),
 		),
 	),
