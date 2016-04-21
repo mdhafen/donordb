@@ -1,0 +1,43 @@
+<?php
+
+function get_actions( $ids = array() ) {
+  $dbh = db_connect('core');
+  $result = array();
+
+  $query = "SELECT * FROM actions ";
+  if ( !empty($ids) ) {
+    $query .= "WHERE actionid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  $sth = $dbh->prepare( $query );
+
+  $sth->execute();
+
+  while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+    $row = stripslashes_array( $row );
+    $result[ $row['actionid'] ] = $row;
+  }
+
+  return $result;
+}
+
+function get_actions_cross( $ids = array() ) {
+  $dbh = db_connect('core');
+  $result = array();
+
+  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions CROSS JOIN contacts USING (contactid) CROSS JOIN location USING (locationid) CROSS JOIN accounts USING (accountid)";
+  if ( !empty($ids) ) {
+    $query .= "WHERE actionid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  $sth = $dbh->prepare( $query );
+
+  $sth->execute();
+
+  while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+    $row = stripslashes_array( $row );
+    $result[ $row['actionid'] ] = $row;
+  }
+
+  return $result;
+}
+
+?>
