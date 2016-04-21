@@ -116,7 +116,7 @@ function do_checks( $admin_role ) {
           $dbh->exec( $statement );
           if ( $dbh->errorCode() !== '00000' ) {
             $db_error = $dbh->errorInfo();
-            $output[ 'INSTALL_CREATETABLES_FAILED' ] = $db_error[2];
+            $output[ 'INSTALL_CREATETABLES_FAILED' ] = htmlspecialchars($db_error[2]);
             return $output;
           }
         }
