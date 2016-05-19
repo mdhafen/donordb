@@ -24,9 +24,9 @@ $config = array(
 			'write' => array(
 				'engine' => 'mysql',
 				'host'   => 'localhost',
-				'schema' => 'fdonordb_v2',
+				'schema' => 'fdonordb',
 				'user'   => 'donor',
-				'passwd' => 'd1ngb@tm@n',
+				'passwd' => 'fdonorpassword',
 			),
 		),
 	),

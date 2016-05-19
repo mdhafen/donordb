@@ -15,8 +15,9 @@ Hash
 
 Next some configuration.
 
-In the modules/lib/config.pm file there are a few configuration settings that
-need to be set before anything else.
+In the lib/config.phpm file there are a few configuration settings that
+need to be set before anything else.  You can create this file by coping the
+config_sample.phpm file.
 
 secure_phrase =>  This is basically a short random character string used in the
 security module to make the stored passwords harder to un-encrypt.
