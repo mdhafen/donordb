@@ -86,7 +86,7 @@ CREATE TABLE `contacts` (
 
 CREATE TABLE `actions` (
 	`actionid` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`date` DATE NOT NULL DEFAULT 0,
+	`date` DATE DEFAULT NULL,
 	`amount` FLOAT(10,2) NOT NULL DEFAULT '0.00',
 	`contactid` BIGINT(20) UNSIGNED DEFAULT NULL,
 	`accountid` BIGINT(20) UNSIGNED DEFAULT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE `actions` (
 	`po` VARCHAR(10) DEFAULT NULL,
 	`note` TEXT,
 	`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`udate` DATETIME NOT NULL DEFAULT 0,
+	`udate` DATETIME DEFAULT NULL,
 	PRIMARY KEY (`actionid`),
 	KEY `contactid` (`contactid`),
 	KEY `accountid` (`accountid`),
