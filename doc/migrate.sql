@@ -64,3 +64,5 @@ UPDATE fdonordb_v2.actions SET date = '2015-12-14' WHERE actionid = 21586;
 UPDATE fdonordb_v2.actions SET date = '2015-9-16' WHERE actionid = 21787;
 UPDATE fdonordb_v2.actions SET date = '2015-10-6' WHERE actionid = 21846;
 UPDATE fdonordb_v2.actions SET date = '2015-10-28' WHERE actionid = 21847;
+
+INSERT INTO fdonordb_v2.user (username,fullname,password,role,salt) (SELECT username,realname,password,CASE privilege WHEN 63 THEN 2 WHEN 255 THEN 3 ELSE 0 END,'' FROM fdonordb.users);
