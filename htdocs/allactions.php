@@ -64,11 +64,11 @@
 <?php include 'header.php'; ?>
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
-<div class="uk-margin uk-margin-left">
+<div class="uk-margin uk-container uk-width-1-1">
 <h2>All Actions</h2>
 <div id="actions_table_container">
 <span class="uk-padding-right"><a href="<?= $data['_config']['base_url'] ?>actions.php">Recent Actions</a></span> <ul class="paginationTop uk-display-inline-block"></ul>
-<table class="" id="actions_table">
+<table class="uk-table" id="actions_table">
 <thead>
 <tr>
   <th>
@@ -142,7 +142,7 @@ var list_options = {
   searchClass: 'list_search',
   sortClass: 'list_sort',
   //indexAsync: true,
-  page: 15,
+  page: 10,
   plugins: [
     ListPagination({
       name: "paginationTop",

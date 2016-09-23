@@ -64,11 +64,11 @@
 <?php include 'header.php'; ?>
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
-<div class="uk-margin uk-margin-left">
+<div class="uk-margin uk-container uk-width-1-1">
 <h2>Recent Actions</h2>
 <div id="actions_table_container">
 <ul class="paginationTop uk-display-inline-block"></ul> <span class="uk-padding-left"><a href="<?= $data['_config']['base_url'] ?>allactions.php">All Actions</a></span>
-<table class="" id="actions_table">
+<table class="uk-table" id="actions_table">
 <thead>
 <tr>
   <th>
@@ -113,7 +113,7 @@
 ?>
 <tr id="actions_<?= $row['actionid'] ?>">
 <td class="list_date" data-list-isodate="<?= $row['date'] ?>"><?= date('m/d/Y',strtotime($row['date'])) ?></td>
-<td class="list_amount"><span class="<?= $row['amount'] < 0 ? 'uk-text-danger' : '' ?>"><?= $row['amount'] ?></span></td>
+<td class="list_amount"><span class="<?= $row['amount'] < 0 ? 'uk-text-danger' : '' ?>"><?= $row['amount'] == 0 ? "0.00" : $row['amount'] ?></span></td>
 <td class="list_contact_name"><?= $row['contact_name'] ?></td>
 <td class="list_contact_company"><?= $row['company'] ?></td>
 <td class="list_account" data-list-cleanaccount="<?= urlencode($row['account_name']) ?>"><?= $row['account_name'] ?></td>
@@ -142,7 +142,7 @@ var list_options = {
   searchClass: 'list_search',
   sortClass: 'list_sort',
   //indexAsync: true,
-  page: 15,
+  page: 10,
   plugins: [
     ListPagination({
       name: "paginationTop",
