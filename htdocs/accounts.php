@@ -64,11 +64,11 @@
 <?php include 'header.php'; ?>
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
-<div class="uk-margin uk-margin-left">
+<div class="uk-container uk-margin uk-width-1-1">
 <h2>Accounts</h2>
 <div id="accounts_table_container">
 <ul class="paginationTop"></ul>
-<table class="" id="actions_table">
+<table class="uk-table" id="accounts_table">
 <thead>
 <tr>
   <th>
@@ -78,6 +78,9 @@
   <th>
     <span class="list_sort" data-sort="list_location">Site</span><br>
     <input type="text" size="10" onkeyup="do_filter(this.value,'location')">
+  </th>
+  <th>
+    Total
   </th>
   <th>
     Notes<br>
@@ -93,6 +96,7 @@
 <tr id="accounts_<?= $row['accountid'] ?>">
 <td class="list_account" data-list-cleanaccount="<?= urlencode($row['name']) ?>"><?= $row['name'] ?></td>
 <td class="list_location"><?= $row['location_name'] ?></td>
+<td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= $row['total'] == 0 ? "0.00" : $row['total'] ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>
 </tr>
 <?php
@@ -126,12 +130,12 @@ function do_filter(value,field) {
 var list_options = {
   valueNames: [
     { name: 'list_account', attr: 'data-list-cleanaccount' },
-    'list_location','list_note'
+    'list_location','list_total','list_note'
   ],
   searchClass: 'list_search',
   sortClass: 'list_sort',
   //indexAsync: true,
-  page: 15,
+  page: 10,
   plugins: [
     ListPagination({
       name: "paginationTop",
