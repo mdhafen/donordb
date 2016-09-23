@@ -65,9 +65,9 @@
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
 <div class="uk-margin uk-margin-left">
-<h2>Recent Actions</h2>
+<h2>All Actions</h2>
 <div id="actions_table_container">
-<ul class="paginationTop uk-display-inline-block"></ul> <span class="uk-padding-left"><a href="<?= $data['_config']['base_url'] ?>allactions.php">All Actions</a></span>
+<span class="uk-padding-right"><a href="<?= $data['_config']['base_url'] ?>actions.php">Recent Actions</a></span> <ul class="paginationTop uk-display-inline-block"></ul>
 <table class="" id="actions_table">
 <thead>
 <tr>

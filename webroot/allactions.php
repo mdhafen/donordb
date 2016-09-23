@@ -6,10 +6,10 @@ include_once( '../inc/donordb.phpm' );
 
 authorize( 'actions' );
 
-$recent_actions = get_actions_since_cross( '-1 year' );
+$all_actions = get_actions_cross();
 
 $output = array(
-    'actions_list' => $recent_actions,
+    'actions_list' => $all_actions,
 );
-output( $output, 'actions' );
+output( $output, 'allactions' );
 ?>
