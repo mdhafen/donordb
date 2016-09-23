@@ -91,4 +91,45 @@ function get_accounts( $ids = array() ) {
   return $result;
 }
 
+function get_accounts_with_total( $ids = array() ) {
+  $dbh = db_connect('core');
+  $result = array();
+
+  $query = "SELECT accounts.*,location.name as location_name,sum(actions.amount) as total FROM accounts CROSS JOIN location USING (locationid) LEFT JOIN actions USING (accountid) ";
+  if ( !empty($ids) ) {
+    $query .= "WHERE accountid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  $query .= "GROUP BY accounts.accountid";
+  $sth = $dbh->prepare( $query );
+
+  $sth->execute();
+
+  while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+    $row = stripslashes_array( $row );
+    $result[ $row['accountid'] ] = $row;
+  }
+
+  return $result;
+}
+
+function get_contacts( $ids = array() ) {
+  $dbh = db_connect('core');
+  $result = array();
+
+  $query = "SELECT * FROM contacts ";
+  if ( !empty($ids) ) {
+    $query .= "WHERE contactid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  $sth = $dbh->prepare( $query );
+
+  $sth->execute();
+
+  while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+    $row = stripslashes_array( $row );
+    $result[ $row['contactid'] ] = $row;
+  }
+
+  return $result;
+}
+
 ?>
