@@ -91,6 +91,27 @@ function get_accounts( $ids = array() ) {
   return $result;
 }
 
+function get_accounts_at_location( $locationid, $ids = array() ) {
+  $dbh = db_connect('core');
+  $result = array();
+
+  $query = "SELECT accounts.*,location.name as location_name FROM accounts CROSS JOIN location USING (locationid) WHERE locationid = :loc";
+  if ( !empty($ids) ) {
+    $query .= " AND accountid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  $sth = $dbh->prepare( $query );
+  $sth->bindParam( ':loc',$locationid );
+
+  $sth->execute();
+
+  while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+    $row = stripslashes_array( $row );
+    $result[ $row['accountid'] ] = $row;
+  }
+
+  return $result;
+}
+
 function get_accounts_with_total( $ids = array() ) {
   $dbh = db_connect('core');
   $result = array();
@@ -130,6 +151,76 @@ function get_contacts( $ids = array() ) {
   }
 
   return $result;
+}
+
+function update_contact( $contactid, $updates ) {
+  $dbh = db_connect('core');
+  $query;
+  $data = array();
+  if ( !empty($contactid) ) {
+      $query = "UPDATE contacts SET ";
+      foreach ( $updates as $field => $value ) {
+          $query .= "$field = ?, ";
+          $data[] = $value;
+      }
+      $query = substr( $query, 0, -2 );
+      $query .= "WHERE contactid = ?";
+      $data[] = $contactid;
+  }
+  else {
+      $values = "";
+      $query = "INSERT INTO contacts (";
+      foreach ( $updates as $field => $value ) {
+          $query .= "$field,";
+          $values .= "?,";
+          $data[] = $value;
+      }
+      $query = substr( $query, 0, -1 );
+      $values = substr( $values, 0, -1 );
+      $query .= ") VALUES ($values)";
+  }
+  $sth = $dbh->prepare($query);
+  $sth->execute($data);
+  if ( empty($contactid) ) {
+      $contactid = $dbh->lastInsertId('contactid');
+  }
+
+  return $contactid;
+}
+
+function update_account( $accountid, $updates ) {
+  $dbh = db_connect('core');
+  $query;
+  $data = array();
+  if ( !empty($contactid) ) {
+      $query = "UPDATE accounts SET ";
+      foreach ( $updates as $field => $value ) {
+          $query .= "$field = ?, ";
+          $data[] = $value;
+      }
+      $query = substr( $query, 0, -2 );
+      $query .= "WHERE accountid = ?";
+      $data[] = $accountid;
+  }
+  else {
+      $values = "";
+      $query = "INSERT INTO accounts (";
+      foreach ( $updates as $field => $value ) {
+          $query .= "$field,";
+          $values .= "?,";
+          $data[] = $value;
+      }
+      $query = substr( $query, 0, -1 );
+      $values = substr( $values, 0, -1 );
+      $query .= ") VALUES ($values)";
+  }
+  $sth = $dbh->prepare($query);
+  $sth->execute($data);
+  if ( empty($accountid) ) {
+      $accountid = $dbh->lastInsertId('accountid');
+  }
+
+  return $accountid;
 }
 
 ?>
