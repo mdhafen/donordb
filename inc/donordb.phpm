@@ -192,7 +192,7 @@ function update_account( $accountid, $updates ) {
   $dbh = db_connect('core');
   $query;
   $data = array();
-  if ( !empty($contactid) ) {
+  if ( !empty($accountid) ) {
       $query = "UPDATE accounts SET ";
       foreach ( $updates as $field => $value ) {
           $query .= "$field = ?, ";
@@ -221,6 +221,41 @@ function update_account( $accountid, $updates ) {
   }
 
   return $accountid;
+}
+
+function update_action( $actionid, $updates ) {
+  $dbh = db_connect('core');
+  $query;
+  $data = array();
+  if ( !empty($actionid) ) {
+      $query = "UPDATE actions SET ";
+      foreach ( $updates as $field => $value ) {
+          $query .= "$field = ?, ";
+          $data[] = $value;
+      }
+      $query = substr( $query, 0, -2 );
+      $query .= "WHERE actionid = ?";
+      $data[] = $actionid;
+  }
+  else {
+      $values = "";
+      $query = "INSERT INTO actions (";
+      foreach ( $updates as $field => $value ) {
+          $query .= "$field,";
+          $values .= "?,";
+          $data[] = $value;
+      }
+      $query = substr( $query, 0, -1 );
+      $values = substr( $values, 0, -1 );
+      $query .= ") VALUES ($values)";
+  }
+  $sth = $dbh->prepare($query);
+  $sth->execute($data);
+  if ( empty($actionid) ) {
+      $actionid = $dbh->lastInsertId('actionid');
+  }
+
+  return $actionid;
 }
 
 ?>
