@@ -84,6 +84,33 @@ if ( $op == 'Save' ) {
         if ( !empty($actionid) ) {
             $op = 'SaveSuccess';
             $action = get_actions( array($actionid) )[$actionid];
+            foreach ( $contacts as &$con ) {
+                if ( $action['contactid'] == $con['contactid'] ) {
+                    $con['selected'] = 1;
+                }
+                else {
+                    unset($con['selected']);
+                }
+            }
+            if ( !empty($action['locationid']) && !empty($action['accountid']) && $accounts[ $action['accountid'] ]['locationid'] == $action['locationid'] ) {
+                $accounts = get_accounts_at_location( $action['locationid'] );
+            }
+            foreach ( $accounts as &$acc ) {
+                if ( $action['accountid'] == $acc['accountid'] ) {
+                    $acc['selected'] = 1;
+                }
+                else {
+                    unset($acc['selected']);
+                }
+            }
+            foreach ( $locations as &$loc ) {
+                if ( $action['locationid'] == $loc['locationid'] ) {
+                    $loc['selected'] = 1;
+                }
+                else {
+                    unset($loc['selected']);
+                }
+            }
         }
     }
 }

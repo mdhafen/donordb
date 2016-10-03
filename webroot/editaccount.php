@@ -44,6 +44,14 @@ if ( $op == 'Save' ) {
         if ( !empty($accountid) ) {
             $op = 'SaveSuccess';
             $account = get_accounts( array($accountid) )[$accountid];
+            foreach ( $locations as &$loc ) {
+                if ( $account['locationid'] == $loc['locationid'] ) {
+                    $loc['selected'] = 1;
+                }
+                else {
+                    unset($loc['selected']);
+                }
+            }
         }
     }
 }
