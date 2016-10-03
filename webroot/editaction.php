@@ -47,10 +47,10 @@ if ( $op == 'Save' ) {
 
     $date = input( 'date', INPUT_HTML_NONE );
     $amount = input( 'amount', INPUT_NUM );
-    $contactid = input( 'contactid', INPUT_PINT );
-    $accountid = input( 'accountid', INPUT_PINT );
-    $locationid = input( 'locationid', INPUT_PINT );
-    $receipt = input( 'receipt', INPUT_HTML_NONE );
+    ( $contactid = input('contactid',INPUT_PINT) ) || ( $contactid = null );
+    ( $accountid = input('accountid',INPUT_PINT) ) || ( $accountid = null );
+    ( $locationid = input('locationid',INPUT_PINT) ) || ( $locationid = null );
+    ( $receipt = input('receipt',INPUT_PINT) ) || ( $receipt = null );
     $po = input( 'po', INPUT_HTML_NONE );
     $note = input( 'note', INPUT_HTML_NONE );
 
@@ -60,19 +60,19 @@ if ( $op == 'Save' ) {
     if ( empty($action['amount']) || $action['amount'] != $amount ) {
         $updates['amount'] = $amount;
     }
-    if ( empty($action['contactid']) || $action['contactid'] != $contactid ) {
+    if ( !array_key_exists('contactid',$action) || $action['contactid'] != $contactid ) {
         $updates['contactid'] = $contactid;
     }
-    if ( empty($action['accountid']) || $action['accountid'] != $accountid ) {
+    if ( !array_key_exists('accountid',$action) || $action['accountid'] != $accountid ) {
         $updates['accountid'] = $accountid;
     }
-    if ( empty($action['locationid']) || $action['locationid'] != $locationid ) {
+    if ( !array_key_exists('locationid',$action) || $action['locationid'] != $locationid ) {
         $updates['locationid'] = $locationid;
     }
-    if ( empty($action['receipt']) || $action['receipt'] != $receipt ) {
+    if ( !array_key_exists('receipt',$action) || $action['receipt'] != $receipt ) {
         $updates['receipt'] = $receipt;
     }
-    if ( empty($action['po']) || $action['po'] != $po ) {
+    if ( !array_key_exists('po',$action) || $action['po'] != $po ) {
         $updates['po'] = $po;
     }
     if ( empty($action['note']) || $action['note'] != $note ) {

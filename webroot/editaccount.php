@@ -26,13 +26,13 @@ if ( $op == 'Save' ) {
     $updates = array();
 
     $name = input( 'name', INPUT_HTML_NONE );
-    $locationid = input( 'locationid', INPUT_PINT );
+    ( $locationid = input('locationid',INPUT_PINT) ) || ( $locationid = null );
     $note = input( 'note', INPUT_HTML_NONE );
 
     if ( empty($account['name']) || $account['name'] != $name ) {
         $updates['name'] = $name;
     }
-    if ( empty($account['locationid']) || $account['locationid'] != $locationid ) {
+    if ( !array_key_exists('locationid',$account) || $account['locationid'] != $locationid ) {
         $updates['locationid'] = $locationid;
     }
     if ( empty($account['note']) || $account['note'] != $note ) {
