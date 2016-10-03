@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<head>
+<?php include 'head.php';?>
+<script src="<?= $data['_config']['base_url'] ?>list.min.js"></script>
+<script src="<?= $data['_config']['base_url'] ?>list.pagination.min.js"></script>
 <style>
 .paginationTop li, .paginationBottom li {
   display: inline-block;
@@ -53,12 +57,7 @@
   top:13px;
   right:-5px;
 }
-
 </style>
-<head>
-<?php include 'head.php';?>
-<script src="<?= $data['_config']['base_url'] ?>list.min.js"></script>
-<script src="<?= $data['_config']['base_url'] ?>list.pagination.min.js"></script>
 </head>
 <body>
 <?php include 'header.php'; ?>
@@ -73,11 +72,11 @@
 <tr>
   <th>
     <span class="list_sort" data-sort="list_account">Account Name</span><br>
-    <input type="text" size="10" onkeyup="do_filter(this.value,'account')">
+    <input type="text" id="account_account_filter" size="10" onkeyup="do_filter(this.value,'account')">
   </th>
   <th>
     <span class="list_sort" data-sort="list_location">Site</span><br>
-    <input type="text" size="10" onkeyup="do_filter(this.value,'location')">
+    <input type="text" id="account_location_filter" size="10" onkeyup="do_filter(this.value,'location')">
   </th>
   <th>
     Total
@@ -94,7 +93,7 @@
      foreach ( $data['accounts_list'] as $row ) {
 ?>
 <tr id="accounts_<?= $row['accountid'] ?>">
-<td class="list_account" data-list-cleanaccount="<?= urlencode($row['name']) ?>"><?= $row['name'] ?></td>
+<td class="list_account" data-list-cleanaccount="<?= urlencode($row['name']) ?>"><a href="editaccount.php?accountid=<?= $row['accountid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a><?= $row['name'] ?></td>
 <td class="list_location"><?= $row['location_name'] ?></td>
 <td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= $row['total'] == 0 ? "0.00" : $row['total'] ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>
@@ -111,20 +110,19 @@
 <script>
 function do_filter(value,field) {
 // FIXME this still doesn't filter - try checking all three fields!
-    if ( ! value ) {
-        list_obj.filter();
-    }
-    else {
-        list_obj.filter(function(item){
-            var test = '';
-            switch (field) {
-                case 'account' : test = item.values().list_account; break;
-                case 'location' : test = item.values().list_location; break;
-                case 'note' : test = item.values().list_note; break;
-            }
-            return test.toLowerCase().indexOf(value.toLowerCase()) > -1;
-        })
-    }
+    list_obj.filter(function(item){
+        var match = [
+            decodeURIComponent((item.values().list_account+'').replace(/\+/g,' ')).toLowerCase(),
+            item.values().list_location.toLowerCase(),
+            item.values().list_note.toLowerCase()
+        ];
+        var input = [
+            document.getElementById('account_account_filter').value.toLowerCase(),
+            document.getElementById('account_location_filter').value.toLowerCase(),
+            document.getElementById('account_note_filter').value.toLowerCase()
+        ];
+        return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 );
+    })
 }
 
 var list_options = {

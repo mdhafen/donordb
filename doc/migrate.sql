@@ -2,11 +2,11 @@
 
 INSERT INTO fdonordb_v2.location (locationid,name) (SELECT schoolId,name FROM fdonordb.locations);
 
-INSERT INTO fdonordb_v2.accounts (accountid,name,locationid,note) (SELECT accountId,name,IF( schoolId IN (0,15,702,1476), NULL, schoolId),CONVERT(note USING BINARY) FROM fdonordb.accounts);
+INSERT INTO fdonordb_v2.accounts (accountid,name,locationid,note) (SELECT accountId,replace(replace(name,'&','&amp;'),'''','&apos;'),IF( schoolId IN (0,15,702,1476), NULL, schoolId),CONVERT(replace(replace(note,'&','&amp;'),'''','&apos;') USING BINARY) FROM fdonordb.accounts);
 
-INSERT INTO fdonordb_v2.contacts (contactid,name,company,street,city,state,zip,phone) (SELECT contactId,name,company,street,city,state,zip,phone FROM fdonordb.contacts);
+INSERT INTO fdonordb_v2.contacts (contactid,name,company,street,city,state,zip,phone) (SELECT contactId,replace(replace(name,'&','&amp;'),'''','&apos;'),replace(replace(company,'&','&amp;'),'''','&apos;'),street,city,state,zip,phone FROM fdonordb.contacts);
 
-INSERT IGNORE INTO fdonordb_v2.actions (actionid,date,amount,contactid,accountid,locationid,receipt,po,note,timestamp,udate) (SELECT actionId,IF(INSTR(DATE,'-'),STR_TO_DATE(date,'%Y-%m-%d'),STR_TO_DATE(date,'%m/%d/%Y')),amount,IF( contactId IN (0,628,1161,2111,2112,2113,3259,6661,11684,13363,13911,14763,17936,22097),NULL,contactId),IF( accountId IN (11,904,1041,1439,3224,3661),NULL,accountId),IF( schoolId IN (0,15,702,1476),NULL,schoolId),receipt,po,note,timestamp,FROM_UNIXTIME(udate) FROM fdonordb.actions);
+INSERT IGNORE INTO fdonordb_v2.actions (actionid,date,amount,contactid,accountid,locationid,receipt,po,note,timestamp,udate) (SELECT actionId,IF(INSTR(DATE,'-'),STR_TO_DATE(date,'%Y-%m-%d'),STR_TO_DATE(date,'%m/%d/%Y')),amount,IF( contactId IN (0,628,1161,2111,2112,2113,3259,6661,11684,13363,13911,14763,17936,22097),NULL,contactId),IF( accountId IN (11,904,1041,1439,3224,3661),NULL,accountId),IF( schoolId IN (0,15,702,1476),NULL,schoolId),receipt,replace(replace(po,'&','&amp;'),'''','&apos;'),replace(replace(note,'&','&amp;'),'''','&apos;'),timestamp,FROM_UNIXTIME(udate) FROM fdonordb.actions);
 
 UPDATE fdonordb_v2.actions SET date = '2007-4-27' WHERE actionid = 6076;
 UPDATE fdonordb_v2.actions SET date = '2007-5-23' WHERE actionid = 6249;
