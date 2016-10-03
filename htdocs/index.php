@@ -8,7 +8,7 @@
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
 <div class="uk-margin uk-margin-left">
-This is a test.  This is only a test.
+Welcome to the WCSD Foundation Donor Database.
 </div>
 </div>
 <?php
