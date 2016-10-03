@@ -44,7 +44,7 @@ uasort( $accounts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } 
 
 if ( $op == 'Save' ) {
     $updates = array();
-    
+
     $date = input( 'date', INPUT_HTML_NONE );
     $amount = input( 'amount', INPUT_NUM );
     $contactid = input( 'contactid', INPUT_PINT );
@@ -83,6 +83,7 @@ if ( $op == 'Save' ) {
         $actionid = update_action( $actionid, $updates );
         if ( !empty($actionid) ) {
             $op = 'SaveSuccess';
+            $action = get_actions( array($actionid) )[$actionid];
         }
     }
 }

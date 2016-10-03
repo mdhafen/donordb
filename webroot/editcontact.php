@@ -16,7 +16,7 @@ if ( !empty($contactid) ) {
 
 if ( $op == 'Save' ) {
     $updates = array();
-    
+
     $name = input( 'name', INPUT_HTML_NONE );
     $company = input( 'company', INPUT_HTML_NONE );
     $street = input( 'street', INPUT_HTML_NONE );
@@ -51,6 +51,7 @@ if ( $op == 'Save' ) {
         $contactid = update_contact( $contactid, $updates );
         if ( !empty($contactid) ) {
             $op = 'SaveSuccess';
+            $contact = get_contacts( array($contactid) )[$contactid];
         }
     }
 }

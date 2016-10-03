@@ -41,10 +41,11 @@ if ( $op == "Save" ) {  // Update/Add the user
   $fullname = input( 'fullname', INPUT_HTML_NONE );
   $email = input( 'email', INPUT_EMAIL );
   $role = input( 'role', INPUT_PINT );
-  $user_locations = input( 'locations', INPUT_PINT );
+  ( $user_locations = input( 'locations', INPUT_PINT ) ) || ( $user_locations = array() );
   $loc_changed = false;
   $password = input( 'password', INPUT_STR );
   $password2 = input( 'password_2', INPUT_STR );
+  $user_password = $salt = '';
   if ( $password && $password != '*****' && $password == $password2 ) {
     list( $user_password, $salt ) = new_password( $password );
   }

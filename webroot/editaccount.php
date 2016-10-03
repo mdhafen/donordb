@@ -24,7 +24,7 @@ if ( !empty($accountid) ) {
 
 if ( $op == 'Save' ) {
     $updates = array();
-    
+
     $name = input( 'name', INPUT_HTML_NONE );
     $locationid = input( 'locationid', INPUT_PINT );
     $note = input( 'note', INPUT_HTML_NONE );
@@ -43,6 +43,7 @@ if ( $op == 'Save' ) {
         $accountid = update_account( $accountid, $updates );
         if ( !empty($accountid) ) {
             $op = 'SaveSuccess';
+            $account = get_accounts( array($accountid) )[$accountid];
         }
     }
 }

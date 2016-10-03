@@ -4,12 +4,12 @@ include_once( '../../lib/security.phpm' );
 include_once( '../../lib/output.phpm' );
 include_once( '../../lib/user.phpm' );
 
-include_once( '../../inc/site.phpm' );
-
 authorize( 'manage_site' );
 
 $locationid = input( 'locationid', INPUT_PINT );
 $op = input( 'op', INPUT_STR );
+$error = array();
+$deleted = 0;
 
 if ( $locationid ) {
   $locations = all_locations();

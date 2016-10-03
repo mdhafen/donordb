@@ -58,6 +58,10 @@
   right:-5px;
 }
 
+tbody tr {
+    border: solid 1px gray;
+}
+
 td.report_body_header {
     background-color: black;
     color: white;
