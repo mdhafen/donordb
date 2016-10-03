@@ -2,11 +2,12 @@ First a few requirements.
 
 Module Dependancies (with Debian package name in parenthesis)
 
-mysql (php5-mysql)
-ldap (php5-ldap) (Optional)
+mysql (php-mysql)
+ldap (php-ldap) (Optional)
 PEAR (php-pear)
 Mail/RFC822 (php-mail)
-MCrypt (php5-mcrypt)
+MCrypt (php-mcrypt)
+MultiByte Strings (php-mbstring)
 
 Module Dependancies that are probably included with PHP
 PDO
