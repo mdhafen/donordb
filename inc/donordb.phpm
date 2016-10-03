@@ -24,7 +24,7 @@ function get_actions_cross( $ids = array() ) {
   $dbh = db_connect('core');
   $result = array();
 
-  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions CROSS JOIN contacts USING (contactid) CROSS JOIN location USING (locationid) CROSS JOIN accounts USING (accountid)";
+  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions CROSS JOIN contacts USING (contactid) CROSS JOIN location USING (locationid) CROSS JOIN accounts USING (accountid) ";
   if ( !empty($ids) ) {
     $query .= "WHERE actionid IN (". implode(',',array_filter($ids)) .") ";
   }
@@ -56,7 +56,7 @@ function get_actions_since_cross( $date = NULL ) {
 
   $dbh = db_connect('core');
 
-  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions CROSS JOIN contacts USING (contactid) CROSS JOIN location USING (locationid) CROSS JOIN accounts USING (accountid)";
+  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions CROSS JOIN contacts USING (contactid) CROSS JOIN location USING (locationid) CROSS JOIN accounts USING (accountid) ";
   $query .= "WHERE actions.date > :date";
   $sth = $dbh->prepare( $query );
   $sth->bindParam( ':date', $date );
@@ -164,7 +164,7 @@ function update_contact( $contactid, $updates ) {
           $data[] = $value;
       }
       $query = substr( $query, 0, -2 );
-      $query .= "WHERE contactid = ?";
+      $query .= " WHERE contactid = ?";
       $data[] = $contactid;
   }
   else {
@@ -199,7 +199,7 @@ function update_account( $accountid, $updates ) {
           $data[] = $value;
       }
       $query = substr( $query, 0, -2 );
-      $query .= "WHERE accountid = ?";
+      $query .= " WHERE accountid = ?";
       $data[] = $accountid;
   }
   else {
@@ -234,7 +234,7 @@ function update_action( $actionid, $updates ) {
           $data[] = $value;
       }
       $query = substr( $query, 0, -2 );
-      $query .= "WHERE actionid = ?";
+      $query .= " WHERE actionid = ?";
       $data[] = $actionid;
   }
   else {
