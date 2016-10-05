@@ -27,6 +27,7 @@ if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
     $e_date = input( 'end_date', INPUT_HTML_NONE );
     $data = array( $s_date, $e_date, $s_date, $e_date, $s_date, $e_date );
+    $title = 'Revenue and Expense by School For '.date('m/d/Y',strtotime($s_date)).' to '.date('m/d/Y',strtotime($e_date));
 
     $dbh = db_connect('core');
     $sth = $dbh->prepare($query);
