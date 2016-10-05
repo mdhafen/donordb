@@ -125,7 +125,7 @@ function select_account(accountid) {
 
     for ( var i = 0; i < el_account.options.length; i++ ) {
         if ( el_account.options[i].value == accountid ) {
-            el_account.value = i;
+            el_account.value = el_account.options[i].value;
             break;
         }
     }
