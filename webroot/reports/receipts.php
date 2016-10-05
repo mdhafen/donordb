@@ -22,11 +22,12 @@ $header = array(
     array('column_name' => 'zip', 'column_title' => 'Zip',),
     array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
     array('column_name' => 'location', 'column_title' => 'Location', 'sort' => 1,),
+    array('column_name' => 'acc_id', 'column_title' => 'Account Number', 'sort' => 1,),
     array('column_name' => 'account', 'column_title' => 'Account', 'sort' => 1,),
     array('column_name' => 'receipt', 'column_title' => 'Receipt',),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND receipt <> 0';
+$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.accountid, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND receipt <> 0';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
@@ -59,8 +60,9 @@ if ( !empty($op) ) {
             array('column_name' => 'city','value' => $row['city'],),
             array('column_name' => 'state','value' => $row['state'],),
             array('column_name' => 'zip','value' => $row['zip'],),
-            array('column_name' => 'amount','value' => $row['amount'],),
+            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
             array('column_name' => 'location','value' => $row['location_name'],),
+            array('column_name' => 'acc_id','value' => $row['accountid'],),
             array('column_name' => 'account','value' => $row['account_name'],),
             array('column_name' => 'receipt','value' => $row['receipt'],),
         );
@@ -82,7 +84,7 @@ else {
 $output = array(
     'op' => $op,
     'params' => $params,
-    'paged' => true,
+    'paged' => false,
     'report_title' => $title,
     'report_header' => $header,
     'report_body' => $rows,

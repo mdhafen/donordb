@@ -64,7 +64,7 @@ if ( !empty($op) ) {
             if ( !is_null($total) ) {
                 $rows[] = array(
                     array('width'=>'6','column_name' => 'note','value' => 'Total','header'=>true,),
-                    array('column_name' => 'amount','value' => $total,'header'=>true,),
+                    array('column_name' => 'amount','value' => number_format($total,2),'header'=>true,),
             );
             }
             $rows[] = array(
@@ -82,7 +82,7 @@ if ( !empty($op) ) {
             $total = $previous['amount'];
             $rows[] = array(
                 array('width'=>'6','column_name' => 'note','value' => 'Calculated Previous Balance',),
-                array('column_name' => 'amount','value' => $previous['amount'],),
+                array('column_name' => 'amount','value' => number_format($previous['amount'],1),),
             );
         }
         $page = $row['account_name'];
@@ -98,13 +98,13 @@ if ( !empty($op) ) {
             array('column_name' => 'receipt','value' => $row['receipt'],),
             array('column_name' => 'po','value' => $row['po'],),
             array('column_name' => 'note','value' => $row['note'],),
-            array('column_name' => 'amount','value' => $row['amount'],),
+            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
         );
     }
     if ( !is_null($total) ) {
         $rows[] = array(
             array('width'=>'6','column_name' => 'note','value' => 'Total','header'=>true,),
-            array('column_name' => 'amount','value' => $total,'header'=>true,),
+            array('column_name' => 'amount','value' => number_format($total,2),'header'=>true,),
         );
     }
 }
@@ -113,11 +113,13 @@ else {
         'type' => 'date',
         'label' => 'Start Date',
         'name' => 'start_date',
+        'value' => date( 'Y-m-d', time() - 31622400 ),  //seconds in a leap year
     );
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
         'name' => 'end_date'
+        'value' => date( 'Y-m-d', time() ),
     );
     $loc_loop = array();
     foreach ( $locations as $loc ) {

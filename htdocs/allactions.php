@@ -111,11 +111,11 @@
      foreach ( $data['actions_list'] as $row ) {
 ?>
 <tr id="actions_<?= $row['actionid'] ?>">
-<td class="list_date" data-list-isodate="<?= $row['date'] ?>"><a href="editaction.php?actionid=<?= $row['actionid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a><?= date('m/d/Y',strtotime($row['date'])) ?></td>
-<td class="list_amount"><span class="<?= $row['amount'] < 0 ? 'uk-text-danger' : '' ?>"><?= $row['amount'] ?></span></td>
-<td class="list_contact_name" data-list-cleancontact="<?= urlencode($row['contact_name']) ?>"><?= $row['contact_name'] ?></td>
-<td class="list_contact_company" data-list-cleancompany="<?= urlencode($row['company']) ?>"><?= $row['company'] ?></td>
-<td class="list_account" data-list-cleanaccount="<?= urlencode($row['account_name']) ?>"><?= $row['account_name'] ?></td>
+<td class="list_date" data-list-isodate="<?= $row['date'] ?>"><a href="editaction.php?actionid=<?= $row['actionid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= date('m/d/Y',strtotime($row['date'])) ?></td>
+<td class="list_amount"><span class="<?= $row['amount'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format($row['amount'],2) ?></span></td>
+<td class="list_contact_name"><?= $row['contact_name'] ?></td>
+<td class="list_contact_company"><?= $row['company'] ?></td>
+<td class="list_account"><?= $row['account_name'] ?></td>
 <td class="list_location"><?= $row['location_name'] ?></td>
 <td class="list_receipt"><?= $row['receipt'] ?></td>
 <td class="list_po"><?= $row['po'] ?></td>
@@ -134,10 +134,7 @@
 var list_options = {
   valueNames: [
     { name: 'list_date', attr: 'data-list-isodate' },
-    'list_amount',
-    { name: 'list_contact_name', attr: 'data-list-cleancontact' },
-    { name: 'list_contact_company', attr: 'data-list-cleancompany' },
-    { name: 'list_account', attr: 'data-list-cleanaccount' },
+    'list_amount','list_contact_name','list_contact_company','list_account',
     'list_location','list_receipt','list_po','list_note'
   ],
   searchClass: 'list_search',

@@ -71,6 +71,9 @@
 <thead>
 <tr>
   <th>
+    <span class="list_sort" data-sort="list_acc_id">Account Number</span>
+  </th>
+  <th>
     <span class="list_sort" data-sort="list_account">Account Name</span><br>
     <input type="text" id="account_account_filter" size="10" onkeyup="do_filter(this.value,'account')">
   </th>
@@ -93,9 +96,10 @@
      foreach ( $data['accounts_list'] as $row ) {
 ?>
 <tr id="accounts_<?= $row['accountid'] ?>">
-<td class="list_account" data-list-cleanaccount="<?= urlencode($row['name']) ?>"><a href="editaccount.php?accountid=<?= $row['accountid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a><?= $row['name'] ?></td>
+<td class="list_acc_id"><?= $row['accountid'] ?></td>
+<td class="list_account"><a href="editaccount.php?accountid=<?= $row['accountid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
 <td class="list_location"><?= $row['location_name'] ?></td>
-<td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= $row['total'] == 0 ? "0.00" : $row['total'] ?></span></td>
+<td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format($row['total'],2) ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>
 </tr>
 <?php
@@ -127,8 +131,7 @@ function do_filter(value,field) {
 
 var list_options = {
   valueNames: [
-    { name: 'list_account', attr: 'data-list-cleanaccount' },
-    'list_location','list_total','list_note'
+    'list_acc_id','list_account','list_location','list_total','list_note'
   ],
   searchClass: 'list_search',
   sortClass: 'list_sort',

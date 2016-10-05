@@ -106,8 +106,8 @@
      foreach ( $data['contacts_list'] as $row ) {
 ?>
 <tr id="contacts_<?= $row['contactid'] ?>">
-<td class="list_name" data-list-cleanname="<?= urlencode($row['name']) ?>"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a><?= $row['name'] ?></td>
-<td class="list_company" data-list-cleancompany="<?= urlencode($row['company']) ?>"><?= $row['company'] ?></td>
+<td class="list_name"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
+<td class="list_company"><?= $row['company'] ?></td>
 <td class="list_street"><?= $row['street'] ?></td>
 <td class="list_city"><?= $row['city'] ?></td>
 <td class="list_state"><?= $row['state'] ?></td>
@@ -151,9 +151,8 @@ function do_filter(value,field) {
 
 var list_options = {
   valueNames: [
-    { name: 'list_name', attr: 'data-list-cleanname' },
-    { name: 'list_company', attr: 'data-list-cleancompany' },
-    'list_street','list_city','list_state','list_zip','list_phone'
+    'list_name','list_company','list_street','list_city','list_state',
+    'list_zip','list_phone'
   ],
   searchClass: 'list_search',
   sortClass: 'list_sort',

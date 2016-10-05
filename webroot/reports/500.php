@@ -63,7 +63,7 @@ if ( !empty($op) ) {
             array('column_name' => 'city','value' => $row['city'],),
             array('column_name' => 'state','value' => $row['state'],),
             array('column_name' => 'zip','value' => $row['zip'],),
-            array('column_name' => 'amount','value' => $row['amount'],),
+            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
         );
     }
 }
@@ -87,14 +87,14 @@ else {
         'label' => 'Location',
         'name' => 'locationid',
         'option_loop' => $loc_loop,
-        'first_blank' => 0,
+        'first_blank' => true,
     );
 }
 
 $output = array(
     'op' => $op,
     'params' => $params,
-    'paged' => true,
+    'paged' => false,
     'report_title' => $title,
     'report_header' => $header,
     'report_body' => $rows,

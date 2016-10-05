@@ -17,12 +17,13 @@ $header = array(
     array('column_name' => 'contact', 'column_title' => 'Contact Name', 'sort' => 1,),
     array('column_name' => 'company', 'column_title' => 'Contact Company', 'sort' => 1,),
     array('column_name' => 'location', 'column_title' => 'Location', 'sort' => 1,),
+    array('column_name' => 'acc_id', 'column_title' => 'Account Number', 'sort' => 1,),
     array('column_name' => 'account', 'column_title' => 'Account', 'sort' => 1,),
     array('column_name' => 'note', 'column_title' => 'Note',),
     array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, location.name AS location_name, accounts.name AS account_name, actions.note, actions.amount FROM actions LEFT JOIN location USING (locationid) LEFT JOIN contacts USING (contactid) LEFT JOIN accounts USING (accountid) WHERE actions.amount = ?';
+$query = 'SELECT actions.date, contacts.name, contacts.company, location.name AS location_name, accounts.accountid, accounts.name AS account_name, actions.note, actions.amount FROM actions LEFT JOIN location USING (locationid) LEFT JOIN contacts USING (contactid) LEFT JOIN accounts USING (accountid) WHERE actions.amount = ?';
 
 if ( !empty($op) ) {
     $amount = input( 'amount', INPUT_NUM );
@@ -41,10 +42,11 @@ if ( !empty($op) ) {
             ),
             array('column_name' => 'contact','value' => $row['name'],),
             array('column_name' => 'company','value' => $row['company'],),
-            array('column_name' => 'account','value' => $row['location_name'],),
+            array('column_name' => 'location','value' => $row['location_name'],),
+            array('column_name' => 'acc_id','value' => $row['accountid'],),
             array('column_name' => 'account','value' => $row['account_name'],),
             array('column_name' => 'note','value' => $row['note'],),
-            array('column_name' => 'amount','value' => $row['amount'],),
+            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
         );
     }
 }

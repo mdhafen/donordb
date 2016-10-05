@@ -19,12 +19,13 @@ $header = array(
     array('column_name' => 'receipt', 'column_title' => 'Receipt',),
     array('column_name' => 'po', 'column_title' => 'PO',),
     array('column_name' => 'note', 'column_title' => 'Action Note',),
+    array('column_name' => 'acc_id', 'column_title' => 'Account Number', 'sort' => 1,),
     array('column_name' => 'account', 'column_title' => 'Account', 'sort' => 1,),
     array('column_name' => 'account_note', 'column_title' => 'Account Note',),
     array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, actions.receipt, actions.po, actions.note, accounts.name AS account_name, accounts.note AS account_note, actions.amount FROM actions LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid)';
+$query = 'SELECT actions.date, contacts.name, contacts.company, actions.receipt, actions.po, actions.note, accounts.accountid, accounts.name AS account_name, accounts.note AS account_note, actions.amount FROM actions LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid)';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
@@ -60,9 +61,10 @@ if ( !empty($op) ) {
             array('column_name' => 'receipt','value' => $row['receipt'],),
             array('column_name' => 'po','value' => $row['po'],),
             array('column_name' => 'note','value' => $row['note'],),
+            array('column_name' => 'acc_id','value' => $row['accountid'],),
             array('column_name' => 'account','value' => $row['account_name'],),
             array('column_name' => 'account_note','value' => $row['account_note'],),
-            array('column_name' => 'amount','value' => $row['amount'],),
+            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
         );
     }
 }

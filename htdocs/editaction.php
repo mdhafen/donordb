@@ -56,6 +56,7 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="accountid">Account</label>
             <div class="uk-form-controls">
+                <input type="number" id="acc_id" name="acc_id" value="" onkeyup="select_account(this.value)">
                 <select id="accountid" name="accountid">
                     <option value="">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
@@ -116,6 +117,17 @@ function update_account(xml_result,modal) {
     else {
         modal.hide();
         modal = UIkit.modal.alert("Could load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.");
+    }
+}
+
+function select_account(accountid) {
+    var el_account = document.getElementById('accountid');
+
+    for ( var i = 0; i < el_account.options.length; i++ ) {
+        if ( el_account.options[i].value == accountid ) {
+            el_account.value = i;
+            break;
+        }
     }
 }
 </script>
