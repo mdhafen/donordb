@@ -21,11 +21,9 @@ $header = array(
     array('column_name' => 'ending', 'column_title' => 'Ending Balance'),
 );
 
-//FIXME enter query
-$query = 'SELECT location.name, (SELECT SUM(actions.amount) from actions WHERE udate <= ? AND locationid = locationid) AS beginning, 0 AS transfers, (SELECT SUM(actions.amount) from actions WHERE udate <= ? AND udate >= ? AND amount > 0 AND locationid = locationid) AS revenue, (SELECT SUM(actions.amount) from actions WHERE udate <= ? AND udate >= ? AND amount < 0 AND locationid = locationid) AS expense, SUM(actions.amount) AS ending FROM actions LEFT JOIN locations USING (locationid) WHERE udate <= ? GROUP BY locationid';
+$query = 'SELECT location.name, (SELECT SUM(amount) from actions AS a1 WHERE udate <= ? AND a1.locationid = a0.locationid) AS beginning, 0 AS transfer, (SELECT SUM(amount) from actions AS a3 WHERE udate <= ? AND udate >= ? AND amount > 0 AND a3.locationid = a0.locationid) AS revenue, (SELECT SUM(amount) from actions AS a4 WHERE udate <= ? AND udate >= ? AND amount < 0 AND a4.locationid = a0.locationid) AS expense, SUM(amount) AS ending FROM location LEFT JOIN USING actions AS a0 (locationid) WHERE udate <= ? GROUP BY locationid';
 
 if ( !empty($op) ) {
-    // FIXME gather params
     $s_date = input( 'start_date', INPUT_HTML_NONE );
     $e_date = input( 'end_date', INPUT_HTML_NONE );
     $data = array( $s_date, $e_date, $s_date, $e_date, $s_date, $e_date );
@@ -34,7 +32,14 @@ if ( !empty($op) ) {
     $sth = $dbh->prepare($query);
     $sth->execute($data);
 
+    $beginning = $ending = $transers = $revenues = $expenses = 0;
+
     while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+        $beginning += $row['beginning'];
+        $ending += $row['ending'];
+        $transers += $row['transfer'];
+        $revenues += $row['revenue'];
+        $expenses += $row['expense'];
         $rows[] = array(
             array('column_name' => 'name','value' => $row['name'],),
             array(
@@ -43,7 +48,7 @@ if ( !empty($op) ) {
             ),
             array(
                 'column_name' => 'transfers',
-                'value' => number_format($row['transfers']),
+                'value' => number_format($row['transfer']),
             ),
             array(
                 'column_name' => 'revenues',
@@ -59,6 +64,29 @@ if ( !empty($op) ) {
             ),
         );
     }
+    $rows[] = array(
+        array('column_name' => 'name','value' => 'Totals', 'new_group' => true),
+        array(
+            'column_name' => 'beginning',
+            'value' => number_format($beginning),
+        ),
+        array(
+            'column_name' => 'transfers',
+            'value' => number_format($transfers),
+        ),
+        array(
+            'column_name' => 'revenues',
+            'value' => number_format($revenues),
+        ),
+        array(
+            'column_name' => 'expenses',
+            'value' => number_format($expenses),
+        ),
+        array(
+            'column_name' => 'ending',
+            'value' => number_format($ending),
+        ),
+    );
 }
 else {
     $params[] = array(
@@ -78,7 +106,7 @@ else {
 $output = array(
     'op' => $op,
     'params' => $params,
-    'paged' => true,
+    'paged' => false,
     'report_title' => $title,
     'report_header' => $header,
     'report_body' => $rows,
