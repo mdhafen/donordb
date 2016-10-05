@@ -21,18 +21,18 @@ $header = array(
     array('column_name' => 'note', 'column_title' => 'Notes',),
 );
 
-$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? ';
+$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? GROUP BY accounts.accountid ';
 
 if ( !empty($op) ) {
     $locationid = input( 'locationid', INPUT_PINT );
-    $nonzero = input( 'nonzero', INPUT_HTML_NONE );
+    $nonzero = input( 'nonzero', INPUT_STR );
     $data = array( $locationid );
 
     if ( !empty($nonzero) ) {
-        $query .= "AND total <> 0 ";
+        $query .= "HAVING total <> 0 ";
     }
 
-    $query .= "GROUP BY accounts.accountid";
+    $query .= "ORDER BY name";
 
     $dbh = db_connect('core');
     $sth = $dbh->prepare($query);
@@ -62,6 +62,7 @@ else {
         'type' => 'check',
         'label' => 'Non-Zero Only',
         'name' => 'nonzero',
+        'value' => 'NotEmpty',
         'checked' => 0,
     );
 }
