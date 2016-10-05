@@ -21,18 +21,18 @@ $header = array(
     array('column_name' => 'note', 'column_title' => 'Notes',),
 );
 
-//FIXME enter query
-$query = 'SELECT accountid, name, SUM(actions.amount) as total, note FROM accounts LEFT JOIN actions USING (accountid) WHERE account.locationid = ?';
+$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? ';
 
 if ( !empty($op) ) {
-    // FIXME gather params
     $locationid = input( 'locationid', INPUT_PINT );
     $nonzero = input( 'nonzero', INPUT_HTML_NONE );
     $data = array( $locationid );
 
     if ( !empty($nonzero) ) {
-        $query .= " AND total <> 0";
+        $query .= "AND total <> 0 ";
     }
+
+    $query .= "GROUP BY accounts.accountid";
 
     $dbh = db_connect('core');
     $sth = $dbh->prepare($query);
