@@ -21,12 +21,12 @@ $header = array(
     array('column_name' => 'ending', 'column_title' => 'Ending Balance'),
 );
 
-$query = 'SELECT location.name, (SELECT SUM(amount) from actions AS a1 WHERE udate <= ? AND a1.locationid = a0.locationid) AS beginning, 0 AS transfer, (SELECT SUM(amount) from actions AS a3 WHERE udate <= ? AND udate >= ? AND amount > 0 AND a3.locationid = a0.locationid) AS revenue, (SELECT SUM(amount) from actions AS a4 WHERE udate <= ? AND udate >= ? AND amount < 0 AND a4.locationid = a0.locationid) AS expense, SUM(amount) AS ending FROM location LEFT JOIN actions AS a0 USING (locationid) WHERE udate <= ? GROUP BY locationid';
+$query = 'SELECT location.name, (SELECT SUM(amount) from actions AS a1 WHERE udate <= ? AND a1.locationid = a0.locationid) AS beginning, (SELECT SUM(amount) from actions AS a2 WHERE udate <= ? AND udate >= ? AND is_transfer = 1 AND a2.locationid = a0.locationid) AS transfer, (SELECT SUM(amount) from actions AS a3 WHERE udate <= ? AND udate >= ? AND amount > 0 AND is_transfer = 0 AND a3.locationid = a0.locationid) AS revenue, (SELECT SUM(amount) from actions AS a4 WHERE udate <= ? AND udate >= ? AND amount < 0 AND is_transfer = 0 AND a4.locationid = a0.locationid) AS expense, SUM(amount) AS ending FROM location LEFT JOIN actions AS a0 USING (locationid) WHERE udate <= ? GROUP BY locationid';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
     $e_date = input( 'end_date', INPUT_HTML_NONE );
-    $data = array( $s_date, $e_date, $s_date, $e_date, $s_date, $e_date );
+    $data = array( $s_date, $e_date, $s_date, $e_date, $s_date, $e_date, $s_date, $e_date );
     $title = 'Revenue and Expense by School For '.date('m/d/Y',strtotime($s_date)).' to '.date('m/d/Y',strtotime($e_date));
 
     $dbh = db_connect('core');

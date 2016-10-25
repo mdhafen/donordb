@@ -57,7 +57,7 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="accountid">Account</label>
             <div class="uk-form-controls">
-                <input type="number" id="acc_id" name="acc_id" value="" onkeyup="select_account(this.value)">
+                <input type="number" id="acc_id" name="acc_id" value="<?= (!empty($data['action']['accountid'])) ? $data['action']['accountid'] : "" ?>" onkeyup="select_account(this.value)">
                 <select id="accountid" name="accountid">
                     <option value="">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
@@ -80,6 +80,11 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="note">Note</label>
             <div class="uk-form-controls"><textarea id="note" name="note"><?= (!empty($data['action']['note'])) ? $data['action']['note'] : "" ?></textarea></div>
+        </div>
+
+        <div class="uk-form-row">
+            <label class="uk-form-label" for="is_transfer">Is A Transfer</label>
+            <div class="uk-form-controls"><input type="checkbox" id="is_transfer" name="is_transfer"<?= (!empty($data['action']['is_transfer'])) ? " checked" : "" ?>></div>
         </div>
 
         <div class="uk-form-row">

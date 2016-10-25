@@ -53,6 +53,8 @@ if ( $op == 'Save' ) {
     ( $receipt = input('receipt',INPUT_PINT) ) || ( $receipt = null );
     $po = input( 'po', INPUT_HTML_NONE );
     $note = input( 'note', INPUT_HTML_NONE );
+    $transfer = input( 'is_transfer', INPUT_HTML_NONE );
+    $transfer = !empty($transfer) ? 1 : 0;
 
     if ( empty($action['date']) || $action['date'] != $date ) {
         $updates['date'] = $date;
@@ -77,6 +79,9 @@ if ( $op == 'Save' ) {
     }
     if ( empty($action['note']) || $action['note'] != $note ) {
         $updates['note'] = $note;
+    }
+    if ( empty($action['is_transfer']) || $action['is_transfer'] != $transfer ) {
+        $updates['is_transfer'] = $transfer;
     }
 
     if ( !empty($updates) ) {
