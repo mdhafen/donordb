@@ -72,31 +72,31 @@
 <tr>
   <th>
     <span class="list_sort" data-sort="list_name">Name</span><br>
-    <input type="text" id="contacts_filter_name" size="10" onkeyup="do_filter(this.value,'name')">
+    <input type="text" id="contacts_filter_name" size="10" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_company">Company</span><br>
-    <input type="text" id="contacts_filter_company" size="10" onkeyup="do_filter(this.value,'company')">
+    <input type="text" id="contacts_filter_company" size="10" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_street">Street</span><br>
-    <input type="text" id="contacts_filter_street" size="10" onkeyup="do_filter(this.value,'street')">
+    <input type="text" id="contacts_filter_street" size="10" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_city">City</span><br>
-    <input type="text" id="contacts_filter_city" size="10" onkeyup="do_filter(this.value,'city')">
+    <input type="text" id="contacts_filter_city" size="10" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_state">State</span><br>
-    <input type="text" id="contacts_filter_state" size="10" onkeyup="do_filter(this.value,'state')">
+    <input type="text" id="contacts_filter_state" size="10" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_zip">Zip</span><br>
-    <input type="text" id="contacts_filter_zip" size="10" onkeyup="do_filter(this.value,'zip')">
+    <input type="text" id="contacts_filter_zip" size="10" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_phone">Phone</span><br>
-    <input type="text" id="contacts_filter_phone" size="10" onkeyup="do_filter(this.value,'phone')">
+    <input type="text" id="contacts_filter_phone" size="10" onkeyup="do_filter()">
   </th>
 </tr>
 </thead>
@@ -106,7 +106,7 @@
      foreach ( $data['contacts_list'] as $row ) {
 ?>
 <tr id="contacts_<?= $row['contactid'] ?>">
-<td class="list_name"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
+<td class="list_name" data-list-clean-name="<?= $row['name'] ?>"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
 <td class="list_company"><?= $row['company'] ?></td>
 <td class="list_street"><?= $row['street'] ?></td>
 <td class="list_city"><?= $row['city'] ?></td>
@@ -124,26 +124,25 @@
 <ul class="paginationBottom"></ul>
 </div>
 <script>
-function do_filter(value,field) {
-// FIXME this still doesn't filter - try checking all three fields!
+function do_filter() {
+    var input = [
+        document.getElementById('contacts_filter_name').value.toLowerCase(),
+        document.getElementById('contacts_filter_company').value.toLowerCase(),
+        document.getElementById('contacts_filter_street').value.toLowerCase(),
+        document.getElementById('contacts_filter_city').value.toLowerCase(),
+        document.getElementById('contacts_filter_state').value.toLowerCase(),
+        document.getElementById('contacts_filter_zip').value.toLowerCase(),
+        document.getElementById('contacts_filter_phone').value.toLowerCase()
+    ];
     list_obj.filter(function(item){
-        match = [
-            decodeURIComponent((item.values().list_name+'').replace(/\+/g,' ')).toLowerCase(),
-            decodeURIComponent((item.values().list_company+'').replace(/\+/g,' ')).toLowerCase(),
+        var match = [
+            decodeURIComponent((item.values().list_name+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
+            decodeURIComponent((item.values().list_company+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             item.values().list_street.toLowerCase(),
             item.values().list_city.toLowerCase(),
             item.values().list_state.toLowerCase(),
             item.values().list_zip.toLowerCase(),
             item.values().list_phone.toLowerCase()
-        ];
-        input = [
-            document.getElementById('contacts_filter_name').value.toLowerCase(),
-            document.getElementById('contacts_filter_company').value.toLowerCase(),
-            document.getElementById('contacts_filter_street').value.toLowerCase(),
-            document.getElementById('contacts_filter_city').value.toLowerCase(),
-            document.getElementById('contacts_filter_state').value.toLowerCase(),
-            document.getElementById('contacts_filter_zip').value.toLowerCase(),
-            document.getElementById('contacts_filter_phone').value.toLowerCase()
         ];
         return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 && match[3].indexOf(input[3]) > -1 && match[4].indexOf(input[4]) > -1 && match[5].indexOf(input[5]) > -1 && match[6].indexOf(input[6]) > -1 );
     })
@@ -151,8 +150,8 @@ function do_filter(value,field) {
 
 var list_options = {
   valueNames: [
-    'list_name','list_company','list_street','list_city','list_state',
-    'list_zip','list_phone'
+    { name: 'list_name', attr: 'data-list-clean-name' },
+    'list_company','list_street','list_city','list_state','list_zip','list_phone'
   ],
   searchClass: 'list_search',
   sortClass: 'list_sort',

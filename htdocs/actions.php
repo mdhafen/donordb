@@ -76,36 +76,36 @@
 <tr>
   <th>
     <span class="list_sort" data-sort="list_date">Date</span><br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_date'])">
+    <input type="text" size="10" id="actions_filter_date" onkeyup="do_filter()">
   </th>
   <th>Amount</th>
   <th>
     <span class="list_sort" data-sort="list_contact_name">Contact Name</span><br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_contact_name'])">
+    <input type="text" size="10" id="actions_filter_name" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_contact_company">Contact Company</span><br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_contact_company'])">
+    <input type="text" size="10" id="actions_filter_company" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_account">Account Name</span><br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_account'])">
+    <input type="text" size="10" id="actions_filter_account" onkeyup="do_filter()">
   </th>
   <th>
     <span class="list_sort" data-sort="list_location">Site</span><br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_location'])">
+    <input type="text" size="10" id="actions_filter_location" onkeyup="do_filter()">
   </th>
   <th>
     Receipt<br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_receipt'])">
+    <input type="text" size="10" id="actions_filter_receipt" onkeyup="do_filter()">
   </th>
   <th>
     P.O.<br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_po'])">
+    <input type="text" size="10" id="actions_filter_po" onkeyup="do_filter()">
   </th>
   <th>
     Notes<br>
-    <input type="text" size="10" onkeyup="list_obj.search(this.value,['list_note'])">
+    <input type="text" size="10" id="actions_filter_note" onkeyup="do_filter()">
   </th>
 </tr>
 </thead>
@@ -131,6 +131,32 @@
 </table>
 <ul class="paginationBottom"></ul>
 <script>
+function do_filter() {
+    var input = [
+        document.getElementById('actions_filter_date').value,
+        document.getElementById('actions_filter_name').value.toLowerCase(),
+        document.getElementById('actions_filter_company').value.toLowerCase(),
+        document.getElementById('actions_filter_account').value.toLowerCase(),
+        document.getElementById('actions_filter_location').value.toLowerCase(),
+        document.getElementById('actions_filter_receipt').value.toLowerCase(),
+        document.getElementById('actions_filter_po').value.toLowerCase(),
+        document.getElementById('actions_filter_note').value.toLowerCase(),
+    ];
+    list_obj.filter(function(item){
+        var match= [
+            item.values().list_date,
+            decodeURIComponent((item.values().list_contact_name+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
+            decodeURIComponent((item.values().list_contact_company+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
+            decodeURIComponent((item.values().list_account+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
+            item.values().list_location.toLowerCase(),
+            item.values().list_receipt.toLowerCase(),
+            item.values().list_po.toLowerCase(),
+            item.values().list_note.toLowerCase(),
+        ];
+        return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 && match[3].indexOf(input[3]) > -1 && match[4].indexOf(input[4]) > -1 && match[5].indexOf(input[5]) > -1 && match[6].indexOf(input[6]) > -1 && match[7].indexOf(input[7]) > -1 );
+    })
+}
+
 var list_options = {
   valueNames: [
     { name: 'list_date', attr: 'data-list-isodate' },

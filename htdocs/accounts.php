@@ -99,7 +99,7 @@
 <td class="list_acc_id"><?= $row['accountid'] ?></td>
 <td class="list_account"><a href="editaccount.php?accountid=<?= $row['accountid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
 <td class="list_location"><?= $row['location_name'] ?></td>
-<td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format($row['total'],2) ?></span></td>
+<td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format(floatval($row['total']),2) ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>
 </tr>
 <?php
@@ -112,18 +112,17 @@
 <ul class="paginationBottom"></ul>
 </div>
 <script>
-function do_filter(value,field) {
-// FIXME this still doesn't filter - try checking all three fields!
+function do_filter() {
+    var input = [
+        document.getElementById('account_account_filter').value.toLowerCase(),
+        document.getElementById('account_location_filter').value.toLowerCase(),
+        document.getElementById('account_note_filter').value.toLowerCase()
+    ];
     list_obj.filter(function(item){
         var match = [
-            decodeURIComponent((item.values().list_account+'').replace(/\+/g,' ')).toLowerCase(),
+            decodeURIComponent((item.values().list_account+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             item.values().list_location.toLowerCase(),
             item.values().list_note.toLowerCase()
-        ];
-        var input = [
-            document.getElementById('account_account_filter').value.toLowerCase(),
-            document.getElementById('account_location_filter').value.toLowerCase(),
-            document.getElementById('account_note_filter').value.toLowerCase()
         ];
         return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 );
     })
