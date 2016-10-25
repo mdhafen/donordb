@@ -38,6 +38,7 @@
                     <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= $con['name'] ?></option>
 <?php } ?>
                 </select>
+                <span class="uk-form-help-inline"><a href="#" id="new_contact_button" class="uk-button" data-uk-modal="{target:'#modal_new_contact',center:true,bgclose:false}">New Contact...</a></span>
             </div>
         </div>
 
@@ -91,7 +92,74 @@
 </form>
 </div>
 
+<!-- New contact Modal -->
+<div id="modal_new_contact" class="uk-modal">
+    <div class="uk-modal-dialog uk-modal-dialog-large">
+        <a class="uk-modal-close uk-close"></a>
+        <div class="uk-modal-header">
+            <h2>New Contact</h2>
+        </div>
+        <div id="new_contact_errors" class="uk-alert uk-alert-warning uk-hidden" data-uk-alert>
+            <a href="" class="uk-alert-close uk-close"></a>
+            <h2>There was an error!</h2>
+        </div>
+        <form class="uk-form" method="post" action="editcontact.php">
+            <fieldset class="uk-form-horizontal">
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="name">Name</label>
+                    <div class="uk-form-controls"><input type="text" id="name" name="name" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="company">Company</label>
+                    <div class="uk-form-controls"><input type="text" id="company" name="company" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="street">Street</label>
+                    <div class="uk-form-controls"><input type="text" id="street" name="street" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="city">City</label>
+                    <div class="uk-form-controls"><input type="text" id="city" name="city" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="state">State</label>
+                    <div class="uk-form-controls"><input type="text" id="state" name="state" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="zip">Zip</label>
+                    <div class="uk-form-controls"><input type="text" id="zip" name="zip" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <label class="uk-form-label" for="phone">Phone</label>
+                    <div class="uk-form-controls"><input type="text" id="phone" name="phone" value=""></div>
+                </div>
+
+                <div class="uk-form-row">
+                    <div class="uk-form-controls">
+                        <input type="button" class="uk-button" value="Save" name="op" onclick="save_contact();">
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+    </div>
+</div>
+
 <script>
+$('#modal_new_contact').on({
+  'hide.uk.modal': function(){
+        $('#modal_new_contact input[type=text]').val('');
+        $('#new_contact_errors').addClass('uk-hidden');
+        $('#new_contact_errors div').remove();
+  }
+});
+
 function location_changed() {
     var loc = document.getElementById('locationid').value
     if ( loc ) {
@@ -103,7 +171,7 @@ function location_changed() {
 function update_account(xml_result,modal) {
     var el = document.getElementById('accountid');
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
-    if ( $(xml_result).find("state").text() == 'Success' ) {
+    if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
         $(xml_result).find("account").each( function(){
             var accountid = $(this).find('accountid').text();
             var account_name = $(this).find('name').text();
@@ -116,7 +184,7 @@ function update_account(xml_result,modal) {
     }
     else {
         modal.hide();
-        modal = UIkit.modal.alert("Could load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.");
+        modal = UIkit.modal.alert("Could not load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.");
     }
 }
 
@@ -128,6 +196,60 @@ function select_account(accountid) {
             el_account.value = el_account.options[i].value;
             break;
         }
+    }
+}
+
+function save_contact() {
+    var contact_info = {};
+    $('#modal_new_contact input[type=text]').each(function(){
+        contact_info[this.name] = this.value;
+    });
+    $.post('<?= $data['_config']['base_url'] ?>api/save_contact.php', contact_info, function(xml_result) { contact_saved(xml_result) }, "xml" );
+}
+
+function contact_saved(xml_result) {
+    if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
+        var contactid = $(xml_result).find("contactid").text();
+        var modal = UIkit.modal('#modal_new_contact');
+        modal.hide();
+        get_contacts(contactid);
+    }
+    else {
+        var el = documentGetElementById('new_contact_errors');
+        $(xml_result).find("messages").each(function(){
+            var mess = document.createElement('div');
+            mess.appendChild( document.createTextNode(this.message) );
+            el.appendChild( mess );
+        });
+        $('#new_contact_errors').removeClass('uk-hidden');
+    }
+}
+
+function get_contacts(selected) {
+    var modal = UIkit.modal.blockUI("Reloading Contacts...");
+    $.post('<?= $data['_config']['base_url'] ?>api/get_contacts.php', null, function(xml_result) { update_contacts(xml_result,modal,selected) }, "xml" );
+}
+
+function update_contacts(xml_result,modal,selected) {
+    var el = document.getElementById('contactid');
+    while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
+    if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
+        $(xml_result).find("contact").each( function(){
+            var contactid = $(this).find('contactid').text();
+            var contact_name = $(this).find('name').text();
+            var opt = document.createElement('option');
+            opt.value = contactid;
+            opt.appendChild( document.createTextNode(contact_name) );
+            el.appendChild( opt );
+        });
+        if ( selected ) {
+            el.value = selected;
+        }
+        modal.hide();
+    }
+    else {
+        modal.hide();
+        modal = UIkit.modal.alert("Could not reload contacts.  Sorry for the inconvenience.  Maybe reloading this page will help.");
     }
 }
 </script>
