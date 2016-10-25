@@ -40,26 +40,37 @@ function get_actions_cross( $ids = array() ) {
   return $result;
 }
 
-function get_actions_since_cross( $date = NULL ) {
+function search_actions_cross( $field, $term ) {
   $result = array();
-  $timestamp = strtotime($date);
-
-  if ( $date === NULL ) {
-    $date = date( 'Y-m-d', time() - (31622400) ); // seconds in a leap year
-  }
-  elseif ( $timestamp === false ) {
-    return $result;
-  }
-  else {
-    $date = date( 'Y-m-d', $timestamp );
+  $op = '=';
+  switch ( $field ) {
+  case 'locationid':
+    $field = 'actions.locationid';
+  case 'contactid':
+  case 'accountid':
+      break;  // no-op
+  case 'date':
+    $field = 'actions.date';
+    $op = '>';
+    $timestamp = strtotime($term);
+    if ( $term === NULL ) {
+      $term = date( 'Y-m-d', time() - (31622400) ); // seconds in a leap year
+    }
+    elseif ( $timestamp === false ) {
+      return $result;
+    }
+    else {
+      $term = date( 'Y-m-d', $timestamp );
+    }
+    break;
   }
 
   $dbh = db_connect('core');
 
   $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions LEFT JOIN contacts USING (contactid) LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) ";
-  $query .= "WHERE actions.date > :date";
+  $query .= "WHERE $field $op :term";
   $sth = $dbh->prepare( $query );
-  $sth->bindParam( ':date', $date );
+  $sth->bindParam( ':term', $term );
 
   $sth->execute();
 

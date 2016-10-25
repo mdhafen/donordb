@@ -64,8 +64,12 @@
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
 <div class="uk-margin uk-container uk-width-1-1">
-<h2>Recent Actions</h2>
+<?php if ( $data['op'] ) { ?>
+<h2>Actions</h2>
 <div id="actions_table_container">
+<?php if ( empty($data['actions_list']) ) { ?>
+  <div>No Actions found</div>
+<?php } else { ?>
 <ul class="paginationTop uk-display-inline-block"></ul> <span class="uk-padding-left"><a href="<?= $data['_config']['base_url'] ?>allactions.php">All Actions</a></span>
 <table class="uk-table" id="actions_table">
 <thead>
@@ -107,8 +111,7 @@
 </thead>
 <tbody class="list">
 <?php
-   if ( !empty($data['actions_list']) ) {
-     foreach ( $data['actions_list'] as $row ) {
+   foreach ( $data['actions_list'] as $row ) {
 ?>
 <tr id="actions_<?= $row['actionid'] ?>">
 <td class="list_date" data-list-isodate="<?= $row['date'] ?>"><a href="editaction.php?actionid=<?= $row['actionid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= date('m/d/Y',strtotime($row['date'])) ?></td>
@@ -122,14 +125,11 @@
 <td class="list_note"><?= $row['note'] ?></td>
 </tr>
 <?php
-     }
    }
-
 ?>
 </tbody>
 </table>
 <ul class="paginationBottom"></ul>
-</div>
 <script>
 var list_options = {
   valueNames: [
@@ -159,7 +159,156 @@ var list_options = {
 
 var list_obj = new List('actions_table_container', list_options);
 </script>
+<?php } ?>
+</div>
+<?php } else { ?>
+<h2>Search Actions</h2>
+<div class="uk-grid">
+<form class="uk-form uk-width-1-4" method="post" action="actions.php">
+    <input type="hidden" name="op" value="search">
+    <input type="hidden" name="field" value="account">
+    <fieldset class="uk-form-stacked">
 
+        <div class="uk-form-row">
+            <label class="uk-form-label" for="accountid">Account</label>
+            <div class="uk-form-controls">
+                <input type="number" id="acc_id" name="acc_id" value="" onkeyup="select_field('accountid',this.value)">
+                <select id="accountid" name="term" onchange="input_update('acc_id',this.value)">
+                    <option value="">Select Account</option>
+<?php foreach ( $data['accounts'] as $acc ) { ?>
+                    <option value="<?= $acc['accountid'] ?>"<?= !empty($acc['selected']) ? " selected" : "" ?>><?= $acc['name'] ?></option>
+<?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="uk-form-row">
+            <div class="uk-form-controls">
+                 <input class="uk-button" type="submit" name="op" value="Search">
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<form class="uk-form uk-width-1-4" method="post" action="actions.php">
+    <input type="hidden" name="op" value="search">
+    <input type="hidden" name="field" value="contact">
+    <fieldset class="uk-form-stacked">
+
+        <div class="uk-form-row">
+            <label class="uk-form-label" for="contactid">Contact</label>
+            <div class="uk-form-controls">
+                <input type="number" id="con_id" name="con_id" value="" onkeyup="select_field('contactid',this.value)">
+                <select id="contactid" name="term" onchange="input_update('con_id',this.value)">
+                    <option value="">Select Contact</option>
+<?php foreach ( $data['contacts'] as $con ) { ?>
+                    <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= $con['name'] ?></option>
+<?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="uk-form-row">
+            <div class="uk-form-controls">
+                 <input class="uk-button" type="submit" name="op" value="Search">
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<form class="uk-form uk-width-1-4" method="post" action="actions.php">
+    <input type="hidden" name="field" value="location">
+    <fieldset class="uk-form-stacked">
+
+        <div class="uk-form-row">
+            <label class="uk-form-label" for="locationid">Location</label>
+            <div class="uk-form-controls">
+                <input type="number" id="loc_id" name="loc_id" value="" onkeyup="select_field('locationid',this.value)">
+                <select id="locationid" name="term" onchange="input_update('loc_id',this.value); location_changed();">
+                    <option value="">Select Location</option>
+<?php foreach ( $data['locations'] as $loc ) { ?>
+                    <option value="<?= $loc['locationid'] ?>"<?= !empty($loc['selected']) ? " selected" : "" ?>><?= $loc['name'] ?></option>
+<?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="uk-form-row">
+            <div class="uk-form-controls">
+                 <input class="uk-button" type="submit" name="op" value="Search">
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<form class="uk-form uk-width-1-4" method="post" action="actions.php">
+    <input type="hidden" name="op" value="search">
+    <input type="hidden" name="field" value="date">
+    <fieldset class="uk-form-stacked">
+
+        <div class="uk-form-row">
+            <label class="uk-form-label" for="date">Actions Since</label>
+            <div class="uk-form-controls">
+                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="term" value=""> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
+            </div>
+        </div>
+        <div class="uk-form-row">
+            <div class="uk-form-controls">
+                 <input class="uk-button" type="submit" name="op" value="Search">
+            </div>
+        </div>
+    </fieldset>
+</form>
+</div>
+
+<script>
+function select_field(field,value) {
+    var el_field = document.getElementById(field);
+
+    for ( var i = 0; i < el_field.options.length; i++ ) {
+        if ( el_field.options[i].value == value ) {
+            el_field.value = el_field.options[i].value;
+            if ( "createEvent" in document ) {
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("change",false,true);
+                el_field.dispatchEvent(evt);
+            } else el_field.fireEvent("onchange");
+            break;
+        }
+    }
+}
+
+function input_update(field,value) {
+    var el_field = document.getElementById(field);
+    el_field.value = value;
+}
+
+function location_changed() {
+    var loc = document.getElementById('locationid').value
+    if ( loc ) {
+        var modal = UIkit.modal.blockUI("Loading Accounts...");
+        $.post('<?= $data['_config']['base_url'] ?>api/get_accounts_at_location.php', {"locationid" : loc}, function(xml_result) { update_account(xml_result,modal) }, "xml" );
+    }
+}
+
+function update_account(xml_result,modal) {
+    var el = document.getElementById('accountid');
+    while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
+    if ( $(xml_result).find("state").text() == 'Success' ) {
+        $(xml_result).find("account").each( function(){
+            var accountid = $(this).find('accountid').text();
+            var account_name = $(this).find('name').text();
+            var opt = document.createElement('option');
+            opt.value = accountid;
+            opt.appendChild( document.createTextNode(account_name) );
+            el.appendChild( opt );
+        });
+        modal.hide();
+    }
+    else {
+        modal.hide();
+        modal = UIkit.modal.alert("Could load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.");
+    }
+}
+</script>
+<?php } ?>
 </div>
 </div>
 <?php

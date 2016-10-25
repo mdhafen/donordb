@@ -5,7 +5,7 @@
 <li class="uk-parent"><a href="#">Actions</a>
   <ul class="uk-nav-sub">
     <li><a href="<?= $data['_config']['base_url'] ?>editaction.php">Add an Action</a></li>
-    <li><a href="<?= $data['_config']['base_url'] ?>actions.php">List Recent Actions</a></li>
+    <li><a href="<?= $data['_config']['base_url'] ?>actions.php">Search Actions</a></li>
   </ul>
 </li>
 <?php } ?>
