@@ -118,7 +118,7 @@ else {
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
-        'name' => 'end_date'
+        'name' => 'end_date',
         'value' => date( 'Y-m-d', time() ),
     );
     $loc_loop = array();
