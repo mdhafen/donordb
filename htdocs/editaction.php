@@ -32,6 +32,7 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
+                <input type="number" id="con_id" name="con_id" value="<?= (!empty($data['action']['contactid'])) ? $data['action']['contactid'] : "" ?>" onkeyup="select_contact(this.value)">
                 <select id="contactid" name="contactid">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
@@ -190,6 +191,17 @@ function update_account(xml_result,modal) {
     else {
         modal.hide();
         modal = UIkit.modal.alert("Could not load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.");
+    }
+}
+
+function select_contact(contactid) {
+    var el_contact = document.getElementById('contactid');
+
+    for ( var i = 0; i < el_contact.options.length; i++ ) {
+        if ( el_contact.options[i].value == contactid ) {
+            el_contact.value = el_contact.options[i].value;
+            break;
+        }
     }
 }
 

@@ -5,12 +5,10 @@
 </head>
 <body>
 <?php include $data['_config']['base_dir'] .'/htdocs/header.php'; ?>
-<div class="uk-flex uk-margin-left">
+<div class="uk-flex uk-margin-left uk-margin-right">
 <?php include $data['_config']['base_dir'] .'/htdocs/menu.php'; ?>
-<div class="uk-flex-item-auto">
-    <div class="uk-container uk-container-center">
-        <div class="uk-panel uk-panel-box">
-            <h2 class="uk-panel-title uk-text-center">Manage Locations</h2>
+<div class="uk-container uk-margin uk-width-1-1">
+    <h2>Manage Locations</h2>
 <a href="<?= $data['_config']['base_url'] ?>manage/edit_location.php">Add Location</a>
 
 <table class="uk-table uk-table-striped">
@@ -34,8 +32,6 @@
 <?php } ?>
 </tbody>
 </table>
-        </div>
-    </div>
 </div>
 </div>
 <?php
