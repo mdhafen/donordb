@@ -71,7 +71,8 @@
 <thead>
 <tr>
   <th>
-    <span class="list_sort" data-sort="list_acc_id">Account Number</span>
+    <span class="list_sort" data-sort="list_acc_id">Account Number</span><br>
+    <input type="text" id="account_accountid_filter" size="5" onkeyup="list_obj.search(this.value,['list_acc_id'])">
   </th>
   <th>
     <span class="list_sort" data-sort="list_account">Account Name</span><br>
