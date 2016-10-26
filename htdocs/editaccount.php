@@ -16,6 +16,8 @@
 </div>
 <?php } ?>
 
+<div class="uk-grid">
+    <div class="<?= empty($data['account']['accountid']) ? 'uk-width-1-1' : 'uk-width-1-2' ?>">
 <form class="uk-form" method="post" action="editaccount.php">
     <input type="hidden" name="accountid" value="<?= $data['accountid'] ?>">
     <fieldset class="uk-form-horizontal">
@@ -49,6 +51,18 @@
 
     </fieldset>
 </form>
+    </div>
+<?php if ( !empty($data['account']['accountid']) ) { ?>
+    <div class="uk-width-1-2">
+         <div class="uk-panel uk-panel-box uk-text-center">
+             <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=transfer&amp;accountid=<?= $data['account']['accountid'] ?>" class="uk-button">Transfer to another account</a>
+         </div>
+         <div class="uk-panel uk-panel-box uk-text-center">
+             <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=move&amp;accountid=<?= $data['account']['accountid'] ?>" class="uk-button">Move to another location</a>
+         </div>
+    </div>
+<?php } ?>
+</div>
 </div>
 
 </div>
