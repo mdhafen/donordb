@@ -40,6 +40,7 @@ function save_session() {
 	$query = '';
 	if ( isset( $_SESSION[ 'new_session' ] ) ) {
 	    $query = "INSERT INTO sessions ( session_data, session_id ) VALUES ( :data, :sid )";
+	    unset( $_SESSION[ 'new_session' ] );
 	} else {
 	    $query = "UPDATE session SET session_data = :data WHERE session_id = :sid";
 	}

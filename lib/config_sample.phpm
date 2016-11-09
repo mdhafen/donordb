@@ -1,7 +1,4 @@
 <?php
-// Make sure all class definitions are loaded before this!
-session_name( 'FDDSESSID' );
-session_start();
 $config = array(
 	'base_dir'        => '/var/www/',  // sane defaults
 	'base_url'	  => '/', // these are set below
@@ -106,4 +103,19 @@ $config['base_url'] = $host . $lcs;
 if ( substr( $config['base_url'], -1, 1 ) != '/' ) {
 	$config['base_url'] .= '/';
 }
+
+// Make sure all class definitions are loaded before this!
+session_name( 'FDDSESSID' );
+if ( !empty($config['secure_only']) ) {
+  $timeout = empty($config['session_expiration']) ? 0 : $config['session_expiration'];
+  $start = strpos( $config['base_url'], '/' ) + 2;
+  $host = substr( $config['base_url'], $start, strpos($config['base_url'],'/',$start+1)-$start );
+  if ( !isset( $_SERVER['HTTPS'] ) || $_SERVER['HTTPS'] == 'off' ) {
+    include_once( $config['base_dir'] .'/lib/output.phpm' );
+    redirect( 'https://'. $host .'/'. $lcs );
+    exit;
+  }
+  session_set_cookie_params( $timeout, '/', $host, true, true );
+}
+session_start();
 ?>
