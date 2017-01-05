@@ -69,15 +69,26 @@ if ( !empty($op) ) {
     }
 }
 else {
+    $s_date = $e_date = "";
+    $month = date('n'); $year = date('Y');
+    if ( $month >= 7 ) {
+        $s_date = date( 'Y-m-d', mktime(1,1,1,7,1,$year) );
+        $e_date = date( 'Y-m-d', mktime(1,1,1,6,30,$year+1) );
+    } else {
+        $s_date = date( 'Y-m-d', mktime(1,1,1,7,1,$year-1) );
+        $e_date = date( 'Y-m-d', mktime(1,1,1,6,30,$year) );
+    }
     $params[] = array(
         'type' => 'date',
         'label' => 'Start Date',
         'name' => 'start_date',
+        'value' => $s_date,
     );
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
         'name' => 'end_date'
+        'value' => $e_date,
     );
 }
 
