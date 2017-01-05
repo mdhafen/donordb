@@ -223,8 +223,8 @@ var list_obj = new List('actions_table_container', list_options);
         <div class="uk-form-row">
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
-                <input type="number" id="con_id" name="con_id" value="" onkeyup="select_field('contactid',this.value)">
-                <select id="contactid" name="term" onchange="input_update('con_id',this.value)">
+                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byText('contactid',this.value)">
+                <select id="contactid" name="term">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
                     <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= $con['name'] ?></option>
@@ -298,6 +298,42 @@ function select_field(field,value) {
             } else el_field.fireEvent("onchange");
             break;
         }
+    }
+}
+
+function select_field_filter_byText(field,value) {
+    var el_field = document.getElementById(field);
+    value = value.toLowerCase();
+    var found = -1;
+
+    for ( var i = 0; i < el_field.options.length; i++ ) {
+        var this_opt = el_field.options[i];
+        var text = this_opt.text.toLowerCase();
+        if ( text.indexOf(value) > -1 ) {
+            if ( found < 0 ) { found = i; }
+            if ( this_opt.style.display == 'none' ) {
+                if ( this_opt.data_old_display ) {
+                    this_opt.style.display = this_opt.data_old_display;
+                }
+                else {
+                    this_opt.style.display = '';
+                }
+            }
+        }
+        else {
+            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                this_opt.data_old_display = this_opt.style.display;
+            }
+            this_opt.style.display = 'none';
+        }
+    }
+    if ( found >= 0 ) {
+        el_field.value = el_field.options[found].value;
+        if ( "createEvent" in document ) {
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change",false,true);
+            el_field.dispatchEvent(evt);
+        } else el_field.fireEvent("onchange");
     }
 }
 
