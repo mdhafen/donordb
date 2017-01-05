@@ -40,39 +40,47 @@ function get_actions_cross( $ids = array() ) {
   return $result;
 }
 
-function search_actions_cross( $field, $term ) {
+function search_actions_cross( $terms ) {
+  $wheres = array();
+  $data = array();
   $result = array();
-  $op = '=';
-  switch ( $field ) {
-  case 'locationid':
-    $field = 'actions.locationid';
-  case 'contactid':
-  case 'accountid':
-      break;  // no-op
-  case 'date':
-    $field = 'actions.date';
-    $op = '>';
-    $timestamp = strtotime($term);
-    if ( $term === NULL ) {
-      $term = date( 'Y-m-d', time() - (31622400) ); // seconds in a leap year
+  foreach ( $terms as $field => $term ) {
+    $op = '=';
+    switch ( $field ) {
+      case 'locationid':
+        $field = 'actions.locationid';
+      case 'contactid':
+      case 'accountid':
+      case 'amount':
+        break;  // no-op
+      case 'date':
+        $field = 'actions.date';
+        $op = '>';
+        $timestamp = strtotime($term);
+        if ( $term === NULL ) {
+          $term = date( 'Y-m-d', time() - (31622400) ); // seconds in a leap year
+        }
+        elseif ( $timestamp === false ) {
+          return $result;
+        }
+        else {
+          $term = date( 'Y-m-d', $timestamp );
+        }
+        break;
     }
-    elseif ( $timestamp === false ) {
-      return $result;
-    }
-    else {
-      $term = date( 'Y-m-d', $timestamp );
-    }
-    break;
+    $wheres[] = "$field $op ?";
+    $data[] = $term;
   }
 
   $dbh = db_connect('core');
 
   $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions LEFT JOIN contacts USING (contactid) LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) ";
-  $query .= "WHERE $field $op :term";
+  if ( !empty($wheres) ) {
+      $query .= "WHERE ". ( implode( ' AND ', $wheres) );
+  }
   $sth = $dbh->prepare( $query );
-  $sth->bindParam( ':term', $term );
 
-  $sth->execute();
+  $sth->execute($data);
 
   while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
     $row = stripslashes_array( $row );

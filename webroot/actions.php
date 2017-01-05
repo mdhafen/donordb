@@ -7,31 +7,23 @@ include_once( '../inc/donordb.phpm' );
 authorize( 'actions' );
 
 $op = input( 'op', INPUT_STR );
-$field = input( 'field', INPUT_STR );
+$account = input( 'account', INPUT_PINT );
+$contact = input( 'contact', INPUT_PINT );
+$location = input( 'location', INPUT_PINT );
+$amount = input( 'amount', INPUT_NUM );
+$date = input( 'date', INPUT_HTML_NONE );
+$search = array();
 
 $actions = $contacts = $accounts = $locations = array();
 
-switch ( $field ) {
-case 'account' :
-    $field = 'accountid';
-    $search = input( 'term', INPUT_PINT );
-    break;
-case 'contact' :
-    $field = 'contactid';
-    $search = input( 'term', INPUT_PINT );
-    break;
-case 'location' :
-    $field = 'locationid';
-    $search = input( 'term', INPUT_PINT );
-    break;
-case 'date' :
-default :
-    $field = 'date';
-    ( $search = input( 'term', INPUT_HTML_NONE ) ) || ( $search = '-1 year' );
-}
+if ( !empty($account) ) { $search['accountid'] = $account; }
+if ( !empty($contact) ) { $search['contactid'] = $contact; }
+if ( !empty($location) ) { $search['locationid'] = $location; }
+if ( !empty($amount) ) { $search['amount'] = $amount; }
+if ( !empty($date) ) { $search['date'] = $date; }
 
-if ( $op && $field && $search ) {
-    $actions = search_actions_cross( $field, $search );
+if ( $op && ! empty($search) ) {
+    $actions = search_actions_cross( $search );
 }
 else {
     $contacts = get_contacts();

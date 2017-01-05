@@ -189,17 +189,15 @@ var list_obj = new List('actions_table_container', list_options);
 </div>
 <?php } else { ?>
 <h2>Search Actions</h2>
-<div class="uk-grid">
-<form class="uk-form uk-width-1-4" method="post" action="actions.php">
+<form class="uk-form" method="post" action="actions.php">
     <input type="hidden" name="op" value="search">
-    <input type="hidden" name="field" value="account">
-    <fieldset class="uk-form-stacked">
-
-        <div class="uk-form-row">
+    <div class="uk-flex uk-flex-wrap">
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="accountid">Account</label>
             <div class="uk-form-controls">
-                <input type="number" id="acc_id" name="acc_id" value="" onkeyup="select_field('accountid',this.value)">
-                <select id="accountid" name="term" onchange="input_update('acc_id',this.value)">
+                <input type="number" id="acc_id" name="acc_id" value="" onkeyup="select_field('accountid',this.value)" tabindex="1">
+                <select id="accountid" name="account" onchange="input_update('acc_id',this.value)" tabindex="7">
                     <option value="">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
                     <option value="<?= $acc['accountid'] ?>"<?= !empty($acc['selected']) ? " selected" : "" ?>><?= $acc['name'] ?></option>
@@ -207,24 +205,14 @@ var list_obj = new List('actions_table_container', list_options);
                 </select>
             </div>
         </div>
-        <div class="uk-form-row">
-            <div class="uk-form-controls">
-                 <input class="uk-button" type="submit" name="op" value="Search">
-            </div>
-        </div>
     </fieldset>
-</form>
 
-<form class="uk-form uk-width-1-4" method="post" action="actions.php">
-    <input type="hidden" name="op" value="search">
-    <input type="hidden" name="field" value="contact">
-    <fieldset class="uk-form-stacked">
-
-        <div class="uk-form-row">
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
-                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byText('contactid',this.value)">
-                <select id="contactid" name="term">
+                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byText('contactid',this.value)" tabindex="2">
+                <select id="contactid" name="contact" tabindex="8">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
                     <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= $con['name'] ?></option>
@@ -232,23 +220,14 @@ var list_obj = new List('actions_table_container', list_options);
                 </select>
             </div>
         </div>
-        <div class="uk-form-row">
-            <div class="uk-form-controls">
-                 <input class="uk-button" type="submit" name="op" value="Search">
-            </div>
-        </div>
     </fieldset>
-</form>
 
-<form class="uk-form uk-width-1-4" method="post" action="actions.php">
-    <input type="hidden" name="field" value="location">
-    <fieldset class="uk-form-stacked">
-
-        <div class="uk-form-row">
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="locationid">Location</label>
             <div class="uk-form-controls">
-                <input type="number" id="loc_id" name="loc_id" value="" onkeyup="select_field('locationid',this.value)">
-                <select id="locationid" name="term" onchange="input_update('loc_id',this.value); location_changed();">
+                <input type="number" id="loc_id" name="loc_id" value="" onkeyup="select_field('locationid',this.value)" tabindex="3">
+                <select id="locationid" name="location" onchange="input_update('loc_id',this.value); location_changed();" tabindex="9">
                     <option value="">Select Location</option>
 <?php foreach ( $data['locations'] as $loc ) { ?>
                     <option value="<?= $loc['locationid'] ?>"<?= !empty($loc['selected']) ? " selected" : "" ?>><?= $loc['name'] ?></option>
@@ -256,33 +235,32 @@ var list_obj = new List('actions_table_container', list_options);
                 </select>
             </div>
         </div>
-        <div class="uk-form-row">
+    </fieldset>
+
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
+            <label class="uk-form-label" for="amount">Amount</label>
             <div class="uk-form-controls">
-                 <input class="uk-button" type="submit" name="op" value="Search">
+                $<input type="number" id="amount" name="amount" value="" tabindex="4">
             </div>
         </div>
     </fieldset>
-</form>
 
-<form class="uk-form uk-width-1-4" method="post" action="actions.php">
-    <input type="hidden" name="op" value="search">
-    <input type="hidden" name="field" value="date">
-    <fieldset class="uk-form-stacked">
-
-        <div class="uk-form-row">
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="date">Actions Since</label>
             <div class="uk-form-controls">
-                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="term" value=""> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
-            </div>
-        </div>
-        <div class="uk-form-row">
-            <div class="uk-form-controls">
-                 <input class="uk-button" type="submit" name="op" value="Search">
+                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="date" value="" tabindex="5"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
             </div>
         </div>
     </fieldset>
+    </div>
+    <div class="uk-form-row">
+        <div class="uk-form-controls">
+             <input class="uk-button" type="submit" name="op" value="Search" tabindex="6">
+        </div>
+    </div>
 </form>
-</div>
 
 <script>
 function select_field(field,value) {
