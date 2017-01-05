@@ -48,9 +48,9 @@ if ( !empty($op) ) {
     if ( !empty($wheres) ) {
         $query .= "WHERE ". ( implode( ' AND ', $wheres ) ) ." ";
     }
-    
-    $query .= 'GROUP BY contact.id HAVING amount >= 5000';
-    
+
+    $query .= 'GROUP BY contactid HAVING amount >= 5000';
+
     $dbh = db_connect('core');
     $sth = $dbh->prepare($query);
     $sth->execute($data);
@@ -86,7 +86,7 @@ else {
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
-        'name' => 'end_date'
+        'name' => 'end_date',
         'value' => $e_date,
     );
     $loc_loop = array();
