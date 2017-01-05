@@ -50,7 +50,6 @@ if ( !empty($op) ) {
             array(
                 'width' => 0,
                 'new_group' => false,
-                'header' => false,
                 'column_name' => 'FIXME name',
                 'clean_value' => $row['FIXME name'],
                 'link' => '',

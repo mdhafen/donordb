@@ -3,25 +3,6 @@
 <head>
 <?php include $data['_config']['base_dir'].'/htdocs/head.php';?>
 <style>
-<?php if ( $data['paged'] !== false ) { ?>
-.paginationTop li, .paginationBottom li {
-  display: inline-block;
-  list-style: none;
-  padding-right: 10px;
-}
-
-.paginationTop li.active a, .paginationBottom li.active a {
-  color: #000;
-}
-
-.paginationTop li.disabled a, .paginationBottom li.disabled a,
-.paginationTop li.disabled a:hover, .paginationBottom li.disabled a:hover {
-  color: #000;
-  cursor: default;
-  text-decoration: none;
-}
-<?php } ?>
-
 .list_sort:after {
   width: 0;
   height: 0;
@@ -58,11 +39,16 @@
   right:-5px;
 }
 
-tbody tr {
+thead tr, tbody tr {
     border: solid 1px gray;
 }
 
-tbody.report_multi_body::before {
+.report_body_header {
+    background-color: black;
+    color: white;
+}
+
+thead.report_multi_body::before {
     content: "";
     display: table-row;
     height: 30px;
@@ -80,45 +66,40 @@ tbody.report_multi_body::before {
 
 <?php if ( !empty($data['op']) ) { ?>
     <div id="reports_table_container">
-      <ul class="paginationTop"></ul>
       <table class="uk-table" id="report_table">
 <?php
-   if ( !empty($data['report_header']) ) {
-     print "<thead>\n<tr>\n";
-     foreach ( $data['report_header'] as $row ) {
-?>
-        <th<?= !empty($row['width']) ? " colspan='${row['width']}'" : "" ?>><?= !empty($row['sort']) ? "<span class='list_sort' data-sort='list_${row['column_name']}'>" : "" ?><?= $row['column_title'] ?><?= !empty($row['sort']) ? "</span>" : "" ?></th>
-<?php
-     }
-     print "</tr>\n</thead>\n";
-   }
-?>
-      <tbody class="list">
-<?php
    if ( !empty($data['report_body']) ) {
-     $count = 1;
-     foreach ( $data['report_body'] as $row ) {
-       if ( !empty($row[0]['new_group']) && $count != 1 ) {
-           print "</tbody>\n<tbody class='list report_multi_body'>\n";
+     foreach ( $data['report_body'] as $account ) {
+       print "<thead class='list report_multi_body'>\n<tr><th colspan='7' class='report_body_header' list_note>${account['name']}</th></tr>\n";
+
+       if ( !empty($data['report_header']) ) {
+           print "<tr>";
+           foreach ( $data['report_header'] as $row ) {
+               print "<th>${row['column_title']}</th>";
+           }
+           print "</tr>\n";
        }
-       $count++;
+
+       print "</thead>\n<tbody class='list'>\n";
+       print "<tr>\n<td colspan='6' list_note>Calculated Previous Balance</td>\n<td list_amount>${account['previous']}</td>\n</tr>\n";
+       foreach ( $account['rows'] as $row ) {
 ?>
         <tr>
 <?php
-       foreach ( $row as $column ) {
+         foreach ( $row as $column ) {
 ?>
-          <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='${column['clean_value']}'" : "" ?><?= !empty($column['column_name']) ? " list_${column['column_name']}" : "" ?>"><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= $column['value'] ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
+          <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='${column['clean_value']}'" : "" ?><?= !empty($column['column_name']) ? " list_${column['column_name']}" : "" ?>><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= $column['value'] ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
 <?php
+         }
        }
+       print "<tr>\n<td colspan='6' class='report_body_header' list_note>Total</td>\n<td class='report_body_header' list_amount>${account['total']}</td>\n</tr>\n</tbody>\n";
 ?>
         </tr>
 <?php
      }
    }
 ?>
-      </tbody>
     </table>
-    <ul class="paginationBottom"></ul>
   </div>
 <script>
 var list_options = {
@@ -135,23 +116,6 @@ var list_options = {
   searchClass: 'list_search',
   sortClass: 'list_sort',
   //indexAsync: true,
-<?php if ( $data['paged'] !== false ) { ?>
-  page: 10,
-  plugins: [
-    ListPagination({
-      name: "paginationTop",
-      paginationClass: "paginationTop",
-      innerWindow: 2,
-      outerWindow: 1
-    }),
-    ListPagination({
-      name: "paginationBottom",
-      paginationClass: "paginationBottom",
-      innerWindow: 2,
-      outerWindow: 1
-    })
-  ]
-<?php } ?>
 };
 
 var list_obj = new List('reports_table_container', list_options);

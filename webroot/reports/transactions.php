@@ -53,41 +53,24 @@ if ( !empty($op) ) {
     $dbh = db_connect('core');
     $sth = $dbh->prepare($query);
     $sth->execute($data);
-    $page = null;
-    $total = null;
 
     $query = "SELECT SUM(amount) AS amount FROM actions WHERE accountid = ? AND date < ? GROUP BY accountid";
     $sth2 = $dbh->prepare($query);
 
     while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
-        if ( $page != $row['account_name'] ) {
-            if ( !is_null($total) ) {
-                $rows[] = array(
-                    array('width'=>'6','column_name' => 'note','value' => 'Total','header'=>true,),
-                    array('column_name' => 'amount','value' => number_format($total,2),'header'=>true,),
-            );
-            }
-            $rows[] = array(
-                array(
-                    'new_group' => true,
-                    'width' => "7",
-                    'column_name' => 'note',
-                    'value' => $row['account_name'],
-                    'header'=>true,
-                ),
-            );
+        if ( empty($rows[ $row['account_name'] ]) ) {
             $sth2->execute( array($row['accountid'],$s_date) );
             $previous = $sth2->fetch( PDO::FETCH_ASSOC );
 
-            $total = $previous['amount'];
-            $rows[] = array(
-                array('width'=>'6','column_name' => 'note','value' => 'Calculated Previous Balance',),
-                array('column_name' => 'amount','value' => number_format($previous['amount'],1),),
+            $rows[ $row['account_name'] ] = array(
+                'name' => $row['account_name'],
+                'total' => $previous['amount'],
+                'previous' => number_format($previous['amount'],1),
+                'rows' => array(),
             );
         }
-        $page = $row['account_name'];
-        $total += $row['amount'];
-        $rows[] = array(
+        $rows[ $row['account_name'] ]['total'] += $row['amount'];
+        $rows[ $row['account_name'] ]['rows'][] = array(
             array(
                 'column_name' => 'date',
                 'clean_value' => $row['date'],
@@ -99,12 +82,6 @@ if ( !empty($op) ) {
             array('column_name' => 'po','value' => $row['po'],),
             array('column_name' => 'note','value' => $row['note'],),
             array('column_name' => 'amount','value' => number_format($row['amount'],2),),
-        );
-    }
-    if ( !is_null($total) ) {
-        $rows[] = array(
-            array('width'=>'6','column_name' => 'note','value' => 'Total','header'=>true,),
-            array('column_name' => 'amount','value' => number_format($total,2),'header'=>true,),
         );
     }
 }
@@ -147,9 +124,8 @@ $output = array(
     'op' => $op,
     'params' => $params,
     'report_title' => $title,
-    'paged' => false,
     'report_header' => $header,
     'report_body' => $rows,
 );
-output( $output, 'reports/report_template' );
+output( $output, 'reports/transactions' );
 ?>
