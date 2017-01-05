@@ -32,7 +32,7 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
-                <input type="number" id="con_id" name="con_id" value="<?= (!empty($data['action']['contactid'])) ? $data['action']['contactid'] : "" ?>" onkeyup="select_contact(this.value)">
+                <input type="text" id="con_id" name="con_id" value="<?= (!empty($data['action']['contactid'])) ? $data['action']['contactid'] : "" ?>" onkeyup="select_contact(this.value)">
                 <select id="contactid" name="contactid">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
@@ -194,14 +194,34 @@ function update_account(xml_result,modal) {
     }
 }
 
-function select_contact(contactid) {
+function select_contact(value) {
     var el_contact = document.getElementById('contactid');
+    value = value.toLowerCase();
+    var found = -1;
 
     for ( var i = 0; i < el_contact.options.length; i++ ) {
-        if ( el_contact.options[i].value == contactid ) {
-            el_contact.value = el_contact.options[i].value;
-            break;
+        var this_opt = el_contact.options[i];
+        var text = this_opt.text.toLowerCase();
+        if ( text.indexOf(value) > -1 ) {
+            if ( found < 0 ) { found = i; }
+            if ( this_opt.style.display == 'none' ) {
+                if ( this_opt.data_old_display ) {
+                    this_opt.style.display = this_opt.data_old_display;
+                }
+                else {
+                    this_opt.style.display = '';
+                }
+            }
         }
+        else {
+            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                this_opt.data_old_display = this_opt.style.display;
+            }
+            this_opt.style.display = 'none';
+        }
+    }
+    if ( found >= 0 ) {
+        el_contact.value = el_contact.options[found].value;
     }
 }
 
