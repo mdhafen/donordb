@@ -12,6 +12,7 @@
       <li><a href="<?= $data['_config']['base_url'] ?>reports/transactions.php">Transactions</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/account_balance.php">Account Balance</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/receipts.php">Receipts</a></li>
+      <li><a href="<?= $data['_config']['base_url'] ?>reports/in_kind_receipts.php">In Kind Receipts</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/500.php">$500+</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/Sum5000.php">Donors who gave $5000+</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/school_revenue_expense.php">Revenue and Expense by School</a></li>

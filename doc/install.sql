@@ -97,6 +97,7 @@ CREATE TABLE `actions` (
 	`timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	`udate` DATETIME DEFAULT NULL,
 	`is_transfer` TINYINT(1) NOT NULL DEFAULT 0,
+	`in_kind` TINYINT(1) NOT NULL DEFAULT 0,
 	PRIMARY KEY (`actionid`),
 	KEY `contactid` (`contactid`),
 	KEY `accountid` (`accountid`),

@@ -27,7 +27,7 @@ $header = array(
     array('column_name' => 'receipt', 'column_title' => 'Receipt',),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.accountid, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND receipt <> 0';
+$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.accountid, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND receipt <> 0 AND in_kind = 0';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
@@ -87,7 +87,7 @@ else {
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
-        'name' => 'end_date'
+        'name' => 'end_date',
         'value' => $e_date,
     );
 }

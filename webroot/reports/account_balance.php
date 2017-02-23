@@ -21,7 +21,7 @@ $header = array(
     array('column_name' => 'note', 'column_title' => 'Notes',),
 );
 
-$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? GROUP BY accounts.accountid ';
+$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? AND actions.in_kind = 0 GROUP BY accounts.accountid ';
 
 if ( !empty($op) ) {
     $locationid = input( 'locationid', INPUT_PINT );

@@ -10,39 +10,37 @@ $op = input( 'op', INPUT_STR );
 $params = array();
 
 $rows = array();
-$title = 'Close Out';
+$title = 'In Kind Receipts';
 
 $header = array(
     array('column_name' => 'date', 'column_title' => 'Date', 'sort' => 1, 'clean_attr' => '1'),
     array('column_name' => 'contact', 'column_title' => 'Contact Name', 'sort' => 1,),
     array('column_name' => 'company', 'column_title' => 'Contact Company', 'sort' => 1,),
-    array('column_name' => 'receipt', 'column_title' => 'Receipt',),
-    array('column_name' => 'po', 'column_title' => 'PO',),
-    array('column_name' => 'note', 'column_title' => 'Action Note',),
+    array('column_name' => 'street', 'column_title' => 'Address',),
+    array('column_name' => 'city', 'column_title' => 'City',),
+    array('column_name' => 'state', 'column_title' => 'State',),
+    array('column_name' => 'zip', 'column_title' => 'Zip',),
+    array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
+    array('column_name' => 'location', 'column_title' => 'Location', 'sort' => 1,),
     array('column_name' => 'acc_id', 'column_title' => 'Account Number', 'sort' => 1,),
     array('column_name' => 'account', 'column_title' => 'Account', 'sort' => 1,),
-    array('column_name' => 'account_note', 'column_title' => 'Account Note',),
-    array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
+    array('column_name' => 'receipt', 'column_title' => 'Receipt',),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, actions.receipt, actions.po, actions.note, accounts.accountid, accounts.name AS account_name, accounts.note AS account_note, actions.amount FROM actions LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE in_kind = 0';
+$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.accountid, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND in_kind = 1';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
     $e_date = input( 'end_date', INPUT_HTML_NONE );
-    $where = array();
     $data = array();
 
     if ( !empty($s_date) ) {
-        $where[] = "udate >= ?";
+        $query .= " AND udate >= ?";
         $data[] = $s_date;
     }
     if ( !empty($e_date) ) {
-        $where[] = "udate <= ?";
+        $query .= " AND udate <= ?";
         $data[] = $e_date;
-    }
-    if ( !empty($where) ) {
-        $query .= " AND ". implode( ' AND ', $where);
     }
 
     $dbh = db_connect('core');
@@ -58,13 +56,15 @@ if ( !empty($op) ) {
             ),
             array('column_name' => 'contact','value' => $row['name'],),
             array('column_name' => 'company','value' => $row['company'],),
-            array('column_name' => 'receipt','value' => $row['receipt'],),
-            array('column_name' => 'po','value' => $row['po'],),
-            array('column_name' => 'note','value' => $row['note'],),
+            array('column_name' => 'street','value' => $row['street'],),
+            array('column_name' => 'city','value' => $row['city'],),
+            array('column_name' => 'state','value' => $row['state'],),
+            array('column_name' => 'zip','value' => $row['zip'],),
+            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
+            array('column_name' => 'location','value' => $row['location_name'],),
             array('column_name' => 'acc_id','value' => $row['accountid'],),
             array('column_name' => 'account','value' => $row['account_name'],),
-            array('column_name' => 'account_note','value' => $row['account_note'],),
-            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
+            array('column_name' => 'receipt','value' => $row['receipt'],),
         );
     }
 }
@@ -87,7 +87,7 @@ else {
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
-        'name' => 'end_date'
+        'name' => 'end_date',
         'value' => $e_date,
     );
 }
@@ -95,7 +95,7 @@ else {
 $output = array(
     'op' => $op,
     'params' => $params,
-    'paged' => true,
+    'paged' => false,
     'report_title' => $title,
     'report_header' => $header,
     'report_body' => $rows,

@@ -19,7 +19,7 @@ $header = array(
 );
 
 //FIXME enter query
-$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount FROM actions LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 500';
+$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount FROM actions LEFT JOIN contacts USING (contactid) WHERE actions.in_kind = 0';
 
 if ( !empty($op) ) {
     // FIXME gather params

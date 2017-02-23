@@ -84,6 +84,11 @@
         </div>
 
         <div class="uk-form-row">
+            <label class="uk-form-label" for="in_kind">In Kind</label>
+            <div class="uk-form-controls"><input type="checkbox" id="in_kind" name="in_kind"<?= (!empty($data['action']['in_kind'])) ? " checked" : "" ?>></div>
+        </div>
+
+        <div class="uk-form-row">
             <label class="uk-form-label" for="is_transfer">Is A Transfer</label>
             <div class="uk-form-controls"><input type="checkbox" id="is_transfer" name="is_transfer"<?= (!empty($data['action']['is_transfer'])) ? " checked" : "" ?>></div>
         </div>

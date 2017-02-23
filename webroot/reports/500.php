@@ -25,7 +25,7 @@ $header = array(
     array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount FROM actions LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 500';
+$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount FROM actions LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 500 AND actions.in_kind = 0';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );

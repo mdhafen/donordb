@@ -23,7 +23,7 @@ $header = array(
     array('column_name' => 'amount', 'column_title' => 'Amount', 'sort' => 1,),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, location.name AS location_name, accounts.accountid, accounts.name AS account_name, actions.note, actions.amount FROM actions LEFT JOIN location USING (locationid) LEFT JOIN contacts USING (contactid) LEFT JOIN accounts USING (accountid) WHERE actions.amount = ?';
+$query = 'SELECT actions.date, contacts.name, contacts.company, location.name AS location_name, accounts.accountid, accounts.name AS account_name, actions.note, actions.amount FROM actions LEFT JOIN location USING (locationid) LEFT JOIN contacts USING (contactid) LEFT JOIN accounts USING (accountid) WHERE actions.amount = ? AND in_kind = 0';
 
 if ( !empty($op) ) {
     $amount = input( 'amount', INPUT_NUM );
