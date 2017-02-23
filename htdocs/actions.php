@@ -124,7 +124,7 @@
 <td class="list_receipt"><?= $row['receipt'] ?></td>
 <td class="list_po"><?= $row['po'] ?></td>
 <td class="list_note"><?= $row['note'] ?></td>
-<td class="list_flags" data-list-inkind="<?= !empty($row['in_kind']) ? 'yes':'no' ?>" data-list-transfer="<?= !empty($row['is_transfer']) ? 'yes':'no' ?>"><?php if ( !empty($row['in_kind']) ) { ?><i title="In Kind" class="uk-icon-balance-scale"></i> <?php } ?><?php if ( !empty($row['is_transfer']) ) { ?> <span title="Transfer"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i><i class="uk-icon-file-text-o"></i></span><?php } ?></td>
+<td class="list_flags" data-list-inkind="<?= !empty($row['in_kind']) ? 'yes':'no' ?>" data-list-transfer="<?= !empty($row['is_transfer']) ? 'yes':'no' ?>"><?php if ( !empty($row['in_kind']) ) { ?><i title="In Kind" class="uk-icon-balance-scale"></i> <?php } ?><?php if ( !empty($row['is_transfer']) ) { ?> <span title="Transfer" class="uk-text-nowrap"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i><i class="uk-icon-file-text-o"></i></span><?php } ?></td>
 </tr>
 <?php
    }

@@ -104,8 +104,8 @@
 <td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format(floatval($row['total']),2) ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>
 <td>
-  <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=transfer&amp;accountid=<?= $row['accountid'] ?>" class="uk-button" title="Transfer"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i><i class="uk-icon-file-text-o"></i></a>
-  <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=move&amp;accountid=<?= $row['accountid'] ?>" class="uk-button" title="Move"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i></a>
+  <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=transfer&amp;accountid=<?= $row['accountid'] ?>" class="uk-button uk-text-nowrap" title="Transfer"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i><i class="uk-icon-file-text-o"></i></a>
+  <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=move&amp;accountid=<?= $row['accountid'] ?>" class="uk-button uk-text-nowrap" title="Move"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i></a>
 </td>
 </tr>
 <?php
