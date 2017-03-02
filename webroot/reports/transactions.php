@@ -2,6 +2,7 @@
 include_once( '../../lib/input.phpm' );
 include_once( '../../lib/security.phpm' );
 include_once( '../../lib/output.phpm' );
+include_once( '../../inc/donordb.phpm' );
 
 authorize( 'reports' );
 
@@ -32,6 +33,7 @@ if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
     $e_date = input( 'end_date', INPUT_HTML_NONE );
     $locationid = input( 'locationid', INPUT_PINT );
+    $accounts = input( 'accountid', INPUT_PINT );
     $where = array();
     $data = array();
 
@@ -46,6 +48,9 @@ if ( !empty($op) ) {
     if ( !empty($locationid) ) {
         $where[] = "actions.locationid = ?";
         $data[] = $locationid;
+    }
+    if ( !empty($accounts) ) {
+        $where[] = "accounts.accountid IN (". implode($accounts,',') .")";
     }
     if ( !empty($where) ) {
         $query .= " WHERE ". implode( ' AND ', $where );
@@ -118,7 +123,7 @@ else {
         'label' => 'Location',
         'name' => 'locationid',
         'option_loop' => $loc_loop,
-        'onchange' => 'update_account_select(this.options[this.selectedIndex].value)',
+        'onchange' => 'onchange="update_account_select(this.value)"',
         'first_blank' => 0,
     );
 
@@ -130,7 +135,7 @@ else {
         'id' => 'account_select',
         'type' => 'select',
         'label' => 'Account(s)',
-        'name' => 'accountid',
+        'name' => 'accountid[]',
         'option_loop' => $acct_loop,
         'first_blank' => 1,
         'multiple' => 1,

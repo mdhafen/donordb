@@ -204,18 +204,21 @@ var list_obj = new List('reports_table_container', list_options);
 <?php } ?>
       ];
       function update_account_select(locId) {
-          var modal = UIkit.modal.blockUI("Reloading Accounts...");
-          var el = document.getElementById('account_select');
-          while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
-          for ( var opt in accts ) {
-              if ( opt.locationid == locId ) {
-                  var new_opt = document.createElement('option');
-                  new_opt.value = opt.accountid;
-                  new_opt.appendChild( document.createTextNode( opt.name ) );
-                  el.appendChild( new_opt );
+          if ( locId ) {
+              var modal = UIkit.modal.blockUI("Reloading Accounts...");
+              var el = document.getElementById('account_select');
+              while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
+              for ( var i=0, l=accts.length; i < l; i++ ) {
+                  var opt = accts[i];
+                  if ( opt.locationid == locId ) {
+                      var new_opt = document.createElement('option');
+                      new_opt.value = opt.accountid;
+                      new_opt.appendChild( document.createTextNode( opt.name ) );
+                      el.appendChild( new_opt );
+                  }
               }
+              modal.hide();
           }
-          modal.hide();
       }
   </script>
 <?php   } ?>
