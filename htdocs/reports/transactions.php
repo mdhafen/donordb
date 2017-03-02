@@ -195,6 +195,29 @@ var list_obj = new List('reports_table_container', list_options);
       </div>
     </fieldset>
   </form>
+  <script>
+      var accts = [
+<?php
+      $last = end($data['all_accounts']);
+      foreach ( $data['all_accounts'] as $acct ) { ?>
+          { 'locationid' : '<?= $acct['locationid'] ?>', 'accountid' : '<?= $acct['accountid'] ?>', 'name' : '<?= $acct['name'] ?>' }<?= $acct == $last ? '' : ',' ?>
+<?php } ?>
+      ];
+      function update_account_select(locId) {
+          var modal = UIkit.modal.blockUI("Reloading Accounts...");
+          var el = document.getElementById('account_select');
+          while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
+          for ( var opt in accts ) {
+              if ( opt.locationid == locId ) {
+                  var new_opt = document.createElement('option');
+                  new_opt.value = opt.accountid;
+                  new_opt.appendChild( document.createTextNode( opt.name ) );
+                  el.appendChild( new_opt );
+              }
+          }
+          modal.hide();
+      }
+  </script>
 <?php   } ?>
 <?php } ?>
 </div>

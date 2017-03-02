@@ -10,6 +10,8 @@ $op = input( 'op', INPUT_STR );
 $params = array();
 $locations = all_locations();
 uasort( $locations, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );
+$all_accounts = get_accounts();
+uasort( $all_accounts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );
 
 $rows = array();
 $title = 'Transactions';
@@ -116,7 +118,23 @@ else {
         'label' => 'Location',
         'name' => 'locationid',
         'option_loop' => $loc_loop,
+        'onchange' => 'update_account_select(this.options[this.selectedIndex].value)',
         'first_blank' => 0,
+    );
+
+    $acct_loop = array();
+    foreach ( $all_accounts as $acct ) {
+        $acct_loop[] = array('value'=>$acct['accountid'],'label'=>$acct['name']);
+    }
+    $params[] = array(
+        'id' => 'account_select',
+        'type' => 'select',
+        'label' => 'Account(s)',
+        'name' => 'accountid',
+        'option_loop' => $acct_loop,
+        'first_blank' => 1,
+        'multiple' => 1,
+        'size' => 8,
     );
 }
 
@@ -126,6 +144,7 @@ $output = array(
     'report_title' => $title,
     'report_header' => $header,
     'report_body' => $rows,
+    'all_accounts' => $all_accounts,
 );
 output( $output, 'reports/transactions' );
 ?>
