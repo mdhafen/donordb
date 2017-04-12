@@ -46,10 +46,11 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="locationid">Location</label>
             <div class="uk-form-controls">
+                <input type="text" id="loc_id" name="loc_id" value="<?= (!empty($data['action']['locationid'])) ? $data['action']['locationid'] : "" ?>" onkeyup="select_location(this.value)">
                 <select id="locationid" name="locationid" onchange="location_changed()">
                     <option value="">Select Location</option>
 <?php foreach ( $data['locations'] as $loc ) { ?>
-                    <option value="<?= $loc['locationid'] ?>"<?= !empty($loc['selected']) ? " selected" : "" ?>><?= $loc['name'] ?></option>
+                    <option value="<?= $loc['locationid'] ?>"<?= !empty($loc['selected']) ? " selected" : "" ?>><?= $loc['locationid'] ?> - <?= $loc['name'] ?></option>
 <?php } ?>
                 </select>
             </div>
@@ -207,7 +208,8 @@ function select_contact(value) {
     for ( var i = 0; i < el_contact.options.length; i++ ) {
         var this_opt = el_contact.options[i];
         var text = this_opt.text.toLowerCase();
-        if ( text.indexOf(value) > -1 ) {
+        var val = this_opt.value;
+        if ( text.indexOf(value) > -1 || value == val ) {
             if ( found < 0 ) { found = i; }
             if ( this_opt.style.display == 'none' ) {
                 if ( this_opt.data_old_display ) {
@@ -227,6 +229,47 @@ function select_contact(value) {
     }
     if ( found >= 0 ) {
         el_contact.value = el_contact.options[found].value;
+    }
+}
+
+function select_location(value) {
+    var el_location = document.getElementById('locationid');
+    value = value.toLowerCase();
+    var found = -1;
+    var num_found = 0;
+
+    for ( var i = 0; i < el_location.options.length; i++ ) {
+        var this_opt = el_location.options[i];
+        var text = this_opt.text.toLowerCase();
+        var val = this_opt.value;
+        if ( text.indexOf(value) > -1 || value == val ) {
+            num_found++;
+            if ( found < 0 ) { found = i; }
+            if ( this_opt.style.display == 'none' ) {
+                if ( this_opt.data_old_display ) {
+                    this_opt.style.display = this_opt.data_old_display;
+                }
+                else {
+                    this_opt.style.display = '';
+                }
+            }
+        }
+        else {
+            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                this_opt.data_old_display = this_opt.style.display;
+            }
+            this_opt.style.display = 'none';
+        }
+    }
+    if ( found >= 0 ) {
+        el_location.value = el_location.options[found].value;
+        if ( num_found == 1 ) {
+            if ( "createEvent" in document ) {
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("change",false,true);
+                el_location.dispatchEvent(evt);
+            } else el_location.fireEvent("onchange");
+        }
     }
 }
 

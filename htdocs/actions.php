@@ -213,7 +213,7 @@ var list_obj = new List('actions_table_container', list_options);
         <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
-                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byText('contactid',this.value)" tabindex="2">
+                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byValNText('contactid',this.value)" tabindex="2">
                 <select id="contactid" name="contact" tabindex="8">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
@@ -281,15 +281,18 @@ function select_field(field,value) {
     }
 }
 
-function select_field_filter_byText(field,value) {
+function select_field_filter_byValNText(field,value) {
     var el_field = document.getElementById(field);
     value = value.toLowerCase();
     var found = -1;
+    var num_found = 0;
 
     for ( var i = 0; i < el_field.options.length; i++ ) {
         var this_opt = el_field.options[i];
         var text = this_opt.text.toLowerCase();
-        if ( text.indexOf(value) > -1 ) {
+        var val = this_opt.value;
+        if ( text.indexOf(value) > -1 || value == val ) {
+            num_found++;
             if ( found < 0 ) { found = i; }
             if ( this_opt.style.display == 'none' ) {
                 if ( this_opt.data_old_display ) {
@@ -309,11 +312,13 @@ function select_field_filter_byText(field,value) {
     }
     if ( found >= 0 ) {
         el_field.value = el_field.options[found].value;
-        if ( "createEvent" in document ) {
-            var evt = document.createEvent("HTMLEvents");
-            evt.initEvent("change",false,true);
-            el_field.dispatchEvent(evt);
-        } else el_field.fireEvent("onchange");
+        if ( num_found == 1 ) {
+            if ( "createEvent" in document ) {
+                var evt = document.createEvent("HTMLEvents");
+                evt.initEvent("change",false,true);
+                el_field.dispatchEvent(evt);
+            } else el_field.fireEvent("onchange");
+        }
     }
 }
 
