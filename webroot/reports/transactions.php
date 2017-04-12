@@ -123,7 +123,7 @@ else {
         'name' => 'locationid',
         'option_loop' => $loc_loop,
         'onchange' => 'onchange="update_account_select(this.value)"',
-        'first_blank' => 0,
+        'first_blank' => 1,
     );
 
     $acct_loop = array();
