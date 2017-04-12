@@ -72,7 +72,7 @@ if ( !empty($op) ) {
             $rows[ $row['account_name'] ] = array(
                 'name' => $row['account_name'],
                 'total' => $previous['amount'],
-                'previous' => number_format($previous['amount'],1),
+                'previous' => number_format($previous['amount'],2),
                 'rows' => array(),
             );
         }

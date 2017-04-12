@@ -66,11 +66,10 @@ thead.report_multi_body::before {
 
 <?php if ( !empty($data['op']) ) { ?>
     <div id="reports_table_container">
-      <table class="uk-table" id="report_table">
 <?php
    if ( !empty($data['report_body']) ) {
      foreach ( $data['report_body'] as $account ) {
-       print "<thead class='list report_multi_body'>\n<tr><th colspan='7' class='report_body_header' list_note>${account['name']}</th></tr>\n";
+       print "<table class='uk-table'>\n<thead class='list report_multi_body'>\n<tr><th colspan='7' class='report_body_header' list_note>${account['name']}</th></tr>\n";
 
        if ( !empty($data['report_header']) ) {
            print "<tr>";
@@ -91,15 +90,14 @@ thead.report_multi_body::before {
           <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='${column['clean_value']}'" : "" ?><?= !empty($column['column_name']) ? " list_${column['column_name']}" : "" ?>><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= $column['value'] ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
 <?php
          }
-       }
-       print "<tr>\n<td colspan='6' class='report_body_header' list_note>Total</td>\n<td class='report_body_header' list_amount>${account['total']}</td>\n</tr>\n</tbody>\n";
 ?>
         </tr>
 <?php
+       }
+       print "<tr>\n<td colspan='6' class='report_body_header' list_note>Total</td>\n<td class='report_body_header' list_amount>". number_format($account['total'],2) ."</td>\n</tr>\n</tbody>\n</table>\n";
      }
    }
 ?>
-    </table>
   </div>
 <script>
 var list_options = {
