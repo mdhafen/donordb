@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
- <?php $page_title=( $data['edit'] ? "Edit" : "New" ) .' Location'; include $data['_config']['base_dir'] .'/htdocs/head.php';?>
+ <?php $page_title=( $data['edit'] ? "Edit" : "New" ) .' Location'; include $data['_config']['base_dir'] .'/view/head.php';?>
 </head>
 <body>
-<?php include $data['_config']['base_dir'] .'/htdocs/header.php'; ?>
+<?php include $data['_config']['base_dir'] .'/view/header.php'; ?>
 <div class="uk-flex uk-margin-left">
-<?php include $data['_config']['base_dir'] .'/htdocs/menu.php'; ?>
+<?php include $data['_config']['base_dir'] .'/view/menu.php'; ?>
 <div class="uk-flex-item-auto">
     <div class="uk-container uk-container-center">
         <form method="post" action="<?= $data['_config']['base_url'] ?>manage/edit_location.php" class="uk-form uk-form-horizontal">
@@ -52,7 +52,7 @@
 </div>
 </div>
 <?php
-include $data['_config']['base_dir'] .'/htdocs/footer.php';
+include $data['_config']['base_dir'] .'/view/footer.php';
 ?>
 
 </body>

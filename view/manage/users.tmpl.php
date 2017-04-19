@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<?php $page_title='Manage Users'; include $data['_config']['base_dir'] .'/htdocs/head.php';?>
+<?php $page_title='Manage Users'; include $data['_config']['base_dir'] .'/view/head.php';?>
 </head>
 <body>
-<?php include $data['_config']['base_dir'] .'/htdocs/header.php'; ?>
+<?php include $data['_config']['base_dir'] .'/view/header.php'; ?>
 <div class="uk-flex uk-margin-left uk-margin-right">
-<?php include $data['_config']['base_dir'] .'/htdocs/menu.php'; ?>
+<?php include $data['_config']['base_dir'] .'/view/menu.php'; ?>
 <div class="uk-container uk-margin uk-width-1-1">
     <h2>Manage Users</h2>
 
@@ -38,7 +38,7 @@
 </div>
 </div>
 <?php
-include $data['_config']['base_dir'] .'/htdocs/footer.php';
+include $data['_config']['base_dir'] .'/view/footer.php';
 ?>
 
 </body>

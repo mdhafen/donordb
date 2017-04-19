@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<?php include $data['_config']['base_dir'].'/htdocs/head.php';?>
+<?php include $data['_config']['base_dir'].'/view/head.php';?>
 </head>
 <body>
-<?php include $data['_config']['base_dir'].'/htdocs/header.php'; ?>
+<?php include $data['_config']['base_dir'].'/view/header.php'; ?>
 <div class="uk-flex uk-margin-left uk-margin-right">
-<?php include $data['_config']['base_dir'].'/htdocs/menu.php'; ?>
+<?php include $data['_config']['base_dir'].'/view/menu.php'; ?>
 <div class="uk-margin uk-margin-left">
 <ul class="uk-list uk-list-line uk-margin-left">
       <li><a href="<?= $data['_config']['base_url'] ?>reports/transactions.php">Transactions</a></li>
@@ -22,7 +22,7 @@
 </div>
 </div>
 <?php
-include $data['_config']['base_dir'].'/htdocs/footer.php';
+include $data['_config']['base_dir'].'/view/footer.php';
 ?>
 
 </body>
