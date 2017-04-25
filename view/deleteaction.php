@@ -28,7 +28,7 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="amount">Amount</label>
-            <div class="uk-form-controls uk-form-controls-text"><span id="amount" name="amount"><?= number_format($data['action']['amount'],2) ?></span></div>
+            <div class="uk-form-controls uk-form-controls-text"><span id="amount" name="amount">$<?= number_format($data['action']['amount'],2) ?></span></div>
         </div>
 
         <div class="uk-form-row">

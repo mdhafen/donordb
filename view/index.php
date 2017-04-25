@@ -8,10 +8,8 @@
 <div class="uk-flex uk-margin-left uk-margin-right">
 <?php include 'menu.php'; ?>
 <div class="uk-margin uk-margin-left">
-Welcome to the WCSD Foundation Donor Database.
-</div>
-<div class="uk-margin uk-margin-left">
-Total Assets: $<?= number_format($data['total'],2) ?>
+<p>Welcome to the WCSD Foundation Donor Database.</p>
+<p>Total Assets: $<?= number_format($data['total'],2) ?></p>
 </div>
 </div>
 <?php

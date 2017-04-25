@@ -293,10 +293,11 @@ function delete_action( $actionid ) {
   $dbh = db_connect('core');
   $query;
   if ( !empty($actionid) ) {
-      $query = "DELETE FROM actions WHERE actionid = ?";
+      $query = "DELETE FROM actions WHERE actionid = :act";
 
       $sth = $dbh->prepare($query);
-      $sth->execute($actionid);
+      $sth->bindParam( ':act',$actionid );
+      $sth->execute();
       $result = $sth->errorCode() !== '00000';
   }
   return $result;
