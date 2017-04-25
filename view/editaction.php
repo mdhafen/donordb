@@ -98,6 +98,9 @@
             <div class="uk-form-controls">
                  <input class="uk-button" type="submit" name="op" value="Save">
             </div>
+            <div class="uk-form-controls">
+                 <input class="uk-button" type="button" name="op" value="Delete"onclick="document.location='deleteaction?actionid=<?= $data['actionid'] ?>'">
+            </div>
         </div>
 
     </fieldset>

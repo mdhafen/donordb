@@ -10,6 +10,9 @@
 <div class="uk-margin uk-margin-left">
 Welcome to the WCSD Foundation Donor Database.
 </div>
+<div class="uk-margin uk-margin-left">
+Total Assets: $<?= number_format($data['total'],2) ?>
+</div>
 </div>
 <?php
 include 'footer.php';

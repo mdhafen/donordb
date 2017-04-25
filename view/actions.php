@@ -115,7 +115,7 @@
    foreach ( $data['actions_list'] as $row ) {
 ?>
 <tr id="actions_<?= $row['actionid'] ?>">
-<td class="list_date" data-list-isodate="<?= $row['date'] ?>"><a href="editaction.php?actionid=<?= $row['actionid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= date('m/d/Y',strtotime($row['date'])) ?></td>
+<td class="list_date" data-list-isodate="<?= $row['date'] ?>"><a href="editaction.php?actionid=<?= $row['actionid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <a href="deleteaction.php?actionid=<?= $row['actionid'] ?>" class="uk-button"><span class="uk-icon-trash"></span></a> <?= date('m/d/Y',strtotime($row['date'])) ?></td>
 <td class="list_amount"><span class="<?= $row['amount'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format($row['amount'],2) ?></span></td>
 <td class="list_contact_name"><?= $row['contact_name'] ?></td>
 <td class="list_contact_company"><?= $row['company'] ?></td>

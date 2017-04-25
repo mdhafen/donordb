@@ -1,5 +1,16 @@
 <?php
 
+function total_assets() {
+  $dbh = db_connect('core');
+  $result = 0;
+  $query = "SELECT SUM(amount) AS total FROM actions";
+  $sth = $dbh->prepare( $query );
+  $sth->execute();
+  $row = $sth->fetch( PDO::FETCH_ASSOC );
+  ($result = $row['total']) || ($result = 0);
+  return $result;
+}
+
 function get_actions( $ids = array() ) {
   $dbh = db_connect('core');
   $result = array();
@@ -275,6 +286,20 @@ function update_action( $actionid, $updates ) {
   }
 
   return $actionid;
+}
+
+function delete_action( $actionid ) {
+  $result = 0;
+  $dbh = db_connect('core');
+  $query;
+  if ( !empty($actionid) ) {
+      $query = "DELETE FROM actions WHERE actionid = ?";
+
+      $sth = $dbh->prepare($query);
+      $sth->execute($actionid);
+      $result = $sth->errorCode() !== '00000';
+  }
+  return $result;
 }
 
 ?>
