@@ -3,7 +3,7 @@
 function total_assets() {
   $dbh = db_connect('core');
   $result = 0;
-  $query = "SELECT SUM(amount) AS total FROM actions";
+  $query = "SELECT SUM(amount) AS total FROM actions WHERE in_kind = 0";
   $sth = $dbh->prepare( $query );
   $sth->execute();
   $row = $sth->fetch( PDO::FETCH_ASSOC );
