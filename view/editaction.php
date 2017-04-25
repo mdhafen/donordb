@@ -26,7 +26,7 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="amount">Amount</label>
-            <div class="uk-form-controls"><input type="number" id="amount" name="amount" value="<?= (!empty($data['action']['amount'])) ? $data['action']['amount'] : "0" ?>"></div>
+            <div class="uk-form-controls"><input type="number" step="0.01" id="amount" name="amount" value="<?= (!empty($data['action']['amount'])) ? $data['action']['amount'] : "0" ?>"></div>
         </div>
 
         <div class="uk-form-row">

@@ -243,7 +243,7 @@ var list_obj = new List('actions_table_container', list_options);
         <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="amount">Amount</label>
             <div class="uk-form-controls">
-                $<input type="number" id="amount" name="amount" value="" tabindex="4">
+                $<input type="number" step="0.01" id="amount" name="amount" value="" tabindex="4">
             </div>
         </div>
     </fieldset>
