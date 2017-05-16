@@ -59,7 +59,7 @@
         <div class="uk-form-row">
             <label class="uk-form-label" for="accountid">Account</label>
             <div class="uk-form-controls">
-                <input type="number" id="acc_id" name="acc_id" value="<?= (!empty($data['action']['accountid'])) ? $data['action']['accountid'] : "" ?>" onkeyup="select_account(this.value)">
+                <input type="text" id="acc_id" name="acc_id" value="<?= (!empty($data['action']['accountid'])) ? $data['action']['accountid'] : "" ?>" onkeyup="select_account(this.value)">
                 <select id="accountid" name="accountid">
                     <option value="">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
