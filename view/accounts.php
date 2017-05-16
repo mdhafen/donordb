@@ -98,8 +98,8 @@
      foreach ( $data['accounts_list'] as $row ) {
 ?>
 <tr id="accounts_<?= $row['accountid'] ?>">
-<td class="list_acc_id"><?= $row['accountid'] ?></td>
-<td class="list_account"><a href="editaccount.php?accountid=<?= $row['accountid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
+<td class="list_acc_id"><a href="editaccount.php?accountid=<?= $row['accountid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['accountid'] ?></td>
+<td class="list_account"><?= $row['name'] ?></td>
 <td class="list_location"><?= $row['location_name'] ?></td>
 <td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format(floatval($row['total']),2) ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>

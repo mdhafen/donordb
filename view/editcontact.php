@@ -20,6 +20,11 @@
     <input type="hidden" name="contactid" value="<?= $data['contactid'] ?>">
     <fieldset class="uk-form-horizontal">
         <div class="uk-form-row">
+            <span class="uk-form-label">Id</span>
+            <div class="uk-form-controls uk-form-controls-text"><?= $data['contact']['contactid'] ?></div>
+        </div>
+
+        <div class="uk-form-row">
             <label class="uk-form-label" for="name">Name</label>
             <div class="uk-form-controls"><input type="text" id="name" name="name" value="<?= (!empty($data['contact']['name'])) ? $data['contact']['name'] : "" ?>"></div>
         </div>

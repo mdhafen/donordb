@@ -71,6 +71,10 @@
 <thead>
 <tr>
   <th>
+    <span class="list_sort" data-sort="list_id">ID</span><br>
+    <input type="text" id="contacts_filter_id" size="10" onkeyup="do_filter()">
+  </th>
+  <th>
     <span class="list_sort" data-sort="list_name">Name</span><br>
     <input type="text" id="contacts_filter_name" size="10" onkeyup="do_filter()">
   </th>
@@ -106,7 +110,8 @@
      foreach ( $data['contacts_list'] as $row ) {
 ?>
 <tr id="contacts_<?= $row['contactid'] ?>">
-<td class="list_name" data-list-clean-name="<?= $row['name'] ?>"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['name'] ?></td>
+<td class="list_id"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['contactid'] ?></td>
+<td class="list_name" data-list-clean-name="<?= $row['name'] ?>"><?= $row['name'] ?></td>
 <td class="list_company"><?= $row['company'] ?></td>
 <td class="list_street"><?= $row['street'] ?></td>
 <td class="list_city"><?= $row['city'] ?></td>
@@ -126,6 +131,7 @@
 <script>
 function do_filter() {
     var input = [
+        document.getElementById('contacts_filter_id').value.toLowerCase(),
         document.getElementById('contacts_filter_name').value.toLowerCase(),
         document.getElementById('contacts_filter_company').value.toLowerCase(),
         document.getElementById('contacts_filter_street').value.toLowerCase(),
@@ -136,6 +142,7 @@ function do_filter() {
     ];
     list_obj.filter(function(item){
         var match = [
+            item.values().list_id.toLowerCase(),
             decodeURIComponent((item.values().list_name+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             decodeURIComponent((item.values().list_company+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             item.values().list_street.toLowerCase(),
@@ -144,7 +151,7 @@ function do_filter() {
             item.values().list_zip.toLowerCase(),
             item.values().list_phone.toLowerCase()
         ];
-        return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 && match[3].indexOf(input[3]) > -1 && match[4].indexOf(input[4]) > -1 && match[5].indexOf(input[5]) > -1 && match[6].indexOf(input[6]) > -1 );
+        return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 && match[3].indexOf(input[3]) > -1 && match[4].indexOf(input[4]) > -1 && match[5].indexOf(input[5]) > -1 && match[6].indexOf(input[6]) > -1 && match[7].indexOf(input[7]) > -1 );
     })
 }
 

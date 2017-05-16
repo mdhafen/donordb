@@ -36,7 +36,7 @@
                 <select id="contactid" name="contactid">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
-                    <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= $con['name'] ?></option>
+                    <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= implode( ' - ', array_filter(array($con['name'],$con['company']))) ?></option>
 <?php } ?>
                 </select>
                 <span class="uk-form-help-inline"><a href="#" id="new_contact_button" class="uk-button" data-uk-modal="{target:'#modal_new_contact',center:true,bgclose:false}">New Contact...</a></span>
@@ -274,14 +274,35 @@ function select_location(value) {
     }
 }
 
-function select_account(accountid) {
+function select_account(value) {
     var el_account = document.getElementById('accountid');
+    value = value.toLowerCase();
+    var found = -1;
 
     for ( var i = 0; i < el_account.options.length; i++ ) {
-        if ( el_account.options[i].value == accountid ) {
-            el_account.value = el_account.options[i].value;
-            break;
+        var this_opt = el_account.options[i];
+        var text = this_opt.text.toLowerCase();
+        var val = this_opt.value;
+        if ( text.indexOf(value) > -1 || val == value ) {
+            if ( found < 0 ) { found = i; }
+            if ( this_opt.style.display == 'none' ) {
+                if ( this_opt.data_old_display ) {
+                    this_opt.style.display = this_opt.data_old_display;
+                }
+                else {
+                    this_opt.style.display = '';
+                }
+            }
         }
+        else {
+            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                this_opt.data_old_display = this_opt.style.display;
+            }
+            this_opt.style.display = 'none';
+        }
+    }
+    if ( found >= 0 ) {
+        el_account.value = el_account.options[found].value;
     }
 }
 
