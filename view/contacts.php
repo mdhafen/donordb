@@ -71,7 +71,7 @@
 <thead>
 <tr>
   <th>
-    <span class="list_sort" data-sort="list_id">ID</span><br>
+    <span class="list_sort" data-sort="list_con_id">ID</span><br>
     <input type="text" id="contacts_filter_id" size="10" onkeyup="do_filter()">
   </th>
   <th>
@@ -110,7 +110,7 @@
      foreach ( $data['contacts_list'] as $row ) {
 ?>
 <tr id="contacts_<?= $row['contactid'] ?>">
-<td class="list_id"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['contactid'] ?></td>
+<td class="list_con_id"><a href="editcontact.php?contactid=<?= $row['contactid'] ?>" class="uk-button"><span class="uk-icon-pencil"></span></a> <?= $row['contactid'] ?></td>
 <td class="list_name" data-list-clean-name="<?= $row['name'] ?>"><?= $row['name'] ?></td>
 <td class="list_company"><?= $row['company'] ?></td>
 <td class="list_street"><?= $row['street'] ?></td>
@@ -142,7 +142,7 @@ function do_filter() {
     ];
     list_obj.filter(function(item){
         var match = [
-            item.values().list_id.toLowerCase(),
+            item.values().list_con_id.toLowerCase(),
             decodeURIComponent((item.values().list_name+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             decodeURIComponent((item.values().list_company+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             item.values().list_street.toLowerCase(),
@@ -156,7 +156,7 @@ function do_filter() {
 }
 
 var list_options = {
-  valueNames: [
+  valueNames: [ 'list_con_id',
     { name: 'list_name', attr: 'data-list-clean-name' },
     'list_company','list_street','list_city','list_state','list_zip','list_phone'
   ],
