@@ -275,8 +275,14 @@ function update_action( $actionid, $updates ) {
           $values .= "?,";
           $data[] = $value;
       }
-      $query = substr( $query, 0, -1 );
-      $values = substr( $values, 0, -1 );
+      if ( ! in_array( 'udate', array_keys($updates) ) ) {
+         $query .= "udate";
+         $values .= "NOW()";
+      }
+      else {
+         $query = substr( $query, 0, -1 );
+         $values = substr( $values, 0, -1 );
+      }
       $query .= ") VALUES ($values)";
   }
   $sth = $dbh->prepare($query);
