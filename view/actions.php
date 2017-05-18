@@ -199,7 +199,7 @@ var list_obj = new List('actions_table_container', list_options);
             <label class="uk-form-label" for="accountid">Account</label>
             <div class="uk-form-controls">
                 <input type="number" id="acc_id" name="acc_id" value="" onkeyup="select_field('accountid',this.value)" tabindex="1">
-                <select id="accountid" name="account" onchange="input_update('acc_id',this.value)" tabindex="7">
+                <select id="accountid" name="account" onchange="input_update('acc_id',this.value)" tabindex="8">
                     <option value="">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
                     <option value="<?= $acc['accountid'] ?>"<?= !empty($acc['selected']) ? " selected" : "" ?>><?= $acc['name'] ?></option>
@@ -214,7 +214,7 @@ var list_obj = new List('actions_table_container', list_options);
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
                 <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byValNText('contactid',this.value)" tabindex="2">
-                <select id="contactid" name="contact" tabindex="8">
+                <select id="contactid" name="contact" tabindex="9">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
                     <option value="<?= $con['contactid'] ?>"<?= !empty($con['selected']) ? " selected" : "" ?>><?= $con['name'] ?></option>
@@ -229,7 +229,7 @@ var list_obj = new List('actions_table_container', list_options);
             <label class="uk-form-label" for="locationid">Location</label>
             <div class="uk-form-controls">
                 <input type="number" id="loc_id" name="loc_id" value="" onkeyup="select_field('locationid',this.value)" tabindex="3">
-                <select id="locationid" name="location" onchange="input_update('loc_id',this.value); location_changed();" tabindex="9">
+                <select id="locationid" name="location" onchange="input_update('loc_id',this.value); location_changed();" tabindex="10">
                     <option value="">Select Location</option>
 <?php foreach ( $data['locations'] as $loc ) { ?>
                     <option value="<?= $loc['locationid'] ?>"<?= !empty($loc['selected']) ? " selected" : "" ?>><?= $loc['name'] ?></option>
@@ -256,10 +256,19 @@ var list_obj = new List('actions_table_container', list_options);
             </div>
         </div>
     </fieldset>
+
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
+            <label class="uk-form-label" for="udate">Date Entered</label>
+            <div class="uk-form-controls">
+                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="udate" name="udate" value="" tabindex="6"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
+            </div>
+        </div>
+    </fieldset>
     </div>
     <div class="uk-form-row">
         <div class="uk-form-controls">
-             <input class="uk-button" type="submit" name="op" value="Search" tabindex="6">
+             <input class="uk-button" type="submit" name="op" value="Search" tabindex="7">
         </div>
     </div>
 </form>

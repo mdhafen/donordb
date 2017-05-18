@@ -12,6 +12,7 @@ $contact = input( 'contact', INPUT_PINT );
 $location = input( 'location', INPUT_PINT );
 $amount = input( 'amount', INPUT_NUM );
 $date = input( 'date', INPUT_HTML_NONE );
+$udate = input( 'udate', INPUT_HTML_NONE );
 $search = array();
 
 $actions = $contacts = $accounts = $locations = array();
@@ -21,6 +22,7 @@ if ( !empty($contact) ) { $search['contactid'] = $contact; }
 if ( !empty($location) ) { $search['locationid'] = $location; }
 if ( !empty($amount) ) { $search['amount'] = $amount; }
 if ( !empty($date) ) { $search['date'] = $date; }
+if ( !empty($udate) ) { $search['udate'] = $udate; }
 
 if ( $op && ! empty($search) ) {
     $actions = search_actions_cross( $search );
