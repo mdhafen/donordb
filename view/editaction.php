@@ -66,6 +66,8 @@
                     <option value="<?= $acc['accountid'] ?>"<?= !empty($acc['selected']) ? " selected" : "" ?>><?= $acc['name'] ?></option>
 <?php } ?>
                 </select>
+                <div id="loading_accounts_messages" class="uk-alert uk-alert-warning uk-display-inline-block uk-hidden uk-margin-remove" data-uk-alert>
+                </div>
             </div>
         </div>
 
@@ -176,12 +178,18 @@ $('#modal_new_contact').on({
 function location_changed() {
     var loc = document.getElementById('locationid').value
     if ( loc ) {
-        var modal = UIkit.modal.blockUI("Loading Accounts...");
-        $.post('<?= $data['_config']['base_url'] ?>api/get_accounts_at_location.php', {"locationid" : loc}, function(xml_result) { update_account(xml_result,modal) }, "xml" );
+        var el = document.getElementById('loading_accounts_messages');
+        while ( el.firstChild ) { el.removeChild(el.firstChild); }
+        var mess = document.createElement('div');
+        mess.appendChild( document.createTextNode('Reloading Accounts...') );
+        el.appendChild( mess );
+        el.classList.remove('uk-hidden');
+
+        $.post('<?= $data['_config']['base_url'] ?>api/get_accounts_at_location.php', {"locationid" : loc}, function(xml_result) { update_account(xml_result) }, "xml" );
     }
 }
 
-function update_account(xml_result,modal) {
+function update_account(xml_result) {
     var el = document.getElementById('accountid');
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
     if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
@@ -193,11 +201,15 @@ function update_account(xml_result,modal) {
             opt.appendChild( document.createTextNode(account_name) );
             el.appendChild( opt );
         });
-        modal.hide();
+        $('#loading_accounts_messages').addClass('uk-hidden');
     }
     else {
-        modal.hide();
-        modal = UIkit.modal.alert("Could not load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.");
+        var el = document.getElementById('loading_accounts_messages');
+        while ( el.firstChild ) { el.removeChild(el.firstChild); }
+        var mess = document.createElement('div');
+        mess.appendChild( document.createTextNode('Could not load accounts for the selected location.  Sorry for the inconvenience.  Maybe reloading this page will help.') );
+        el.appendChild( mess );
+
     }
 }
 
@@ -308,6 +320,7 @@ function select_account(value) {
 
 function save_contact() {
     var contact_info = {};
+    $('#new_contact_errors div').remove();
     $('#modal_new_contact input[type=text]').each(function(){
         contact_info[this.name] = this.value;
     });
