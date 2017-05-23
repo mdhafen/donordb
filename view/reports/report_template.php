@@ -107,7 +107,7 @@ tbody.report_multi_body::before {
 <?php
        foreach ( $row as $column ) {
 ?>
-          <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='${column['clean_value']}'" : "" ?><?= !empty($column['column_name']) ? " list_${column['column_name']}" : "" ?>"><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= $column['value'] ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
+          <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='${column['clean_value']}'" : "" ?><?= !empty($column['column_name']) ? " class='list_${column['column_name']}'" : "" ?>><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= $column['value'] ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
 <?php
        }
 ?>
@@ -167,63 +167,60 @@ var list_obj = new List('reports_table_container', list_options);
 <?php foreach ( $data['params'] as $row ) { ?>
       <div class="uk-form-row">
 <?php
+      if ( $row['type'] != 'check' ) {
+?>
+        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
+<?php
+      }
+?>
+        <div class="uk-form-controls">
+<?php
       switch( $row['type'] ) {
         case 'input' :
 ?>
-        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
-        <div class="uk-form-controls">
           <input type="text" id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>" value="<?= !empty($row['value']) ? $row['value'] : "" ?>"<?= !empty($row['pattern']) ? " pattern='${row['pattern']}'" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
-        </div>
 <?php
           break;
         case 'select' :
+          if ( !empty($row['filter_label']) || !empty($row['filter_value_label']) ) {
 ?>
-        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
-        <div class="uk-form-controls">
+          <input type="text" id="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" onkeyup="filter_select(this.value,'<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>,<?= $row['filter_label'] ? 'label' : 'value_label' ?>')">
+<?php
+          }
+?>
           <select id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>"<?= !empty($row['size']) ? " size='${row['size']}'" : "" ?><?= !empty($row['multiple']) ? " multiple" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
 <?= !empty($row['first_blank']) ? "<option value=''></option>\n" : "" ?>
 <?php foreach ( $row['option_loop'] as $option ) { ?>
             <option value="<?= $option['value'] ?>"<?= !empty($option['selected']) ? " selected" : "" ?>><?= $option['label'] ?></option>
 <?php } ?>
           </select>
-        </div>
 <?php
           break;
         case 'check' :
 ?>
-        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
-        <div class="uk-form-controls">
           <input type="checkbox" id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>" value="<?= !empty($row['value']) ? $row['value'] : "" ?>"<?= !empty($row['checked']) ? " checked" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
-        </div>
 <?php
           break;
         case 'radio' :
           print "            <span class='uk-form-label'>${row['label']}</span>\n";
           foreach ( $row['option_loop'] as $option ) {
 ?>
-        <div class="uk-form-controls">
           <label class=""><?= $option['label'] ?>
             <input type="radio" id="<?= !empty($row['id']) ? $row['id'] .'_'. $count++ : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>" value="<?= !empty($option['value']) ? $option['value'] : "" ?>"<?= !empty($option['selected']) ? " checked" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
           </label><br>
-        </div>
 <?php
           }
           break;
         case 'number' :
 ?>
-        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
-        <div class="uk-form-controls">
           <input type="number" id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>" value="<?= !empty($row['value']) ? $row['value'] : "" ?>"<?= !empty($row['min']) ? " min='${row['min']}'" : "" ?><?= !empty($row['max']) ? " max='${row['max']}'" : "" ?><?= !empty($row['step']) ? " step='${row['step']}'" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
-        </div>
 <?php
           break;
         case 'date' :
 ?>
-        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
-        <div class="uk-form-controls">
           <input type="date" id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>" data-uk-datepicker="{format:'YYYY-MM-DD'}" value="<?= !empty($row['value']) ? $row['value'] : "" ?>"<?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
-        </div>
 <?php   } ?>
+        </div>
       </div>
 <?php } ?>
       <div class="uk-form-row uk-form-controls">
@@ -234,6 +231,55 @@ var list_obj = new List('reports_table_container', list_options);
 <?php   } ?>
 <?php } ?>
 </div>
+
+<script>
+function filter_select(value,el_id,mode) {
+    if ( mode === undefined ) { mode = 'label_value'; }
+    var el = document.getElementById(el_id);
+    value = value.toLowerCase();
+    var found = -1;
+
+    for ( var i = 0; i < el.options.length; i++ ) {
+        var this_opt = el.options[i];
+        var text = this_opt.text.toLowerCase();
+        var val = this_opt.value;
+        var test = false;
+        switch ( mode ) {
+            case 'value':
+                test = val == value;
+                break;
+            case 'label':
+                test = text.indexOf(value) > -1;
+                break;
+            case 'value_label':
+            default:
+                test = text.indexOf(value) > -1 || val == value;
+                break;
+        }
+        if ( test ) {
+            if ( found < 0 ) { found = i; }
+            if ( this_opt.style.display == 'none' ) {
+                if ( this_opt.data_old_display ) {
+                    this_opt.style.display = this_opt.data_old_display;
+                }
+                else {
+                    this_opt.style.display = '';
+                }
+            }
+        }
+        else {
+            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                this_opt.data_old_display = this_opt.style.display;
+            }
+            this_opt.style.display = 'none';
+        }
+    }
+    if ( found >= 0 ) {
+        el.value = el.options[found].value;
+    }
+}
+</script>
+
 </div>
 </div>
 <?php include $data['_config']['base_dir'].'/view/footer.php'; ?>

@@ -57,6 +57,8 @@ else {
         'name' => 'locationid',
         'option_loop' => $loc_loop,
         'first_blank' => 0,
+        'filter_value_label' => 1,
+        'filter_label' => 0
     );
     $params[] = array(
         'type' => 'check',
