@@ -60,6 +60,9 @@
 <?php if ( !empty($data['account']['accountid']) ) { ?>
     <div class="uk-width-1-2">
          <div class="uk-panel uk-panel-box uk-text-center">
+             <a href="<?= $data['_config']['base_url'] ?>actions.php?op=search&amp;account=<?= $data['account']['accountid'] ?>" class="uk-button">View transactions</a>
+         </div>
+         <div class="uk-panel uk-panel-box uk-text-center">
              <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=transfer&amp;accountid=<?= $data['account']['accountid'] ?>" class="uk-button">Transfer to another account</a>
          </div>
          <div class="uk-panel uk-panel-box uk-text-center">
