@@ -64,6 +64,9 @@ function search_actions_cross( $terms ) {
       case 'accountid':
       case 'amount':
         break;  // no-op
+      case 'udate':
+        $field = 'DATE(udate)';
+        break;
       case 'date':
         $field = 'actions.date';
         $op = '>';
