@@ -21,7 +21,7 @@
     <fieldset class="uk-form-horizontal">
         <div class="uk-form-row">
             <label class="uk-form-label" for="date">Date</label>
-            <div class="uk-form-controls"><input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="date" value="<?= (!empty($data['action']['date'])) ? $data['action']['date'] : "" ?>"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span></div>
+            <div class="uk-form-controls"><input type="date" autofocus data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="date" value="<?= (!empty($data['action']['date'])) ? $data['action']['date'] : "" ?>"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span></div>
         </div>
 
         <div class="uk-form-row">
@@ -98,6 +98,7 @@
 
         <div class="uk-form-row">
             <div class="uk-form-controls">
+                 <input class="uk-button" type="submit" name="op" value="Save &amp; New">
                  <input class="uk-button" type="submit" name="op" value="Save">
                  <input class="uk-button" type="button" name="op" value="Delete"onclick="document.location='deleteaction.php?actionid=<?= $data['actionid'] ?>'">
             </div>

@@ -18,7 +18,7 @@
 			<fieldset class="uk-form-horizontal">
 				<div class="uk-form-row">
 					<label class="uk-form-label" for="_username">Username</label>
-					<div class="uk-form-controls"><input type="text" placeholder="username" id="_username" name="_username"></div>
+					<div class="uk-form-controls"><input type="text" autofocus placeholder="username" id="_username" name="_username"></div>
 				</div>
 
 				<div class="uk-form-row">

@@ -42,7 +42,7 @@ uasort( $contacts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } 
 uasort( $locations, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );
 uasort( $accounts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );
 
-if ( $op == 'Save' ) {
+if ( $op == 'Save' || $op == 'Save & New' ) {
     $updates = array();
 
     $date = input( 'date', INPUT_HTML_NONE );
@@ -92,8 +92,13 @@ if ( $op == 'Save' ) {
     if ( !empty($updates) ) {
         $actionid = update_action( $actionid, $updates );
         if ( !empty($actionid) ) {
+            if ( $op == 'Save & New' ) {
+                $action = array('contactid'=>0,'locationid'=>0,'accountid'=>0);
+                $actionid = 0;
+            } else {
+                $action = get_actions( array($actionid) )[$actionid];
+            }
             $op = 'SaveSuccess';
-            $action = get_actions( array($actionid) )[$actionid];
             foreach ( $contacts as &$con ) {
                 if ( $action['contactid'] == $con['contactid'] ) {
                     $con['selected'] = 1;
