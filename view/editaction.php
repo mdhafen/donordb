@@ -223,7 +223,8 @@ function select_contact(value) {
         var this_opt = el_contact.options[i];
         var text = this_opt.text.toLowerCase();
         var val = this_opt.value;
-        if ( text.indexOf(value) > -1 || value == val ) {
+//        if ( text.indexOf(value) > -1 || value == val ) {
+        if ( value == val ) {
             if ( found < 0 ) { found = i; }
             if ( this_opt.style.display == 'none' ) {
                 if ( this_opt.data_old_display ) {
@@ -296,7 +297,8 @@ function select_account(value) {
         var this_opt = el_account.options[i];
         var text = this_opt.text.toLowerCase();
         var val = this_opt.value;
-        if ( text.indexOf(value) > -1 || val == value ) {
+//        if ( text.indexOf(value) > -1 || val == value ) {
+        if ( val == value ) {
             if ( found < 0 ) { found = i; }
             if ( this_opt.style.display == 'none' ) {
                 if ( this_opt.data_old_display ) {
