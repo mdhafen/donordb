@@ -7,7 +7,7 @@ include_once( '../../inc/donordb.phpm' );
 authorize( 'accounts' );
 
 $locationid = input( 'locationid', INPUT_PINT );
-if ( !emtpy($locationid) ) {
+if ( !empty($locationid) ) {
     $accounts = get_accounts_at_location( $locationid );
 }
 else {
