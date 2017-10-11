@@ -21,12 +21,12 @@ $header = array(
     array('column_name' => 'note', 'column_title' => 'Notes',),
 );
 
-$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY accounts.accountid ';
+$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM actions LEFT JOIN accounts USING (accountid) WHERE (accounts.locationid = ? OR ( accounts.accountid IS NULL and actions.locationid = ? ) ) AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid ';
 
 if ( !empty($op) ) {
     $locationid = input( 'locationid', INPUT_PINT );
     $nonzero = input( 'nonzero', INPUT_STR );
-    $data = array( $locationid );
+    $data = array( $locationid, $locationid );
 
     if ( !empty($nonzero) ) {
         $query .= "HAVING total <> 0 ";
@@ -39,6 +39,7 @@ if ( !empty($op) ) {
     $sth->execute($data);
 
     while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+        if ( empty($row['name']) ) { $row['name'] = '[No Account]'; }
         $rows[] = array(
             array('column_name' => 'acc_id','value' => $row['accountid'],),
             array('column_name' => 'name','value' => $row['name'],),

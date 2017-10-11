@@ -48,6 +48,7 @@ if ( !empty($op) ) {
     $sth->execute($data);
 
     while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+        if ( empty($row['account_name']) ) { $row['account_name'] = '[No Account]'; }
         $rows[] = array(
             array(
                 'column_name' => 'date',

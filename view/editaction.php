@@ -61,7 +61,7 @@
             <div class="uk-form-controls">
                 <input type="text" id="acc_id" name="acc_id" value="<?= (!empty($data['action']['accountid'])) ? $data['action']['accountid'] : "" ?>" onkeyup="select_account(this.value)">
                 <select id="accountid" name="accountid">
-                    <option value="">Select Account</option>
+                    <option value="0">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
                     <option value="<?= $acc['accountid'] ?>"<?= !empty($acc['selected']) ? " selected" : "" ?>><?= $acc['name'] ?></option>
 <?php } ?>
@@ -177,23 +177,30 @@ $('#modal_new_contact').on({
 });
 
 function location_changed() {
-    var loc = document.getElementById('locationid').value
-    if ( loc ) {
-        var el = document.getElementById('loading_accounts_messages');
-        while ( el.firstChild ) { el.removeChild(el.firstChild); }
-        var mess = document.createElement('div');
-        mess.appendChild( document.createTextNode('Reloading Accounts...') );
-        el.appendChild( mess );
-        el.classList.remove('uk-hidden');
+    var loc = document.getElementById('locationid').value;
 
-        $.post('<?= $data['_config']['base_url'] ?>api/get_accounts_at_location.php', {"locationid" : loc}, function(xml_result) { update_account(xml_result) }, "xml" );
+    var el = document.getElementById('loading_accounts_messages');
+    while ( el.firstChild ) { el.removeChild(el.firstChild); }
+    var mess = document.createElement('div');
+    mess.appendChild( document.createTextNode('Reloading Accounts...') );
+    el.appendChild( mess );
+    el.classList.remove('uk-hidden');
+
+    var data = {};
+    if ( loc ) {
+        data.locationid = loc;
     }
+    $.post('<?= $data['_config']['base_url'] ?>api/get_accounts.php', data, function(xml_result) { update_account(xml_result) }, "xml" );
 }
 
 function update_account(xml_result) {
     var el = document.getElementById('accountid');
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
     if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
+        var opt = document.createElement('option');
+        opt.value = "0";
+        opt.appendChild( document.createTextNode("Select Account") );
+        el.appendChild( opt );
         $(xml_result).find("account").each( function(){
             var accountid = $(this).find('accountid').text();
             var account_name = $(this).find('name').text();
@@ -219,28 +226,39 @@ function select_contact(value) {
     value = value.toLowerCase();
     var found = -1;
 
-    for ( var i = 0; i < el_contact.options.length; i++ ) {
-        var this_opt = el_contact.options[i];
-        var text = this_opt.text.toLowerCase();
-        var val = this_opt.value;
+    if ( value ) {
+        for ( var i = 0; i < el_contact.options.length; i++ ) {
+            var this_opt = el_contact.options[i];
+            var text = this_opt.text.toLowerCase();
+            var val = this_opt.value;
 //        if ( text.indexOf(value) > -1 || value == val ) {
-        if ( value == val ) {
-            if ( found < 0 ) { found = i; }
-            if ( this_opt.style.display == 'none' ) {
-                if ( this_opt.data_old_display ) {
-                    this_opt.style.display = this_opt.data_old_display;
-                }
-                else {
-                    this_opt.style.display = '';
+            if ( value == val ) {
+                if ( found < 0 ) { found = i; }
+                if ( this_opt.style.display == 'none' ) {
+                    if ( this_opt.data_old_display ) {
+                        this_opt.style.display = this_opt.data_old_display;
+                    }
+                    else {
+                        this_opt.style.display = '';
+                    }
                 }
             }
+            else {
+                if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                    this_opt.data_old_display = this_opt.style.display;
+                }
+                this_opt.style.display = 'none';
+            }
+        }
+    }
+    else {
+        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+            this_opt.style.display = this_opt.data_old_display;
         }
         else {
-            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
-                this_opt.data_old_display = this_opt.style.display;
-            }
-            this_opt.style.display = 'none';
+            this_opt.style.display = '';
         }
+        el_contact.value = "0";
     }
     if ( found >= 0 ) {
         el_contact.value = el_contact.options[found].value;
@@ -253,28 +271,40 @@ function select_location(value) {
     var found = -1;
     var num_found = 0;
 
-    for ( var i = 0; i < el_location.options.length; i++ ) {
-        var this_opt = el_location.options[i];
-        var text = this_opt.text.toLowerCase();
-        var val = this_opt.value;
-        if ( text.indexOf(value) > -1 || value == val ) {
-            num_found++;
-            if ( found < 0 ) { found = i; }
-            if ( this_opt.style.display == 'none' ) {
-                if ( this_opt.data_old_display ) {
-                    this_opt.style.display = this_opt.data_old_display;
-                }
-                else {
-                    this_opt.style.display = '';
+    if ( value ) {
+        for ( var i = 0; i < el_location.options.length; i++ ) {
+            var this_opt = el_location.options[i];
+            var text = this_opt.text.toLowerCase();
+            var val = this_opt.value;
+            if ( text.indexOf(value) > -1 || value == val ) {
+                num_found++;
+                if ( found < 0 ) { found = i; }
+                if ( this_opt.style.display == 'none' ) {
+                    if ( this_opt.data_old_display ) {
+                        this_opt.style.display = this_opt.data_old_display;
+                    }
+                    else {
+                        this_opt.style.display = '';
+                    }
                 }
             }
+            else {
+                if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                    this_opt.data_old_display = this_opt.style.display;
+                }
+                this_opt.style.display = 'none';
+            }
+        }
+    }
+    else {
+        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+            this_opt.style.display = this_opt.data_old_display;
         }
         else {
-            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
-                this_opt.data_old_display = this_opt.style.display;
-            }
-            this_opt.style.display = 'none';
+            this_opt.style.display = '';
         }
+        el_location.value = "0";
+        location_changed()
     }
     if ( found >= 0 ) {
         el_location.value = el_location.options[found].value;
@@ -293,28 +323,39 @@ function select_account(value) {
     value = value.toLowerCase();
     var found = -1;
 
-    for ( var i = 0; i < el_account.options.length; i++ ) {
-        var this_opt = el_account.options[i];
-        var text = this_opt.text.toLowerCase();
-        var val = this_opt.value;
+    if ( value ) {
+        for ( var i = 0; i < el_account.options.length; i++ ) {
+            var this_opt = el_account.options[i];
+            var text = this_opt.text.toLowerCase();
+            var val = this_opt.value;
 //        if ( text.indexOf(value) > -1 || val == value ) {
-        if ( val == value ) {
-            if ( found < 0 ) { found = i; }
-            if ( this_opt.style.display == 'none' ) {
-                if ( this_opt.data_old_display ) {
-                    this_opt.style.display = this_opt.data_old_display;
-                }
-                else {
-                    this_opt.style.display = '';
+            if ( val == value ) {
+                if ( found < 0 ) { found = i; }
+                if ( this_opt.style.display == 'none' ) {
+                    if ( this_opt.data_old_display ) {
+                        this_opt.style.display = this_opt.data_old_display;
+                    }
+                    else {
+                        this_opt.style.display = '';
+                    }
                 }
             }
+            else {
+                if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                    this_opt.data_old_display = this_opt.style.display;
+                }
+                this_opt.style.display = 'none';
+            }
+        }
+    }
+    else {
+        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+            this_opt.style.display = this_opt.data_old_display;
         }
         else {
-            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
-                this_opt.data_old_display = this_opt.style.display;
-            }
-            this_opt.style.display = 'none';
+            this_opt.style.display = '';
         }
+        el_account.value = "0";
     }
     if ( found >= 0 ) {
         el_account.value = el_account.options[found].value;

@@ -98,10 +98,13 @@ function select_account(accountid) {
 }
 
 function location_changed() {
-    var loc = document.getElementById('locationid').value
+    var loc = document.getElementById('locationid').value;
+    var data = {};
     if ( loc ) {
-        var modal = UIkit.modal.blockUI("Loading Accounts...");
-        $.post('<?= $data['_config']['base_url'] ?>api/get_accounts_at_location.php', {"locationid" : loc}, function(xml_result) { update_account(xml_result,modal) }, "xml" );
+        data.locationid = loc;
+    }
+    var modal = UIkit.modal.blockUI("Loading Accounts...");
+    $.post('<?= $data['_config']['base_url'] ?>api/get_accounts.php', data, function(xml_result) { update_account(xml_result,modal) }, "xml" );
     }
 }
 
@@ -109,6 +112,10 @@ function update_account(xml_result,modal) {
     var el = document.getElementById('to_accountid');
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
     if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
+        var opt = document.createElement('option');
+        opt.value = "0";
+        opt.appendChild( document.createTextNode("Select Account") );
+        el.appendChild( opt );
         $(xml_result).find("account").each( function(){
             var accountid = $(this).find('accountid').text();
             var account_name = $(this).find('name').text();

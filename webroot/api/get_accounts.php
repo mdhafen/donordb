@@ -7,7 +7,12 @@ include_once( '../../inc/donordb.phpm' );
 authorize( 'accounts' );
 
 $locationid = input( 'locationid', INPUT_PINT );
-$accounts = get_accounts_at_location( $locationid );
+if ( !emtpy($locationid) ) {
+    $accounts = get_accounts_at_location( $locationid );
+}
+else {
+    $accounts = get_accounts();
+}
 $account_details = '';
 
 uasort( $accounts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );

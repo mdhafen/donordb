@@ -296,27 +296,41 @@ function select_field_filter_byValNText(field,value) {
     var found = -1;
     var num_found = 0;
 
-    for ( var i = 0; i < el_field.options.length; i++ ) {
-        var this_opt = el_field.options[i];
-        var text = this_opt.text.toLowerCase();
-        var val = this_opt.value;
-        if ( text.indexOf(value) > -1 || value == val ) {
-            num_found++;
-            if ( found < 0 ) { found = i; }
-            if ( this_opt.style.display == 'none' ) {
-                if ( this_opt.data_old_display ) {
-                    this_opt.style.display = this_opt.data_old_display;
+    if ( value ) {
+        for ( var i = 0; i < el_field.options.length; i++ ) {
+            var this_opt = el_field.options[i];
+            var text = this_opt.text.toLowerCase();
+            var val = this_opt.value;
+            if ( text.indexOf(value) > -1 || value == val ) {
+                num_found++;
+                if ( found < 0 ) { found = i; }
+                if ( this_opt.style.display == 'none' ) {
+                    if ( this_opt.data_old_display ) {
+                        this_opt.style.display = this_opt.data_old_display;
+                    }
+                    else {
+                        this_opt.style.display = '';
+                    }
                 }
-                else {
-                    this_opt.style.display = '';
+            }
+            else {
+                if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+                    this_opt.data_old_display = this_opt.style.display;
                 }
+                this_opt.style.display = 'none';
             }
         }
+    }
+    else {
+        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+            this_opt.style.display = this_opt.data_old_display;
+        }
         else {
-            if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
-                this_opt.data_old_display = this_opt.style.display;
-            }
-            this_opt.style.display = 'none';
+            this_opt.style.display = '';
+        }
+        el_field.value = "0";
+        if ( field == 'locationid' ) {
+            location_changed();
         }
     }
     if ( found >= 0 ) {
@@ -338,16 +352,22 @@ function input_update(field,value) {
 
 function location_changed() {
     var loc = document.getElementById('locationid').value
+    var modal = UIkit.modal.blockUI("Loading Accounts...");
+    var data = {};
     if ( loc ) {
-        var modal = UIkit.modal.blockUI("Loading Accounts...");
-        $.post('<?= $data['_config']['base_url'] ?>api/get_accounts_at_location.php', {"locationid" : loc}, function(xml_result) { update_account(xml_result,modal) }, "xml" );
+        data.locationid = loc;
     }
+    $.post('<?= $data['_config']['base_url'] ?>api/get_accounts.php', data, function(xml_result) { update_account(xml_result,modal) }, "xml" );
 }
 
 function update_account(xml_result,modal) {
     var el = document.getElementById('accountid');
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
     if ( $(xml_result).find("state").text() == 'Success' ) {
+        var opt = document.createElement('option');
+        opt.value = "0";
+        opt.appendChild( document.createTextNode("Select Account") );
+        el.appendChild( opt );
         $(xml_result).find("account").each( function(){
             var accountid = $(this).find('accountid').text();
             var account_name = $(this).find('name').text();

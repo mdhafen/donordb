@@ -63,11 +63,20 @@ if ( !empty($op) ) {
 
     $query = "SELECT SUM(amount) AS amount FROM actions WHERE accountid = ? AND date < ? GROUP BY accountid";
     $sth2 = $dbh->prepare($query);
+    $query = "SELECT SUM(amount) AS amount FROM actions WHERE accountid IS NULL AND date < ? GROUP BY accountid";
+    $sth3 = $dbh->prepare($query);
 
     while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+        if ( empty($row['account_name']) ) { $row['account_name'] = '[No Account]'; }
         if ( empty($rows[ $row['account_name'] ]) ) {
-            $sth2->execute( array($row['accountid'],$s_date) );
-            $previous = $sth2->fetch( PDO::FETCH_ASSOC );
+            if ( empty($row['accountid']) ) {
+                $sth3->execute( array($s_date) );
+                $previous = $sth3->fetch( PDO::FETCH_ASSOC );
+            }
+            else {
+                $sth2->execute( array($row['accountid'],$s_date) );
+                $previous = $sth2->fetch( PDO::FETCH_ASSOC );
+            }
 
             $rows[ $row['account_name'] ] = array(
                 'name' => $row['account_name'],
