@@ -322,11 +322,14 @@ function select_field_filter_byValNText(field,value) {
         }
     }
     else {
-        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
-            this_opt.style.display = this_opt.data_old_display;
-        }
-        else {
-            this_opt.style.display = '';
+        for ( var i = 0; i < el_field.options.length; i++ ) {
+            var this_opt = el_field.options[i];
+            if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+                this_opt.style.display = this_opt.data_old_display;
+            }
+            else {
+                this_opt.style.display = '';
+            }
         }
         el_field.value = "0";
         if ( field == 'locationid' ) {

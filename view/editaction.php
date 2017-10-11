@@ -252,11 +252,14 @@ function select_contact(value) {
         }
     }
     else {
-        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
-            this_opt.style.display = this_opt.data_old_display;
-        }
-        else {
-            this_opt.style.display = '';
+        for ( var i = 0; i < el_contact.options.length; i++ ) {
+            var this_opt = el_contact.options[i];
+            if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+                this_opt.style.display = this_opt.data_old_display;
+            }
+            else {
+                this_opt.style.display = '';
+            }
         }
         el_contact.value = "0";
     }
@@ -297,11 +300,14 @@ function select_location(value) {
         }
     }
     else {
-        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
-            this_opt.style.display = this_opt.data_old_display;
-        }
-        else {
-            this_opt.style.display = '';
+        for ( var i = 0; i < el_location.options.length; i++ ) {
+            var this_opt = el_location.options[i];
+            if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+                this_opt.style.display = this_opt.data_old_display;
+            }
+            else {
+                this_opt.style.display = '';
+            }
         }
         el_location.value = "0";
         location_changed()
@@ -349,11 +355,14 @@ function select_account(value) {
         }
     }
     else {
-        if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
-            this_opt.style.display = this_opt.data_old_display;
-        }
-        else {
-            this_opt.style.display = '';
+        for ( var i = 0; i < el_account.options.length; i++ ) {
+            var this_opt = el_account.options[i];
+            if ( this_opt.data_old_display && this_opt.data_old_display != 'none' ) {
+                this_opt.style.display = this_opt.data_old_display;
+            }
+            else {
+                this_opt.style.display = '';
+            }
         }
         el_account.value = "0";
     }
