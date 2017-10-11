@@ -21,7 +21,7 @@ if ( !empty($actionid) ) {
             break;
         }
     }
-    if ( !empty($action['locationid']) && !empty($action['accountid']) && $accounts[ $action['accountid'] ]['locationid'] == $action['locationid'] ) {
+    if ( !empty($action['locationid']) && ( empty($action['accountid']) || $accounts[ $action['accountid'] ]['locationid'] == $action['locationid'] ) ) {
         $accounts = get_accounts_at_location( $action['locationid'] );
     }
     foreach ( $accounts as &$acc ) {
@@ -50,7 +50,7 @@ if ( $op == 'Save' || $op == 'Save & New' ) {
     ( $contactid = input('contactid',INPUT_PINT) ) || ( $contactid = null );
     ( $accountid = input('accountid',INPUT_PINT) ) || ( $accountid = null );
     ( $locationid = input('locationid',INPUT_PINT) ) || ( $locationid = null );
-    ( $receipt = input('receipt',INPUT_PINT) ) || ( $receipt = null );
+    ( $receipt = input('receipt',INPUT_HTML_NONE) ) || ( $receipt = null );
     $po = input( 'po', INPUT_HTML_NONE );
     $note = input( 'note', INPUT_HTML_NONE );
     $inkind = input( 'in_kind', INPUT_HTML_NONE );
