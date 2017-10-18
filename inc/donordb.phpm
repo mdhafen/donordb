@@ -63,6 +63,8 @@ function search_actions_cross( $terms ) {
       case 'contactid':
       case 'accountid':
       case 'amount':
+      case 'receipt':
+      case 'po':
         break;  // no-op
       case 'udate':
         $field = 'DATE(udate)';

@@ -11,6 +11,8 @@ $account = input( 'account', INPUT_PINT );
 $contact = input( 'contact', INPUT_PINT );
 $location = input( 'location', INPUT_PINT );
 $amount = input( 'amount', INPUT_NUM );
+$receipt = input( 'receipt', INPUT_HTML_NONE );
+$po = input( 'po', INPUT_HTML_NONE );
 $date = input( 'date', INPUT_HTML_NONE );
 $udate = input( 'udate', INPUT_HTML_NONE );
 $search = array();
@@ -21,6 +23,8 @@ if ( !empty($account) ) { $search['accountid'] = $account; }
 if ( !empty($contact) ) { $search['contactid'] = $contact; }
 if ( !empty($location) ) { $search['locationid'] = $location; }
 if ( !empty($amount) ) { $search['amount'] = $amount; }
+if ( !empty($receipt) ) { $search['receipt'] = $receipt; }
+if ( !empty($po) ) { $search['po'] = $po; }
 if ( !empty($date) ) { $search['date'] = $date; }
 if ( !empty($udate) ) { $search['udate'] = $udate; }
 

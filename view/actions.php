@@ -250,9 +250,27 @@ var list_obj = new List('actions_table_container', list_options);
 
     <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
         <div class="uk-form-row uk-panel-box uk-panel">
+            <label class="uk-form-label" for="receipt">receipt</label>
+            <div class="uk-form-controls">
+                <input type="text" id="receipt" name="receipt" value="" tabindex="5">
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
+            <label class="uk-form-label" for="po">P.O.</label>
+            <div class="uk-form-controls">
+                <input type="text" id="po" name="po" value="" tabindex="6">
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="uk-form-stacked uk-margin-bottom uk-margin-right">
+        <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="date">Actions Since</label>
             <div class="uk-form-controls">
-                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="date" value="" tabindex="5"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
+                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="date" name="date" value="" tabindex="7"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
             </div>
         </div>
     </fieldset>
@@ -261,14 +279,14 @@ var list_obj = new List('actions_table_container', list_options);
         <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="udate">Date Entered</label>
             <div class="uk-form-controls">
-                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="udate" name="udate" value="" tabindex="6"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
+                <input type="date" data-uk-datepicker="{format:'YYYY-MM-DD'}" id="udate" name="udate" value="" tabindex="8"> <span class="uk-form-help-inline">(yyyy-mm-dd)</span>
             </div>
         </div>
     </fieldset>
     </div>
     <div class="uk-form-row">
         <div class="uk-form-controls">
-             <input class="uk-button" type="submit" name="op" value="Search" tabindex="7">
+             <input class="uk-button" type="submit" name="op" value="Search" tabindex="9">
         </div>
     </div>
 </form>
