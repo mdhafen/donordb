@@ -169,7 +169,7 @@ var list_obj = new List('reports_table_container', list_options);
 <?php
       if ( $row['type'] != 'check' ) {
 ?>
-        <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
+        <label class="uk-form-label" for="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>"><?= $row['label'] ?></label>
 <?php
       }
 ?>
@@ -198,7 +198,10 @@ var list_obj = new List('reports_table_container', list_options);
           break;
         case 'check' :
 ?>
+          <label class="uk-form-label">
           <input type="checkbox" id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>" value="<?= !empty($row['value']) ? $row['value'] : "" ?>"<?= !empty($row['checked']) ? " checked" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
+          <?= $row['label'] ?>
+          </label>
 <?php
           break;
         case 'radio' :
