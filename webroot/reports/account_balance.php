@@ -21,7 +21,7 @@ $header = array(
     array('column_name' => 'note', 'column_title' => 'Notes',),
 );
 
-$query = 'SELECT accountid, name, SUM(actions.amount) as total, accounts.note FROM actions LEFT JOIN accounts USING (accountid) WHERE (accounts.locationid = ? OR ( accounts.accountid IS NULL and actions.locationid = ? ) ) AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid ';
+$query = '( SELECT accounts.accountid,name, 0 AS total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = 950 AND actions.accountid IS NULL AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY accounts.accountid ) UNION ( SELECT actions.accountid,COALESCE(name,"[No Account]"), SUM(actions.amount) AS total, accounts.note FROM actions LEFT JOIN accounts USING (accountid) WHERE (accounts.locationid = 950 OR ( actions.accountid IS NULL AND actions.locationid = 950 ) ) AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid,accounts.accountid ) ORDER BY accountid';
 
 if ( !empty($op) ) {
     $locationid = input( 'locationid', INPUT_PINT );
