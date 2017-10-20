@@ -35,7 +35,7 @@ function get_actions_cross( $ids = array() ) {
   $dbh = db_connect('core');
   $result = array();
 
-  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions LEFT JOIN contacts USING (contactid) LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) ";
+  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,COALESCE(accounts.name,'[No Account]') AS account_name,actions.note FROM actions LEFT JOIN contacts USING (contactid) LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) ";
   if ( !empty($ids) ) {
     $query .= "WHERE actionid IN (". implode(',',array_filter($ids)) .") ";
   }
@@ -64,7 +64,9 @@ function search_actions_cross( $terms ) {
       case 'accountid':
         break;  // no-op
       case 'amount':
-	$term = preg_replace( '/[^\d\.]/', '', $term );
+        $op = 'LIKE';
+        $term = preg_replace( '/[^-\d\.]/', '', $term );
+        $term = number_format($term,2,'.','');
         break;
       case 'receipt':
       case 'po':
@@ -95,7 +97,7 @@ function search_actions_cross( $terms ) {
 
   $dbh = db_connect('core');
 
-  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,accounts.name AS account_name,actions.note FROM actions LEFT JOIN contacts USING (contactid) LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) ";
+  $query = "SELECT actions.*,contacts.*,accounts.*,location.name AS location_name,contacts.name AS contact_name,COALESCE(accounts.name,'[No Account]') AS account_name,actions.note FROM actions LEFT JOIN contacts USING (contactid) LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) ";
   if ( !empty($wheres) ) {
       $query .= "WHERE ". ( implode( ' AND ', $wheres) );
   }
