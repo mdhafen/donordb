@@ -21,16 +21,17 @@ $header = array(
     array('column_name' => 'note', 'column_title' => 'Notes',),
 );
 
-$query = '( SELECT actions.accountid,"[No Account]" AS name, SUM(actions.amount) AS total, "" AS note FROM actions WHERE actions.locationid = ? AND actions.accountid IS NULL AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid ) UNION ( SELECT accounts.accountid,name, SUM(actions.amount) AS total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid,accounts.accountid ) ';
+$nonzero = input( 'nonzero', INPUT_STR );
+$nonzero_str = '';
+if ( !empty($nonzero) ) {
+    $nonzero_str .= " HAVING total <> 0 ";
+}
+
+$query = '( SELECT actions.accountid,"[No Account]" AS name, SUM(actions.amount) AS total, "" AS note FROM actions WHERE actions.locationid = ? AND actions.accountid IS NULL AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid '. $nonzero_str .') UNION ( SELECT accounts.accountid,name, SUM(actions.amount) AS total, accounts.note FROM accounts LEFT JOIN actions USING (accountid) WHERE accounts.locationid = ? AND ( actions.in_kind = 0 OR actions.in_kind IS NULL ) GROUP BY actions.accountid,accounts.accountid '. $nonzero_str .') ';
 
 if ( !empty($op) ) {
     $locationid = input( 'locationid', INPUT_PINT );
-    $nonzero = input( 'nonzero', INPUT_STR );
     $data = array( $locationid, $locationid );
-
-    if ( !empty($nonzero) ) {
-        $query .= "HAVING total <> 0 ";
-    }
 
     $query .= "ORDER BY name";
 
