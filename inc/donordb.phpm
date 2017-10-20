@@ -62,10 +62,15 @@ function search_actions_cross( $terms ) {
         $field = 'actions.locationid';
       case 'contactid':
       case 'accountid':
+        break;  // no-op
       case 'amount':
+	$term = preg_replace( '/[^\d\.]/', '', $term );
+        break;
       case 'receipt':
       case 'po':
-        break;  // no-op
+        $op = 'LIKE';
+        $term = '%'. $term;
+        break;
       case 'udate':
         $field = 'DATE(udate)';
         break;
