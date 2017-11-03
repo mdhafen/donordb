@@ -21,17 +21,22 @@ $header = array(
     array('column_name' => 'ending', 'column_title' => 'Ending Balance'),
 );
 
-$query = 'SELECT location.name, (SELECT SUM(amount) from actions AS a1 WHERE udate <= ? AND in_kind = 0 AND a1.locationid = a0.locationid) AS beginning, (SELECT SUM(amount) from actions AS a2 WHERE udate <= ? AND udate >= ? AND is_transfer = 1 AND in_kind = 0 AND a2.locationid = a0.locationid) AS transfer, (SELECT SUM(amount) from actions AS a3 WHERE udate <= ? AND udate >= ? AND amount > 0 AND in_kind = 0 AND is_transfer = 0 AND a3.locationid = a0.locationid) AS revenue, (SELECT SUM(amount) from actions AS a4 WHERE udate <= ? AND udate >= ? AND amount < 0 AND in_kind = 0 AND is_transfer = 0 AND a4.locationid = a0.locationid) AS expense, SUM(amount) AS ending FROM location LEFT JOIN actions AS a0 USING (locationid) WHERE in_kind = 0 AND udate <= ? GROUP BY locationid';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
     $e_date = input( 'end_date', INPUT_HTML_NONE );
-    $data = array( $s_date, $e_date, $s_date, $e_date, $s_date, $e_date, $s_date, $e_date );
     $title = 'Revenue and Expense by School For '.date('m/d/Y',strtotime($s_date)).' to '.date('m/d/Y',strtotime($e_date));
 
     $dbh = db_connect('core');
+
+    $s_date = $dbh->quote($s_date);
+    $e_date = $dbh->quote($e_date);
+    $query = "SELECT '[No Location]' as name, (SELECT COALESCE(SUM(amount),0.00) from actions AS a1 WHERE date <= $s_date AND in_kind = 0 AND a1.locationid IS NULL) AS beginning, (SELECT COALESCE(SUM(amount),0.00) from actions AS a2 WHERE date <= $e_date AND date >= $s_date AND is_transfer = 1 AND in_kind = 0 AND a2.locationid IS NULL) AS transfer, (SELECT COALESCE(SUM(amount),0.00) from actions AS a3 WHERE date <= $e_date AND date >= $s_date AND amount > 0 AND in_kind = 0 AND is_transfer = 0 AND a3.locationid IS NULL) AS revenue, (SELECT COALESCE(SUM(amount),0.00) from actions AS a4 WHERE date <= $e_date AND date >= $s_date AND amount < 0 AND in_kind = 0 AND is_transfer = 0 AND a4.locationid IS NULL) AS expense, COALESCE(SUM(amount),0.00) AS ending FROM actions a0  WHERE in_kind = 0 AND date <= $e_date AND locationid IS NULL ".
+        "UNION ALL ".
+        "SELECT location.name, (SELECT COALESCE(SUM(amount),0.00) from actions AS a1 WHERE date <= $s_date AND in_kind = 0 AND a1.locationid = a0.locationid) AS beginning, (SELECT COALESCE(SUM(amount),0.00) from actions AS a2 WHERE date <= $e_date AND date >= $s_date AND is_transfer = 1 AND in_kind = 0 AND a2.locationid = a0.locationid) AS transfer, (SELECT COALESCE(SUM(amount),0.00) from actions AS a3 WHERE date <= $e_date AND date >= $s_date AND amount > 0 AND in_kind = 0 AND is_transfer = 0 AND a3.locationid = a0.locationid) AS revenue, (SELECT COALESCE(SUM(amount),0.00) from actions AS a4 WHERE date <= $e_date AND date >= $s_date AND amount < 0 AND in_kind = 0 AND is_transfer = 0 AND a4.locationid = a0.locationid) AS expense, COALESCE(SUM(amount),0.00) AS ending FROM location LEFT JOIN actions a0 USING (locationid) WHERE in_kind = 0 AND date <= $e_date AND a0.locationid IS NOT NULL GROUP BY locationid ORDER BY name";
+
     $sth = $dbh->prepare($query);
-    $sth->execute($data);
+    $sth->execute();
 
     $beginning = $ending = $transfers = $revenues = $expenses = 0;
 
@@ -45,23 +50,23 @@ if ( !empty($op) ) {
             array('column_name' => 'name','value' => $row['name'],),
             array(
                 'column_name' => 'beginning',
-                'value' => number_format($row['beginning']),
+                'value' => number_format($row['beginning'],2),
             ),
             array(
                 'column_name' => 'transfers',
-                'value' => number_format($row['transfer']),
+                'value' => number_format($row['transfer'],2),
             ),
             array(
                 'column_name' => 'revenues',
-                'value' => number_format($row['revenue']),
+                'value' => number_format($row['revenue'],2),
             ),
             array(
                 'column_name' => 'expenses',
-                'value' => number_format($row['expense']),
+                'value' => number_format($row['expense'],2),
             ),
             array(
                 'column_name' => 'ending',
-                'value' => number_format($row['ending']),
+                'value' => number_format($row['ending'],2),
             ),
         );
     }
@@ -69,23 +74,23 @@ if ( !empty($op) ) {
         array('column_name' => 'name','value' => 'Totals', 'new_group' => true),
         array(
             'column_name' => 'beginning',
-            'value' => number_format($beginning),
+            'value' => number_format($beginning,2),
         ),
         array(
             'column_name' => 'transfers',
-            'value' => number_format($transfers),
+            'value' => number_format($transfers,2),
         ),
         array(
             'column_name' => 'revenues',
-            'value' => number_format($revenues),
+            'value' => number_format($revenues,2),
         ),
         array(
             'column_name' => 'expenses',
-            'value' => number_format($expenses),
+            'value' => number_format($expenses,2),
         ),
         array(
             'column_name' => 'ending',
-            'value' => number_format($ending),
+            'value' => number_format($ending,2),
         ),
     );
 }
