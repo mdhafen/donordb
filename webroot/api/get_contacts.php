@@ -12,7 +12,7 @@ $contact_details = '';
 uasort( $contacts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );
 
 function xml_encode(&$val, $key) {
-    $val = htmlspecialchars($val,ENT_QUOTES|ENT_XML1|ENT_SUBSTITUTE);
+    $val = htmlspecialchars(htmlspecialchars_decode($val,ENT_QUOTES|ENT_HTML5),ENT_QUOTES|ENT_XML1|ENT_SUBSTITUTE);
 }
 
 foreach ( $contacts as $con ) {

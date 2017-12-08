@@ -18,7 +18,7 @@ $account_details = '';
 uasort( $accounts, function($a,$b){ return strcasecmp($a['name'],$b['name']); } );
 
 foreach ( $accounts as $acc ) {
-    $account_details .= "<account><accountid>". $acc['accountid'] ."</accountid><name>". htmlspecialchars($acc['name'],ENT_QUOTES|ENT_XML1|ENT_SUBSTITUTE) ."</name></account>";
+    $account_details .= "<account><accountid>". $acc['accountid'] ."</accountid><name>". htmlspecialchars(htmlspecialchars_decode($acc['name'],ENT_QUOTES|ENT_HTML5),ENT_QUOTES|ENT_XML1|ENT_SUBSTITUTE) ."</name></account>";
 }
 
 if ( !empty($accounts) ) {
