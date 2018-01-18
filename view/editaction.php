@@ -198,6 +198,7 @@ function update_account(xml_result) {
     var acc_default = document.getElementById('acc_id').value;
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
     if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
+        var default_found = false;
         var opt = document.createElement('option');
         opt.value = "0";
         opt.appendChild( document.createTextNode("Select Account") );
@@ -210,11 +211,12 @@ function update_account(xml_result) {
             if ( acc_default && accountid == acc_default ) {
                 opt.selected = true;
                 opt.defaultSelected = true;
+                default_found = true;
             }
             opt.appendChild( document.createTextNode(account_name) );
             el.appendChild( opt );
         });
-        if ( acc_default ) {
+        if ( default_found ) {
             el.value = acc_default;
         }
         $('#loading_accounts_messages').addClass('uk-hidden');
