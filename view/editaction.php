@@ -195,6 +195,7 @@ function location_changed() {
 
 function update_account(xml_result) {
     var el = document.getElementById('accountid');
+    var acc_default = document.getElementById('acc_id').value;
     while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
     if ( $(xml_result).find(" > result > state").text() == 'Success' ) {
         var opt = document.createElement('option');
@@ -206,9 +207,16 @@ function update_account(xml_result) {
             var account_name = $(this).find('name').text();
             var opt = document.createElement('option');
             opt.value = accountid;
+            if ( acc_default && accountid == acc_default ) {
+                opt.selected = true;
+                opt.defaultSelected = true;
+            }
             opt.appendChild( document.createTextNode(account_name) );
             el.appendChild( opt );
         });
+        if ( acc_default ) {
+            el.value = acc_default;
+        }
         $('#loading_accounts_messages').addClass('uk-hidden');
     }
     else {
