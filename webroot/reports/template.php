@@ -29,11 +29,11 @@ if ( !empty($op) ) {
     $data = array();
 
     if ( !empty($s_date) ) {
-        $query .= " AND udate >= ?";
+        $query .= " AND date >= ?";
         $data[] = $s_date;
     }
     if ( !empty($e_date) ) {
-        $query .= " AND udate <= ?";
+        $query .= " AND date <= ?";
         $data[] = $e_date;
     }
     if ( !empty($locationid) ) {

@@ -34,11 +34,11 @@ if ( !empty($op) ) {
     $data = array();
 
     if ( !empty($s_date) ) {
-        $wheres[] = "udate >= ?";
+        $wheres[] = "date >= ?";
         $data[] = $s_date;
     }
     if ( !empty($e_date) ) {
-        $wheres[] = "udate <= ?";
+        $wheres[] = "date <= ?";
         $data[] = $e_date;
     }
     if ( !empty($locationid) ) {

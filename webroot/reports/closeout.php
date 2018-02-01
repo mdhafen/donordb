@@ -34,11 +34,11 @@ if ( !empty($op) ) {
     $data = array();
 
     if ( !empty($s_date) ) {
-        $where[] = "udate >= ?";
+        $where[] = "date >= ?";
         $data[] = $s_date;
     }
     if ( !empty($e_date) ) {
-        $where[] = "udate <= ?";
+        $where[] = "date <= ?";
         $data[] = $e_date;
     }
     if ( !empty($where) ) {
