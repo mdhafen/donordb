@@ -10,6 +10,7 @@
 <div class="uk-margin uk-margin-left">
 <ul class="uk-list uk-list-line uk-margin-left">
       <li><a href="<?= $data['_config']['base_url'] ?>reports/transactions.php">Transactions</a></li>
+      <li><a href="<?= $data['_config']['base_url'] ?>reports/transactions_by_date.php">Transactions entered on date</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/account_balance.php">Account Balance</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/receipts.php">Receipts</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/in_kind_receipts.php">In Kind Receipts</a></li>
