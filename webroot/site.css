@@ -1,3 +1,7 @@
 .site-header-title {
 	font-size: 30pt;
 }
+
+.list_amount {
+	text-align: right;
+}
