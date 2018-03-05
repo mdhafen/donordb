@@ -26,17 +26,17 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="name">Name</label>
-            <div class="uk-form-controls"><input type="text" id="name" name="name" value="<?= (!empty($data['contact']['name'])) ? $data['contact']['name'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" class="uk-form-width-large" id="name" name="name" value="<?= (!empty($data['contact']['name'])) ? $data['contact']['name'] : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="company">Company</label>
-            <div class="uk-form-controls"><input type="text" id="company" name="company" value="<?= (!empty($data['contact']['company'])) ? $data['contact']['company'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" class="uk-form-width-large" id="company" name="company" value="<?= (!empty($data['contact']['company'])) ? $data['contact']['company'] : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="street">Street</label>
-            <div class="uk-form-controls"><input type="text" id="street" name="street" value="<?= (!empty($data['contact']['street'])) ? $data['contact']['street'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" class="uk-form-width-medium" id="street" name="street" value="<?= (!empty($data['contact']['street'])) ? $data['contact']['street'] : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
