@@ -321,4 +321,28 @@ function delete_action( $actionid ) {
   return $result;
 }
 
+function modlog_add( $table, $id, $field, $new_value, $old_value ) {
+    $mod_table = '';
+    $id_column = '';
+    switch ( $table ) {
+        case 'action':
+            $mod_table = 'modlog_actions';
+            $id_column = 'actionid';
+            break;
+    }
+
+    $dbh = db_connect('core');
+    $query = "INSERT INTO ${mod_table} ($id_column,field,old_value,new_value,userid,ipAddress) VALUES (:id,:field,:oldval,:newval,:user,:client)";
+    $sth = $dbh->prepare($query);
+    $sth->bindValue( ':id', $id );
+    $sth->bindValue( ':field', $field );
+    $sth->bindValue( ':oldval', $old_value );
+    $sth->bindValue( ':newval', $new_value );
+    $sth->bindValue( ':user', !empty($_SESSION['loggedin_user'])?$_SESSION['loggedin_user']['userid']:null );
+    $sth->bindValue( ':client', inet_pton(get_remote_ip()) );
+    $sth->execute();
+    $result = $sth->errorCode() !== '00000';
+    return $result;
+}
+
 ?>

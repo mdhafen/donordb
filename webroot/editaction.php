@@ -79,19 +79,22 @@ if ( $op == 'Save' || $op == 'Save & New' ) {
     if ( !array_key_exists('po',$action) || $action['po'] != $po ) {
         $updates['po'] = $po;
     }
-    if ( empty($action['note']) || $action['note'] != $note ) {
+    if ( !isset($action['note']) || $action['note'] != $note ) {
         $updates['note'] = $note;
     }
-    if ( empty($action['in_kind']) || $action['in_kind'] != $inkind ) {
+    if ( !isset($action['in_kind']) || $action['in_kind'] != $inkind ) {
         $updates['in_kind'] = $inkind;
     }
-    if ( empty($action['is_transfer']) || $action['is_transfer'] != $transfer ) {
+    if ( !isset($action['is_transfer']) || $action['is_transfer'] != $transfer ) {
         $updates['is_transfer'] = $transfer;
     }
 
     if ( !empty($updates) ) {
         $actionid = update_action( $actionid, $updates );
         if ( !empty($actionid) ) {
+            foreach ( $updates as $field => $value ) {
+                modlog_add('action',$actionid,$field,$value,$action[$field]);
+            }
             if ( $op == 'Save & New' ) {
                 $action = array('contactid'=>0,'locationid'=>0,'accountid'=>0);
                 $actionid = 0;

@@ -2,6 +2,7 @@
 
 $updates = array(
   '0001-Change_receipt_to_varchar',
+  '0002-Add_modlog_actions',
 );
 $results = array();
 
