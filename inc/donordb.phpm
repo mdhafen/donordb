@@ -345,4 +345,98 @@ function modlog_add( $table, $id, $field, $new_value, $old_value ) {
     return $result;
 }
 
+function modlog_get( $table, $id ) {
+    $mod_table = '';
+    $id_column = '';
+    switch ( $table ) {
+        case 'action':
+            $mod_table = 'modlog_actions';
+            $id_column = 'actionid';
+            break;
+    }
+
+    $dbh = db_connect('core');
+    $query = "SELECT * FROM $mod_table WHERE $id_column = :id";
+    $sth = $dbh->prepare($query);
+    $sth->bindValue( ':id', $id );
+    $sth->execute();
+    $result = $sth->errorCode() !== '00000';
+    if ( ! $result ) {
+        $result = [];
+        while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+            $row = stripslashes_array( $row );
+            $result[] = $row;
+        }
+    }
+    return $result;
+}
+
+function modlog_search( $table, $terms ) {
+    $mod_table = '';
+    $id_column = '';
+    switch ( $table ) {
+        case 'action':
+            $mod_table = 'modlog_actions';
+            $id_column = 'actionid';
+            break;
+    }
+
+    $dbh = db_connect('core');
+
+    foreach ( $terms as $field => $term ) {
+        $op = '=';
+        $column = substr($field,0,3);
+        $field = substr($field,4);
+        if ( in_array($field,['date','mod_date']) ) {
+            $timestamp = strtotime($term);
+            if ( $timestamp !== false ) {
+                $term = date( 'Y-m-d', $timestamp );
+            }
+        }
+        switch ( $field ) {
+            case 'mod_date':
+                $wheres[] = "(DATE(timestamp) = ?)";
+                $data[] = $term;
+                continue 2;
+            case 'locationid':
+            case 'contactid':
+            case 'accountid':
+            case 'date':
+                break;  // no-op
+            case 'amount':
+                $op = 'LIKE';
+                $term = preg_replace( '/[^-\d\.]/', '', $term );
+                $term = number_format($term,2,'.','');
+                break;
+            case 'receipt':
+            case 'po':
+                $op = 'LIKE';
+                $term = '%'. $term;
+                break;
+        }
+        $wheres[] = "(field = '$field' AND ${column}_value $op ?)";
+        $data[] = $term;
+    }
+
+    if ( !empty($wheres) ) {
+        $where_str = "WHERE ". ( implode( ' AND ', $wheres) );
+    }
+    $query = "SELECT DISTINCT $id_column FROM $mod_table $where_str";
+    $sth = $dbh->prepare( $query );
+
+    $sth->execute($data);
+
+    while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
+        $result[] = $row[$id_column];
+    }
+
+    switch ( $table ) {
+        case 'action':
+            $result = get_actions_cross($result);
+            break;
+    }
+
+    return $result;
+}
+
 ?>

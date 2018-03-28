@@ -6,6 +6,7 @@
   <ul class="uk-nav-sub">
     <li><a href="<?= $data['_config']['base_url'] ?>editaction.php">Add an Action</a></li>
     <li><a href="<?= $data['_config']['base_url'] ?>actions.php">Search Actions</a></li>
+    <li><a href="<?= $data['_config']['base_url'] ?>modlog_actions.php">Search Actions Changes</a></li>
   </ul>
 </li>
 <?php } ?>
