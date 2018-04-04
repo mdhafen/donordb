@@ -426,14 +426,17 @@ function modlog_search( $table, $terms ) {
 
     $sth->execute($data);
 
+    $result = [];
     while ( $row = $sth->fetch( PDO::FETCH_ASSOC ) ) {
         $result[] = $row[$id_column];
     }
 
-    switch ( $table ) {
-        case 'action':
-            $result = get_actions_cross($result);
-            break;
+    if ( !empty($result) ) {
+        switch ( $table ) {
+            case 'action':
+                $result = get_actions_cross($result);
+                break;
+        }
     }
 
     return $result;
