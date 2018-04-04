@@ -237,7 +237,7 @@ var list_obj = new List('reports_table_container', list_options);
 
 <script>
 function filter_select(value,el_id,mode) {
-    if ( mode === undefined ) { mode = 'label_value'; }
+    if ( mode === undefined ) { mode = 'value_label'; }
     var el = document.getElementById(el_id);
     value = value.toLowerCase();
     var found = -1;
