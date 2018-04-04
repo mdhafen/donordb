@@ -86,7 +86,7 @@ else {
     $params[] = array(
         'type' => 'date',
         'label' => 'End Date',
-        'name' => 'end_date'
+        'name' => 'end_date',
         'value' => $e_date,
     );
     $loc_loop = array();
