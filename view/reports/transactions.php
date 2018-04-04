@@ -142,6 +142,13 @@ var list_obj = new List('reports_table_container', list_options);
 ?>
         <label class="uk-form-label" for="<?= $row['name'] ?>"><?= $row['label'] ?></label>
         <div class="uk-form-controls">
+<?php
+          if ( !empty($row['filter_label']) || !empty($row['filter_value_label']) ) {
+?>
+          <input type="text" id="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>" name="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>" onkeyup="filter_select(this.value,'<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>','<?= $row['filter_label'] ? 'label' : 'value_label' ?>')">
+<?php
+          }
+?>
           <select id="<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count++ ?>" name="<?= $row['name'] ?>"<?= !empty($row['size']) ? " size='${row['size']}'" : "" ?><?= !empty($row['multiple']) ? " multiple" : "" ?><?= !empty($row['onchange']) ? " ${row['onchange']}" : "" ?>>
 <?= !empty($row['first_blank']) ? "<option value=''></option>\n" : "" ?>
 <?php foreach ( $row['option_loop'] as $option ) { ?>
@@ -194,30 +201,76 @@ var list_obj = new List('reports_table_container', list_options);
     </fieldset>
   </form>
   <script>
-      var accts = [
-<?php
+    var accts = [ <?php
       $last = end($data['all_accounts']);
-      foreach ( $data['all_accounts'] as $acct ) { ?>
-          { 'locationid' : '<?= $acct['locationid'] ?>', 'accountid' : '<?= $acct['accountid'] ?>', 'name' : '<?= $acct['name'] ?>' }<?= $acct == $last ? '' : ',' ?>
-<?php } ?>
-      ];
-      function update_account_select(locId) {
-          if ( locId ) {
-              var modal = UIkit.modal.blockUI("Reloading Accounts...");
-              var el = document.getElementById('account_select');
-              while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
-              for ( var i=0, l=accts.length; i < l; i++ ) {
-                  var opt = accts[i];
-                  if ( opt.locationid == locId ) {
-                      var new_opt = document.createElement('option');
-                      new_opt.value = opt.accountid;
-                      new_opt.appendChild( document.createTextNode( opt.name ) );
-                      el.appendChild( new_opt );
-                  }
-              }
-              modal.hide();
+      foreach ( $data['all_accounts'] as $acct ) {
+          print json_encode($acct);
+          if ( $acct != $last ) { print ','; }
+      } ?> ];
+
+    function update_account_select(locId) {
+      if ( locId ) {
+        var modal = UIkit.modal.blockUI("Reloading Accounts...");
+        var el = document.getElementById('account_select');
+        while ( el.lastChild && el.lastChild != el.firstChild ) { el.removeChild(el.lastChild); }
+        for ( var i=0, l=accts.length; i < l; i++ ) {
+          var opt = accts[i];
+          if ( opt.locationid == locId ) {
+            var new_opt = document.createElement('option');
+            new_opt.value = opt.accountid;
+            new_opt.appendChild( document.createTextNode( opt.name ) );
+            el.appendChild( new_opt );
           }
+        }
+        modal.hide();
       }
+    }
+
+    function filter_select(value,el_id,mode) {
+      if ( mode === undefined ) { mode = 'value_label'; }
+      var el = document.getElementById(el_id);
+      value = value.toLowerCase();
+      var found = -1;
+
+      for ( var i = 0; i < el.options.length; i++ ) {
+        var this_opt = el.options[i];
+        var text = this_opt.text.toLowerCase();
+        var val = this_opt.value;
+        var test = false;
+        switch ( mode ) {
+          case 'value':
+            test = val == value;
+            break;
+          case 'label':
+            test = text.indexOf(value) > -1;
+            break;
+          case 'value_label':
+          default:
+            test = text.indexOf(value) > -1 || val == value;
+            break;
+        }
+        if ( test ) {
+          if ( found < 0 ) { found = i; }
+          if ( this_opt.style.display == 'none' ) {
+            if ( this_opt.data_old_display ) {
+              this_opt.style.display = this_opt.data_old_display;
+            }
+            else {
+              this_opt.style.display = '';
+            }
+          }
+        }
+        else {
+          if ( ! this_opt.data_old_display && this_opt.style.display != 'none' ) {
+            this_opt.data_old_display = this_opt.style.display;
+          }
+          this_opt.style.display = 'none';
+        }
+      }
+      if ( found >= 0 ) {
+        el.value = el.options[found].value;
+      }
+    }
   </script>
 <?php   } ?>
 <?php } ?>

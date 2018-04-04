@@ -146,6 +146,7 @@ else {
         'name' => 'accountid[]',
         'option_loop' => $acct_loop,
         'first_blank' => 1,
+        'filter_value_label' => 1,
         'multiple' => 1,
         'size' => 8,
     );
