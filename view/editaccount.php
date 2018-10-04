@@ -49,6 +49,11 @@
         </div>
 
         <div class="uk-form-row">
+            <label class="uk-form-label" for="retired">Retired</label>
+            <div class="uk-form-controls"><input type="checkbox" id="retired" name="retired"<?= $data['account']['retired'] ? " checked" : "" ?>></div>
+        </div>
+
+        <div class="uk-form-row">
             <div class="uk-form-controls">
                  <input class="uk-button" type="submit" name="op" value="Save">
             </div>
@@ -56,6 +61,20 @@
 
     </fieldset>
 </form>
+
+<form class="uk-form uk-margin-top" method="post" action="editaccount.php">
+    <input type="hidden" name="accountid" value="<?= $data['accountid'] ?>">
+    <fieldset class="uk-form-horizontal">
+        <div class="uk-form-row uk-panel uk-panel-box uk-text-center">
+<?php if ( !empty($data['num_actions']) ) { ?>
+            <div class="uk-form-controls-text">Account is used by <?= $data['num_actions'] ?> actions.  Can not be deleted.</div>
+<?php } else { ?>
+            <input class="uk-button" type="submit" name="op" value="Delete">
+<?php } ?>
+        </div>
+    </fieldset>
+</form>
+
     </div>
 <?php if ( !empty($data['account']['accountid']) ) { ?>
     <div class="uk-width-1-2">

@@ -8,8 +8,9 @@ authorize( 'actions' );
 
 $op = input( 'op', INPUT_STR );
 $actionid = input( 'actionid', INPUT_PINT );
+$include_retired = input( 'retired', INPUT_PINT );
 $contacts = get_contacts();
-$accounts = get_accounts();
+$accounts = get_accounts( [], $include_retired );
 $locations = all_locations();
 
 $action = array();
@@ -22,7 +23,7 @@ if ( !empty($actionid) ) {
         }
     }
     if ( !empty($action['locationid']) && ( empty($action['accountid']) || $accounts[ $action['accountid'] ]['locationid'] == $action['locationid'] ) ) {
-        $accounts = get_accounts_at_location( $action['locationid'] );
+        $accounts = get_accounts_at_location( $action['locationid'], [], $include_retired );
     }
     foreach ( $accounts as &$acc ) {
         if ( $action['accountid'] == $acc['accountid'] ) {
@@ -111,7 +112,7 @@ if ( $op == 'Save' || $op == 'Save & New' ) {
                 }
             }
             if ( !empty($action['locationid']) && !empty($action['accountid']) && $accounts[ $action['accountid'] ]['locationid'] == $action['locationid'] ) {
-                $accounts = get_accounts_at_location( $action['locationid'] );
+                $accounts = get_accounts_at_location( $action['locationid'], [], $include_retired );
             }
             foreach ( $accounts as &$acc ) {
                 if ( $action['accountid'] == $acc['accountid'] ) {

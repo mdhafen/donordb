@@ -66,7 +66,7 @@
 <div class="uk-container uk-margin uk-width-1-1">
 <h2>Accounts</h2>
 <div id="accounts_table_container">
-<ul class="paginationTop"></ul>
+<ul class="paginationTop uk-display-inline-block"></ul>
 <table class="uk-table" id="accounts_table">
 <thead>
 <tr>
@@ -89,7 +89,7 @@
     Notes<br>
     <input type="text" id="account_note_filter" size="10" onkeyup="do_filter(this.value,'note')">
   </th>
-  <th></th>
+  <th><label>Include Retired Accounts<input type="checkbox" id="account_retired_filter" onchange="do_filter(this.checked, 'retired')"<?= $data['retired'] ? " checked" : "" ?>></label></th>
 </tr>
 </thead>
 <tbody class="list">
@@ -103,10 +103,11 @@
 <td class="list_location"><?= $row['location_name'] ?></td>
 <td class="list_total"><span class="<?= $row['total'] < 0 ? 'uk-text-danger' : '' ?>"><?= number_format(floatval($row['total']),2) ?></span></td>
 <td class="list_note"><?= $row['note'] ?></td>
-<td>
+<td class="list_retired" data-list-retired="<?= $row['retired'] ? '1' : '0' ?>">
   <a href="<?= $data['_config']['base_url'] ?>actions.php?op=search&amp;account=<?= $row['accountid'] ?>" class="uk-button uk-text-nowrap" title="Transactions"><i class="uk-icon-file-text-o"></i></a>
   <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=transfer&amp;accountid=<?= $row['accountid'] ?>" class="uk-button uk-text-nowrap" title="Transfer"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i><i class="uk-icon-file-text-o"></i></a>
   <a href="<?= $data['_config']['base_url'] ?>account_action.php?op=move&amp;accountid=<?= $row['accountid'] ?>" class="uk-button uk-text-nowrap" title="Move"><i class="uk-icon-file-text-o"></i><i class="uk-icon-arrow-right"></i></a>
+  <span><?= $row['retired'] ? ' Retired account' : "" ?></span>
 </td>
 </tr>
 <?php
@@ -123,21 +124,24 @@ function do_filter() {
     var input = [
         document.getElementById('account_account_filter').value.toLowerCase(),
         document.getElementById('account_location_filter').value.toLowerCase(),
-        document.getElementById('account_note_filter').value.toLowerCase()
+        document.getElementById('account_note_filter').value.toLowerCase(),
+        document.getElementById('account_retired_filter').checked
     ];
     list_obj.filter(function(item){
         var match = [
             decodeURIComponent((item.values().list_account+'').replace(/%D?/g,'%25')).replace(/\+/g,' ').toLowerCase(),
             item.values().list_location.toLowerCase(),
-            item.values().list_note.toLowerCase()
+            item.values().list_note.toLowerCase(),
+            item.values().list_retired == 1 ? true : false
         ];
-        return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 );
+        return ( match[0].indexOf(input[0]) > -1 && match[1].indexOf(input[1]) > -1 && match[2].indexOf(input[2]) > -1 ) && ( !match[3] || input[3] );
     })
 }
 
 var list_options = {
   valueNames: [
-    'list_acc_id','list_account','list_location','list_total','list_note'
+    'list_acc_id','list_account','list_location','list_total','list_note',
+    { name: 'list_retired', attr: 'data-list-retired' }
   ],
   searchClass: 'list_search',
   sortClass: 'list_sort',
@@ -160,6 +164,7 @@ var list_options = {
 };
 
 var list_obj = new List('accounts_table_container', list_options);
+do_filter();
 </script>
 
 </div>

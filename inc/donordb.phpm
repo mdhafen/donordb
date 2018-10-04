@@ -51,6 +51,29 @@ function get_actions_cross( $ids = array() ) {
   return $result;
 }
 
+function get_actions_count_by_account(  $ids = array(), $include_retired = FALSE ) {
+  $dbh = db_connect('core');
+
+  $query = "SELECT accountid,COUNT(*) FROM actions CROSS JOIN accounts USING (accountid) ";
+  if ( !empty($ids) ) {
+    $query .= "WHERE accountid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  else if ( empty($include_retired) ) {
+    $query .= "WHERE retired = 0 ";
+  }
+  $query .= "GROUP BY accountid";
+
+  $sth = $dbh->prepare( $query );
+
+  $sth->execute();
+
+  while ( $row = $sth->fetch( PDO::FETCH_NUM ) ) {
+      $result[ $row[0] ] = (int) $row[1];
+  }
+
+  return $result;
+}
+
 function search_actions_cross( $terms ) {
   $wheres = array();
   $data = array();
@@ -113,13 +136,16 @@ function search_actions_cross( $terms ) {
   return $result;
 }
 
-function get_accounts( $ids = array() ) {
+function get_accounts( $ids = array(), $include_retired = FALSE ) {
   $dbh = db_connect('core');
   $result = array();
 
   $query = "SELECT *,accounts.name,location.name as location_name FROM accounts LEFT JOIN location USING (locationid) ";
   if ( !empty($ids) ) {
     $query .= "WHERE accountid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  else if ( empty($include_retired) ) {
+    $query .= "WHERE retired = 0 ";
   }
   $sth = $dbh->prepare( $query );
 
@@ -133,13 +159,16 @@ function get_accounts( $ids = array() ) {
   return $result;
 }
 
-function get_accounts_at_location( $locationid, $ids = array() ) {
+function get_accounts_at_location( $locationid, $ids = array(), $include_retired = FALSE ) {
   $dbh = db_connect('core');
   $result = array();
 
   $query = "SELECT accounts.*,location.name as location_name FROM accounts LEFT JOIN location USING (locationid) WHERE locationid = :loc";
   if ( !empty($ids) ) {
     $query .= " AND accountid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  else if ( empty($include_retired) ) {
+    $query .= " AND retired = 0 ";
   }
   $sth = $dbh->prepare( $query );
   $sth->bindParam( ':loc',$locationid );
@@ -154,13 +183,16 @@ function get_accounts_at_location( $locationid, $ids = array() ) {
   return $result;
 }
 
-function get_accounts_with_total( $ids = array() ) {
+function get_accounts_with_total( $ids = array(), $include_retired = FALSE ) {
   $dbh = db_connect('core');
   $result = array();
 
   $query = "SELECT accounts.*,location.name as location_name,sum(actions.amount) as total FROM accounts LEFT JOIN location USING (locationid) LEFT JOIN actions USING (accountid) ";
   if ( !empty($ids) ) {
     $query .= "WHERE accountid IN (". implode(',',array_filter($ids)) .") ";
+  }
+  else if ( empty($include_retired) ) {
+    $query .= "WHERE retired = 0 ";
   }
   $query .= "GROUP BY accounts.accountid";
   $sth = $dbh->prepare( $query );
@@ -315,6 +347,21 @@ function delete_action( $actionid ) {
 
       $sth = $dbh->prepare($query);
       $sth->bindParam( ':act',$actionid );
+      $sth->execute();
+      $result = $sth->errorCode() !== '00000';
+  }
+  return $result;
+}
+
+function delete_account( $accountid ) {
+  $result = 0;
+  $dbh = db_connect('core');
+  $query;
+  if ( !empty($accountid) ) {
+      $query = "DELETE FROM accounts WHERE accountid = :acc";
+
+      $sth = $dbh->prepare($query);
+      $sth->bindParam( ':acc',$accountid );
       $sth->execute();
       $result = $sth->errorCode() !== '00000';
   }

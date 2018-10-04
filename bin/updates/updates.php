@@ -3,6 +3,7 @@
 $updates = array(
   '0001-Change_receipt_to_varchar',
   '0002-Add_modlog_actions',
+  '0003-Add_account_retired',
 );
 $results = array();
 

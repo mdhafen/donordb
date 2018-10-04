@@ -7,11 +7,12 @@ include_once( '../../inc/donordb.phpm' );
 authorize( 'accounts' );
 
 $locationid = input( 'locationid', INPUT_PINT );
+$include_retired = input( 'retired', INPUT_PINT );
 if ( !empty($locationid) ) {
-    $accounts = get_accounts_at_location( $locationid );
+    $accounts = get_accounts_at_location( $locationid, [], $include_retired );
 }
 else {
-    $accounts = get_accounts();
+    $accounts = get_accounts( [], $include_retired );
 }
 $account_details = '';
 
