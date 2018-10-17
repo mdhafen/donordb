@@ -62,7 +62,7 @@ else {
         $output['ERROR'] = 1;
       }
       else {
-        list( $password, $salt ) = new_password( $con_pass );
+        list( $password, $salt, $pass_mode ) = new_password( $con_pass );
         $user = array(
           'username' => $username,
           'fullname' => !empty($fullname) ? $fullname : "",
@@ -70,6 +70,7 @@ else {
           'role' => $admin_role,
           'password' => $password,
           'salt' => $salt,
+          'password_mode' => $pass_mode,
         );
         $result = update_user( 0, $user );
         if ( empty($result) ) {

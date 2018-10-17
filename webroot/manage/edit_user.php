@@ -45,9 +45,9 @@ if ( $op == "Save" ) {  // Update/Add the user
   $loc_changed = false;
   $password = input( 'password', INPUT_STR );
   $password2 = input( 'password_2', INPUT_STR );
-  $user_password = $salt = '';
+  $user_password = $salt = $pass_mode = '';
   if ( $password && $password != '*****' && $password == $password2 ) {
-    list( $user_password, $salt ) = new_password( $password );
+    list( $user_password, $salt, $pass_mode ) = new_password( $password );
   }
 
   foreach ( $user_locations as $locid ) {
@@ -91,9 +91,10 @@ if ( $op == "Save" ) {  // Update/Add the user
     if ( $role != $user['role'] ) {
       $updated['role'] = $role;
     }
-    if ( !empty($salt) ) {
-      $updated['salt'] = $salt;
+    if ( !empty($pass_mode) ) {
       $updated['password'] = $user_password;
+      $updated['salt'] = $salt;
+      $updated['password_mode'] = $pass_mode;
     }
   } else {
     $updated = array(
@@ -103,6 +104,7 @@ if ( $op == "Save" ) {  // Update/Add the user
 	'role' => $role,
 	'password' => $user_password,
 	'salt' => $salt,
+	'password_mode' => $pass_mode,
 		     );
     $loc_changed = true;
   }
