@@ -184,7 +184,7 @@ var list_obj = new List('reports_table_container', list_options);
         case 'select' :
           if ( !empty($row['filter_label']) || !empty($row['filter_value_label']) ) {
 ?>
-          <input type="text" id="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>" name="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>" onkeyup="filter_select(this.value,'<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>','<?= $row['filter_label'] ? 'label' : 'value_label' ?>')">
+          <input type="text" id="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>" name="filter_<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>" onkeyup="filter_select(this.value,'<?= !empty($row['id']) ? $row['id'] : 'report_input_'.$count ?>','<?= !empty($row['filter_label']) ? 'label' : 'value_label' ?>')">
 <?php
           }
 ?>

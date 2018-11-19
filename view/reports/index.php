@@ -17,6 +17,7 @@
       <li><a href="<?= $data['_config']['base_url'] ?>reports/500.php">$500+</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/Sum5000.php">Donors who gave $5000+</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/school_revenue_expense.php">Revenue and Expense by School</a></li>
+      <li><a href="<?= $data['_config']['base_url'] ?>reports/account_revenue_expense.php">School Revenue and Expense by Account</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/closeout.php">Close Out</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/action_amounts.php">Action Amount</a></li>
 </ul>
