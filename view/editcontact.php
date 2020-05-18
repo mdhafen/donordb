@@ -21,7 +21,7 @@
     <fieldset class="uk-form-horizontal">
         <div class="uk-form-row">
             <span class="uk-form-label">Id</span>
-            <div class="uk-form-controls uk-form-controls-text"><?= $data['contact']['contactid'] ?></div>
+            <div class="uk-form-controls uk-form-controls-text"><?= !empty($data['contact']['contactid']) ? $data['contact']['contactid'] : '[new]' ?></div>
         </div>
 
         <div class="uk-form-row">

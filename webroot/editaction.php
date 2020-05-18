@@ -94,7 +94,7 @@ if ( $op == 'Save' || $op == 'Save & New' ) {
         $actionid = update_action( $actionid, $updates );
         if ( !empty($actionid) ) {
             foreach ( $updates as $field => $value ) {
-                modlog_add('action',$actionid,$field,$value,$action[$field]);
+                modlog_add('action',$actionid,$field,$value,array_key_exists($field,$action)?$action[$field]:'');
             }
             if ( $op == 'Save & New' ) {
                 $action = array('contactid'=>0,'locationid'=>0,'accountid'=>0);

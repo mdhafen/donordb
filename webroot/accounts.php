@@ -12,7 +12,7 @@ $all_accounts = get_accounts_with_total( [], true ); //$include_retired );
 
 $output = array(
     'accounts_list' => $all_accounts,
-    'retired' => $include_retired,
+//    'retired' => $include_retired,
 );
 output( $output, 'accounts' );
 ?>
