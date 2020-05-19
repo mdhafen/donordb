@@ -89,7 +89,7 @@
     Notes<br>
     <input type="text" id="account_note_filter" size="10" onkeyup="do_filter(this.value,'note')">
   </th>
-  <th><label>Include Retired Accounts<input type="checkbox" id="account_retired_filter" onchange="do_filter(this.checked, 'retired')"<?= $data['retired'] ? " checked" : "" ?>></label></th>
+  <th><label>Include Retired Accounts<input type="checkbox" id="account_retired_filter" onchange="do_filter(this.checked, 'retired')"<?= !empty($data['retired']) ? " checked" : "" ?>></label></th>
 </tr>
 </thead>
 <tbody class="list">

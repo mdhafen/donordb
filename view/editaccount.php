@@ -23,7 +23,7 @@
     <fieldset class="uk-form-horizontal">
         <div class="uk-form-row">
             <span class="uk-form-label">Id</span>
-            <div class="uk-form-controls uk-form-controls-text"><?= $data['account']['accountid'] ?></div>
+            <div class="uk-form-controls uk-form-controls-text"><?= !empty($data['account']['accountid'])?$data['account']['accountid']:'[new]' ?></div>
         </div>
 
         <div class="uk-form-row">
@@ -50,7 +50,7 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="retired">Retired</label>
-            <div class="uk-form-controls"><input type="checkbox" id="retired" name="retired"<?= $data['account']['retired'] ? " checked" : "" ?>></div>
+            <div class="uk-form-controls"><input type="checkbox" id="retired" name="retired"<?= !empty($data['account']['retired']) ? " checked" : "" ?>></div>
         </div>
 
         <div class="uk-form-row">

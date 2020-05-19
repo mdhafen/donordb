@@ -41,7 +41,7 @@ if ( $op == 'Save' ) {
     if ( empty($account['note']) || $account['note'] != $note ) {
         $updates['note'] = $note;
     }
-    if ( $account['retired'] != $retired ) {
+    if ( empty($account['retired']) || $account['retired'] != $retired ) {
         $updates['retired'] = $retired;
     }
 
