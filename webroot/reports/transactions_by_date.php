@@ -42,6 +42,9 @@ if ( !empty($op) ) {
         $data[] = $locationid;
     }
     if ( !empty($accounts) ) {
+        if ( ! is_array($accounts) ) {
+            $accounts = array( $accounts );
+        }
         $where[] = "accounts.accountid IN (". implode($accounts,',') .")";
     }
     if ( !empty($where) ) {
