@@ -69,7 +69,7 @@ if ( !empty($op) ) {
             array('column_name' => 'receipt','value' => $row['receipt'],),
             array('column_name' => 'po','value' => $row['po'],),
             array('column_name' => 'note','value' => $row['note'],),
-            array('column_name' => 'amount','value' => number_format($row['amount'],2),),
+            array('column_name' => 'amount','value' => number_format($row['amount'] ?? 0,2),),
         );
     }
     $rows[] = array(

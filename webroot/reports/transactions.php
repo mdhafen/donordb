@@ -80,8 +80,8 @@ if ( !empty($op) ) {
 
             $rows[ $row['account_name'] ] = array(
                 'name' => $row['account_name'],
-                'total' => $previous['amount'],
-                'previous' => number_format($previous['amount'],2),
+                'total' => $previous['amount'] ?? 0,
+                'previous' => number_format($previous['amount'] ?? 0,2),
                 'rows' => array(),
             );
         }
