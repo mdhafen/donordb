@@ -53,7 +53,7 @@ if ( !empty($op) ) {
         if ( ! is_array($accounts) ) {
             $accounts = array( $accounts );
         }
-        $where[] = "accounts.accountid IN (". implode($accounts,',') .")";
+        $where[] = "accounts.accountid IN (". implode(',',$accounts) .")";
     }
     if ( !empty($where) ) {
         $query .= " WHERE ". implode( ' AND ', $where );
