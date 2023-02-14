@@ -20,6 +20,7 @@
       <li><a href="<?= $data['_config']['base_url'] ?>reports/account_revenue_expense.php">School Revenue and Expense by Account</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/closeout.php">Close Out</a></li>
       <li><a href="<?= $data['_config']['base_url'] ?>reports/action_amounts.php">Action Amount</a></li>
+      <li><a href="<?= $data['_config']['base_url'] ?>reports/problems.php">Possible Problems</a></li>
 </ul>
 </div>
 </div>
