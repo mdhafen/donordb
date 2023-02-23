@@ -5,6 +5,7 @@ $updates = array(
   '0002-Add_modlog_actions',
   '0003-Add_account_retired',
   '0004-add_password_mode_field',
+  '0005-add_message_tables',
 );
 $results = array();
 

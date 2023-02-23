@@ -1,5 +1,6 @@
 <?php
 $config = array(
+	'postmaster'      => 'noreply@invalid',
 	'base_dir'        => '/var/www/',  // sane defaults
 	'base_url'	  => '/', // these are set below
 	'secure_phrase'   => '',

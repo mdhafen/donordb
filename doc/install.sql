@@ -1,3 +1,48 @@
+--
+-- Table structure for table `message_templates`
+--
+
+DROP TABLE IF EXISTS `message_templates`;
+CREATE TABLE `message_templates` (
+  `template_id` INT NOT NULL AUTO_INCREMENT,
+  `code` varchar(20) NOT NULL,
+  `transport` ENUM('EMail','SMS','Print') NOT NULL DEFAULT 'EMail',
+  `lang` varchar(5) NOT NULL,
+  `subject` varchar(200),
+  `body` mediumtext,
+  PRIMARY KEY (`template_id`),
+  UNIQUE KEY (`code`,`transport`,`lang`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `message_queue`
+--
+
+DROP TABLE IF EXISTS `message_queue`;
+CREATE TABLE `message_queue` (
+  `queue_id` INT NOT NULL AUTO_INCREMENT,
+  `to_uid` varchar(40) NOT NULL,
+  `from_uid` varchar(40) NOT NULL,
+  `template_id` INT,
+  `status` ENUM('pending','failed','sent','cancelled') NOT NULL DEFAULT 'pending',
+  `status_metadata` mediumtext,
+  `subject` varchar(200),
+  `body` mediumtext,
+  PRIMARY KEY (`queue_id`),
+  CONSTRAINT `template_id_fk` FOREIGN KEY (`template_id`) REFERENCES `message_templates` (`template_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `user_message_settings`
+--
+
+DROP TABLE IF EXISTS `user_message_settings`;
+CREATE TABLE `user_message_settings` (
+  `userid` varchar(40),
+  `template_id` INT NOT NULL,
+  UNIQUE KEY (`userid`,`template_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `user` (
 	`userid` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
 	`username` VARCHAR(16) NOT NULL DEFAULT '',
