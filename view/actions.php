@@ -198,7 +198,7 @@ var list_obj = new List('actions_table_container', list_options);
         <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="accountid">Account</label>
             <div class="uk-form-controls">
-                <input type="text" id="acc_id" name="acc_id" value="" onkeyup="select_field_filter_byValNText('accountid',this.value)" tabindex="1">
+                <input type="text" id="acc_id" name="acc_id" value="" onkeyup="select_field('accountid',this.value)" tabindex="1">
                 <select id="accountid" name="account" onchange="input_update('acc_id',this.value)" tabindex="8">
                     <option value="">Select Account</option>
 <?php foreach ( $data['accounts'] as $acc ) { ?>
@@ -213,7 +213,7 @@ var list_obj = new List('actions_table_container', list_options);
         <div class="uk-form-row uk-panel-box uk-panel">
             <label class="uk-form-label" for="contactid">Contact</label>
             <div class="uk-form-controls">
-                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field_filter_byValNText('contactid',this.value)" tabindex="2">
+                <input type="text" id="con_id" name="con_id" value="" onkeyup="select_field('contactid',this.value)" tabindex="2">
                 <select id="contactid" name="contact" tabindex="9">
                     <option value="">Select Contact</option>
 <?php foreach ( $data['contacts'] as $con ) { ?>
