@@ -62,7 +62,7 @@ else {
         $output['ERROR'] = 1;
       }
       else {
-        list( $password, $salt, $pass_mode ) = new_password( $con_pass );
+        list( $password, $salt, $pass_mode ) = encode_password( $con_pass );
         $user = array(
           'username' => $username,
           'fullname' => !empty($fullname) ? $fullname : "",
