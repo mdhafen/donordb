@@ -84,6 +84,7 @@ if ( !empty($action) ) {
     if ( $op == 'move' ) {
         $updates = [ 'locationid' => $locationid ];
         update_account( $accountid, $updates );
+        modlog_add('account',$accountid,'locationid',$locationid,array_key_exists('locationid',$account)?$account['locationid']:'');
         $successes++;
     }
 

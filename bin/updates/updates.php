@@ -6,18 +6,17 @@ $updates = array(
   '0003-Add_account_retired',
   '0004-add_password_mode_field',
   '0005-add_message_tables',
+  '0006-Add_modlog_accounts',
 );
-$results = array();
 
 foreach ( $updates as $file ) {
   if ( is_readable( $file .".php" ) ) {
     $result = include( $file .".php" );
-    if ( strlen($result) > 1 ) { $results[] = $result; }
+    if ( strlen($result) > 1 ) { print $result ."\n"; }
   }
-}
-
-foreach ( $results as $msg ) {
-  print $msg ."\n";
+  else {
+    print "Error! file (${file}.php) not found!\n";
+  }
 }
 
 ?>

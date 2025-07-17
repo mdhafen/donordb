@@ -28,7 +28,7 @@ $checks = array(
             array('column_name' => 'c_name', 'column_title' => 'Contact'),
             array('column_name' => 'company', 'column_title' => 'Company'),
         ),
-        'query' => 'SELECT actions.date, actions.amount, actions.note, actions.po, l1.name AS t_loc_name, accounts.name, l2.name AS a_loc_name, contacts.name AS c_name, contacts.company, actions.actionid FROM actions LEFT JOIN location AS l1 USING (locationid) LEFT JOIN contacts USING (contactid) LEFT JOIN accounts USING (accountid) LEFT JOIN location AS l2 ON (accounts.locationid = l2.locationid) WHERE actions.in_kind = 0 AND actions.locationid <> accounts.locationid',
+        'query' => 'SELECT actions.date, actions.amount, actions.note, actions.po, l1.name AS t_loc_name, accounts.name, l2.name AS a_loc_name, contacts.name AS c_name, contacts.company, actions.actionid FROM actions LEFT JOIN location AS l1 USING (locationid) LEFT JOIN contacts USING (contactid) LEFT JOIN accounts USING (accountid) LEFT JOIN location AS l2 ON (accounts.locationid = l2.locationid) LEFT JOIN modlog_accounts AS mla ON (mla.accountid = accounts.accountid AND field = "locationid" AND old_value = actions.locationid AND new_value = accounts.locationid AND mla.timestamp >= actions.udate) WHERE actions.in_kind = 0 AND actions.locationid <> accounts.locationid AND mla.timestamp IS NULL',
         'sql_params' => array(),
         'rows' => array(),
     ),

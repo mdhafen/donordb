@@ -48,6 +48,9 @@ if ( $op == 'Save' ) {
     if ( !empty($updates) ) {
         $accountid = update_account( $accountid, $updates );
         if ( !empty($accountid) ) {
+            foreach ( $updates as $field => $value ) {
+                modlog_add('account',$accountid,$field,$value,array_key_exists($field,$account)?$account[$field]:'');
+            }
             $op = 'SaveSuccess';
             $account = get_accounts( array($accountid) )[$accountid];
             foreach ( $locations as &$loc ) {

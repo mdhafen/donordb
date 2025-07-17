@@ -376,6 +376,10 @@ function modlog_add( $table, $id, $field, $new_value, $old_value ) {
             $mod_table = 'modlog_actions';
             $id_column = 'actionid';
             break;
+        case 'account':
+            $mod_table = 'modlog_accounts';
+            $id_column = 'accountid';
+            break;
     }
 
     $dbh = db_connect('core');
@@ -400,10 +404,14 @@ function modlog_get( $table, $id ) {
             $mod_table = 'modlog_actions';
             $id_column = 'actionid';
             break;
+        case 'account':
+            $mod_table = 'modlog_accounts';
+            $id_column = 'accountid';
+            break;
     }
 
     $dbh = db_connect('core');
-    $query = "SELECT * FROM $mod_table WHERE $id_column = :id";
+    $query = "SELECT * FROM $mod_table WHERE $id_column = :id ORDER BY timestamp DESC";
     $sth = $dbh->prepare($query);
     $sth->bindValue( ':id', $id );
     $sth->execute();
@@ -425,6 +433,10 @@ function modlog_search( $table, $terms ) {
         case 'action':
             $mod_table = 'modlog_actions';
             $id_column = 'actionid';
+            break;
+        case 'account':
+            $mod_table = 'modlog_accounts';
+            $id_column = 'accountid';
             break;
     }
 
@@ -460,6 +472,11 @@ function modlog_search( $table, $terms ) {
                 $op = 'LIKE';
                 $term = '%'. $term;
                 break;
+            case 'name':
+            case 'note':
+                $op = 'LIKE';
+                $term = '%'. $term .'%';
+                break;
         }
         $wheres[] = "(field = '$field' AND ${column}_value $op ?)";
         $data[] = $term;
@@ -482,6 +499,9 @@ function modlog_search( $table, $terms ) {
         switch ( $table ) {
             case 'action':
                 $result = get_actions_cross($result);
+                break;
+            case 'account':
+                $result = get_accounts($result,include_retired:true);
                 break;
         }
     }

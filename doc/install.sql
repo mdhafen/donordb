@@ -110,6 +110,7 @@ CREATE TABLE `accounts` (
 	`name` VARCHAR(128) NOT NULL DEFAULT 'Unnamed',
 	`locationid` INT(10) UNSIGNED DEFAULT NULL ,
 	`note` TEXT NOT NULL,
+	`retired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
 	PRIMARY KEY (`accountId`),
 	KEY `schoolId` (`locationid`),
 	CONSTRAINT `acc_fk_locationid` FOREIGN KEY (`locationid`)
@@ -157,4 +158,28 @@ CREATE TABLE `actions` (
 	CONSTRAINT `act_fk_locationid` FOREIGN KEY (`locationid`)
 		REFERENCES `location` (`locationid`)
 		ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `modlog_actions` (
+	`actionid` BIGINT(20) UNSIGNED NOT NULL,
+	`field` VARCHAR(16) NOT NULL,
+	`old_value` TEXT NULL DEFAULT NULL,
+	`new_value` TEXT NULL DEFAULT NULL,
+	`userid` INT(10) UNSIGNED NULL DEFAULT NULL,
+	ipAddress VARBINARY(16) NOT NULL DEFAULT 2130706433,
+	timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	KEY (actionid),
+	KEY (field)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `modlog_accounts` (
+	`accountid` BIGINT(20) UNSIGNED NOT NULL,
+	`field` VARCHAR(16) NOT NULL,
+	`old_value` TEXT NULL DEFAULT NULL,
+	`new_value` TEXT NULL DEFAULT NULL,
+	`userid` INT(10) UNSIGNED NULL DEFAULT NULL,
+	ipAddress VARBINARY(16) NOT NULL DEFAULT 2130706433,
+	timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	KEY (accountid),
+	KEY (field)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
