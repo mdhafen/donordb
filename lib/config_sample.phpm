@@ -48,6 +48,15 @@ $config = array(
 			// role with most permissions
 			'sysadmin_role' => 6,
 		),
+		'AD' => array(
+			'server' => 'ldaps://ldap3.example/',
+			'base' => 'dc=example',
+			'userdn' => 'cn=admin,cn=users,dc=example',
+			'passwd' => 'localpassword',
+			'upn' => '@example',
+			'starttls' => 0,
+			'CACert' => '/lib/CA.crt', // path from base_dir to CA Cert file
+		),
 	),
 	'auth' => array(
 		1   => "reports",
