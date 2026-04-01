@@ -7,6 +7,7 @@ $updates = array(
   '0004-add_password_mode_field',
   '0005-add_message_tables',
   '0006-Add_modlog_accounts',
+  '0007-add_contact_email_field',
 );
 
 foreach ( $updates as $file ) {

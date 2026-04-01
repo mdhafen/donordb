@@ -24,6 +24,7 @@ if ( $op == 'Save' ) {
     $state = input( 'state', INPUT_HTML_NONE );
     $zip = input( 'zip', INPUT_HTML_NONE );
     $phone = input( 'phone', INPUT_HTML_NONE );
+    $email = input( 'email', INPUT_HTML_NONE );
 
     if ( empty($contact['name']) || $contact['name'] != $name ) {
         $updates['name'] = $name;
@@ -45,6 +46,9 @@ if ( $op == 'Save' ) {
     }
     if ( empty($contact['phone']) || $contact['phone'] != $phone ) {
         $updates['phone'] = $phone;
+    }
+    if ( empty($contact['email']) || $contact['email'] != $email ) {
+        $updates['email'] = $email;
     }
 
     if ( !empty($updates) ) {

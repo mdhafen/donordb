@@ -16,6 +16,7 @@ $header = array(
     array('column_name' => 'date', 'column_title' => 'Date', 'sort' => 1, 'clean_attr' => '1'),
     array('column_name' => 'contact', 'column_title' => 'Contact Name', 'sort' => 1,),
     array('column_name' => 'company', 'column_title' => 'Contact Company', 'sort' => 1,),
+    array('column_name' => 'email', 'column_title' => 'Contact Email',),
     array('column_name' => 'street', 'column_title' => 'Address',),
     array('column_name' => 'city', 'column_title' => 'City',),
     array('column_name' => 'state', 'column_title' => 'State',),
@@ -27,7 +28,7 @@ $header = array(
     array('column_name' => 'receipt', 'column_title' => 'Receipt',),
 );
 
-$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.accountid, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND receipt <> 0 AND in_kind = 0';
+$query = 'SELECT actions.date, contacts.name, contacts.company, contacts.email, contacts.street, contacts.city, contacts.state, contacts.zip, actions.amount, accounts.accountid, accounts.name AS account_name, location.name AS location_name, receipt FROM actions LEFT JOIN location USING (locationid) LEFT JOIN accounts USING (accountid) LEFT JOIN contacts USING (contactid) WHERE actions.amount >= 0 AND receipt <> "0" AND in_kind = 0';
 
 if ( !empty($op) ) {
     $s_date = input( 'start_date', INPUT_HTML_NONE );
@@ -57,6 +58,7 @@ if ( !empty($op) ) {
             ),
             array('column_name' => 'contact','value' => $row['name'],),
             array('column_name' => 'company','value' => $row['company'],),
+            array('column_name' => 'email','value' => $row['email'],'link' => 'mailto:'.htmlspecialchars(rawurlencode($row['email'])),),
             array('column_name' => 'street','value' => $row['street'],),
             array('column_name' => 'city','value' => $row['city'],),
             array('column_name' => 'state','value' => $row['state'],),

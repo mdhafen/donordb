@@ -26,37 +26,42 @@
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="name">Name</label>
-            <div class="uk-form-controls"><input type="text" class="uk-form-width-large" id="name" name="name" value="<?= (!empty($data['contact']['name'])) ? $data['contact']['name'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" class="uk-form-width-large" id="name" name="name" value="<?= (!empty($data['contact']['name'])) ? htmlspecialchars($data['contact']['name']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="company">Company</label>
-            <div class="uk-form-controls"><input type="text" class="uk-form-width-large" id="company" name="company" value="<?= (!empty($data['contact']['company'])) ? $data['contact']['company'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" class="uk-form-width-large" id="company" name="company" value="<?= (!empty($data['contact']['company'])) ? htmlspecialchars($data['contact']['company']) : "" ?>"></div>
+        </div>
+
+        <div class="uk-form-row">
+            <label class="uk-form-label" for="email">Email</label>
+            <div class="uk-form-controls"><input type="text" id="email" name="email" value="<?= (!empty($data['contact']['email'])) ? htmlspecialchars($data['contact']['email']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="street">Street</label>
-            <div class="uk-form-controls"><input type="text" class="uk-form-width-medium" id="street" name="street" value="<?= (!empty($data['contact']['street'])) ? $data['contact']['street'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" class="uk-form-width-medium" id="street" name="street" value="<?= (!empty($data['contact']['street'])) ? htmlspecialchars($data['contact']['street']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="city">City</label>
-            <div class="uk-form-controls"><input type="text" id="city" name="city" value="<?= (!empty($data['contact']['city'])) ? $data['contact']['city'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" id="city" name="city" value="<?= (!empty($data['contact']['city'])) ? htmlspecialchars($data['contact']['city']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="state">State</label>
-            <div class="uk-form-controls"><input type="text" id="state" name="state" value="<?= (!empty($data['contact']['state'])) ? $data['contact']['state'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" id="state" name="state" value="<?= (!empty($data['contact']['state'])) ? htmlspecialchars($data['contact']['state']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="zip">Zip</label>
-            <div class="uk-form-controls"><input type="text" id="zip" name="zip" value="<?= (!empty($data['contact']['zip'])) ? $data['contact']['zip'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" id="zip" name="zip" value="<?= (!empty($data['contact']['zip'])) ? htmlspecialchars($data['contact']['zip']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">
             <label class="uk-form-label" for="phone">Phone</label>
-            <div class="uk-form-controls"><input type="text" id="phone" name="phone" value="<?= (!empty($data['contact']['phone'])) ? $data['contact']['phone'] : "" ?>"></div>
+            <div class="uk-form-controls"><input type="text" id="phone" name="phone" value="<?= (!empty($data['contact']['phone'])) ? htmlspecialchars($data['contact']['phone']) : "" ?>"></div>
         </div>
 
         <div class="uk-form-row">

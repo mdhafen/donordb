@@ -107,7 +107,7 @@ tbody.report_multi_body::before {
 <?php
        foreach ( $row as $column ) {
 ?>
-          <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='${column['clean_value']}'" : "" ?><?= !empty($column['column_name']) ? " class='list_${column['column_name']}'" : "" ?>><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= $column['value'] ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
+          <td<?= !empty($column['width']) ? " colspan='${column['width']}'" : "" ?><?= !empty($column['clean_value']) ? " data-list-${column['column_name']}='".htmlspecialchars($column['clean_value'])."'" : "" ?><?= !empty($column['column_name']) ? " class='list_${column['column_name']}'" : "" ?>><?= !empty($column['link']) ? "<a href='${column['link']}'>" : "" ?><?= htmlspecialchars($column['value']) ?><?= !empty($column['link']) ? "</a>" : "" ?></td>
 <?php
        }
 ?>

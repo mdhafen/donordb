@@ -127,6 +127,7 @@ CREATE TABLE `contacts` (
 	`state` VARCHAR(128) DEFAULT NULL,
 	`zip` VARCHAR(56) DEFAULT NULL,
 	`phone` VARCHAR(56) DEFAULT NULL,
+	`email` VARCHAR(128) DEFAULT NULL,
 	PRIMARY KEY (`contactId`),
 	KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
